@@ -9967,19 +9967,10 @@ temp@^0.8.3:
     os-tmpdir "^1.0.0"
     rimraf "~2.2.6"
 
-terser@^3.14.0:
+terser@^3.14.0, terser@^3.14.1:
   version "3.14.1"
   resolved "https://registry.yarnpkg.com/terser/-/terser-3.14.1.tgz#cc4764014af570bc79c79742358bd46926018a32"
   integrity sha512-NSo3E99QDbYSMeJaEk9YW2lTg3qS9V0aKGlb+PlOrei1X02r1wSBHCNX/O+yeTRFSWPKPIGj6MqvvdqV4rnVGw==
-  dependencies:
-    commander "~2.17.1"
-    source-map "~0.6.1"
-    source-map-support "~0.5.6"
-
-terser@^3.7.3:
-  version "3.10.3"
-  resolved "https://registry.yarnpkg.com/terser/-/terser-3.10.3.tgz#4085f9e62171ca746c5759fe955d921291703ee6"
-  integrity sha512-uyL5hwDICjnv49JANhZvQYLikt/HADWNbUFsKQpZ/i+JSOkL2T4V7WUpW7S/5QGZceVq2x0HRVhEQQuW2ZpX6g==
   dependencies:
     commander "~2.17.1"
     source-map "~0.6.1"

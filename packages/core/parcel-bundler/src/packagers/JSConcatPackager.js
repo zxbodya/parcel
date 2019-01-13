@@ -7,6 +7,7 @@ const walk = require('babylon-walk');
 const babylon = require('@babel/parser');
 const t = require('@babel/types');
 const {getName, getIdentifier} = require('../scope-hoisting/utils');
+const {minify} = require('terser');
 
 const prelude = getExisting(
   path.join(__dirname, '../builtins/prelude2.min.js'),
@@ -540,6 +541,13 @@ class JSConcatPackager extends Packager {
         );
         output += `\n//# sourceMappingURL=${mapUrl}`;
       }
+    }
+
+    if (this.options.minify) {
+      output = minify(output, {
+        toplevel: true,
+        safari10: true
+      }).code;
     }
 
     await super.write(output);

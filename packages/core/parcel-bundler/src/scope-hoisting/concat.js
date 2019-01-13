@@ -340,9 +340,9 @@ module.exports = (packager, ast) => {
       exit(path) {
         treeShake(path.scope);
 
-        if (packager.options.minify) {
-          mangleScope(path.scope);
-        }
+        // if (packager.options.minify) {
+        //   mangleScope(path.scope);
+        // }
       }
     }
   });
@@ -350,8 +350,7 @@ module.exports = (packager, ast) => {
   let opts = {
     sourceMaps: packager.options.sourceMaps,
     sourceFileName: packager.bundle.name,
-    minified: packager.options.minify,
-    comments: !packager.options.minify
+    minified: packager.options.minify
   };
 
   return generate(ast, opts);
