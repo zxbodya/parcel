@@ -1,6 +1,7 @@
 const t = require('@babel/types');
 
 const EXPORTS_RE = /^\$([^$]+)\$exports$/;
+const PURE_RE = /(@|#)__PURE__/;
 
 /**
  * This is a small small implementation of dead code removal specialized to handle
@@ -64,6 +65,28 @@ function getUnusedBinding(path, name) {
   }
 }
 
+function hasPureComment(node) {
+  return (
+    node.leadingComments &&
+    PURE_RE.test(node.leadingComments[node.leadingComments.length - 1].value)
+  );
+}
+
+function isPureFunctionCall(path) {
+  if (t.isCallExpression(path.node) && hasPureComment(path.node)) {
+    return path
+      .get('arguments')
+      .every(
+        arg =>
+          arg.isPure() ||
+          arg.isIdentifier() ||
+          arg.isThisExpression() ||
+          isPureFunctionCall(arg.node)
+      );
+  }
+  return false;
+}
+
 function isPure(binding) {
   if (binding.referenced) {
     return false;
@@ -74,7 +97,12 @@ function isPure(binding) {
     binding.path.get('id').isIdentifier()
   ) {
     let init = binding.path.get('init');
-    return init.isPure() || init.isIdentifier() || init.isThisExpression();
+    return (
+      init.isPure() ||
+      init.isIdentifier() ||
+      init.isThisExpression() ||
+      isPureFunctionCall(init)
+    );
   }
 
   return binding.path.isPure();
