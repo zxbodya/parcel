@@ -70,12 +70,6 @@ const commonOptions = {
 
 var hmrOptions = {
   '--no-hmr': 'disable hot module replacement',
-  '--hmr-port <port>': [
-    'set the port to serve HMR websockets, defaults to random',
-    parseInt,
-  ],
-  '--hmr-host <hostname>':
-    'set the hostname of HMR websockets, defaults to location.hostname of current window',
   '--https': 'serves files over HTTPS',
   '--cert <path>': 'path to certificate to use with HTTPS',
   '--key <path>': 'path to private key to use with HTTPS',
@@ -98,7 +92,7 @@ let serve = program
     'set the port to serve on. defaults to 1234',
     parseInt,
   )
-  .option('--public-url <url>', 'set the path prefix to use in serve mode')
+  .option('--public-url <url>', 'the path prefix for absolute urls')
   .option(
     '--host <host>',
     'set the host to listen on, defaults to listening on all interfaces',
@@ -107,6 +101,7 @@ let serve = program
     '--open [browser]',
     'automatically open in specified browser, defaults to default browser',
   )
+  .option('--watch-for-stdin', 'exit when stdin closes')
   .action(run);
 
 applyOptions(serve, hmrOptions);
@@ -115,6 +110,12 @@ applyOptions(serve, commonOptions);
 let watch = program
   .command('watch [input...]')
   .description('starts the bundler in watch mode')
+  .option(
+    '--dist-dir <dir>',
+    'output directory to write to when unspecified by targets',
+  )
+  .option('--public-url <url>', 'the path prefix for absolute urls')
+  .option('--watch-for-stdin', 'exit when stdin closes')
   .action(run);
 
 applyOptions(watch, hmrOptions);
@@ -125,6 +126,11 @@ let build = program
   .description('bundles for production')
   .option('--no-minify', 'disable minification')
   .option('--no-scope-hoist', 'disable scope-hoisting')
+  .option('--public-url <url>', 'the path prefix for absolute urls')
+  .option(
+    '--dist-dir <dir>',
+    'Output directory to write to when unspecified by targets',
+  )
   .action(run);
 
 applyOptions(build, commonOptions);
@@ -199,6 +205,15 @@ async function run(entries: Array<string>, command: any) {
       await unsubscribe();
       process.exit();
     };
+
+    if (command.watchForStdin) {
+      process.stdin.on('end', async () => {
+        console.log('STDIN closed, ending');
+
+        await exit();
+      });
+      process.stdin.resume();
+    }
 
     // Detect the ctrl+c key, and gracefully exit after writing the asset graph to the cache.
     // This is mostly for tools that wrap Parcel as a child process like yarn and npm.
@@ -276,18 +291,7 @@ async function normalizeOptions(command): Promise<InitialParcelOptions> {
 
   let hmr = false;
   if (command.name() !== 'build' && command.hmr !== false) {
-    let port = command.hmrPort || 12345;
-    let host = command.hmrHost || command.host;
-    port = await getPort({port, host});
-
-    process.env.HMR_HOSTNAME = host || '';
-    process.env.HMR_PORT = port;
-
-    hmr = {
-      https,
-      port,
-      host,
-    };
+    hmr = true;
   }
 
   let mode = command.name() === 'build' ? 'production' : 'development';
@@ -298,6 +302,8 @@ async function normalizeOptions(command): Promise<InitialParcelOptions> {
     minify: command.minify != null ? command.minify : mode === 'production',
     sourceMaps: command.sourceMaps ?? true,
     scopeHoist: command.scopeHoist,
+    publicUrl: command.publicUrl,
+    distDir: command.distDir,
     hot: hmr,
     serve,
     targets: command.target.length > 0 ? command.target : null,
