@@ -843,6 +843,13 @@ type BundlingProgressEvent = {|
   +phase: 'bundling',
 |};
 
+type BundledEvent = {|
+  +type: 'buildProgress',
+  +phase: 'bundled',
+  +bundleGraph: BundleGraph<NamedBundle>,
+  +changedAssets: Map<string, Asset>,
+|};
+
 type PackagingProgressEvent = {|
   +type: 'buildProgress',
   +phase: 'packaging',
@@ -858,6 +865,7 @@ type OptimizingProgressEvent = {|
 export type BuildProgressEvent =
   | ResolvingProgressEvent
   | TransformingProgressEvent
+  | BundledEvent
   | BundlingProgressEvent
   | PackagingProgressEvent
   | OptimizingProgressEvent;

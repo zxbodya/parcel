@@ -262,28 +262,37 @@ export default class Parcel {
       );
       dumpGraphToGraphViz(assetGraph, 'MainAssetGraph');
 
+      let publicChangedAsset = new Map(
+        Array.from(changedAssets).map(([id, asset]) => [
+          id,
+          assetFromValue(asset, options),
+        ]),
+      );
+
       // $FlowFixMe Added in Flow 0.121.0 upgrade in #4381
       let bundleGraph = await this.#bundlerRunner.bundle(assetGraph, {signal});
       // $FlowFixMe Added in Flow 0.121.0 upgrade in #4381 (Windows only)
       dumpGraphToGraphViz(bundleGraph._graph, 'BundleGraph');
+      let namedBundleGraph = new BundleGraph(
+        bundleGraph,
+        (bundle, bundleGraph, options) =>
+          new NamedBundle(bundle, bundleGraph, options),
+        options,
+      );
+      this.#reporterRunner.report({
+        type: 'buildProgress',
+        phase: 'bundled',
+        changedAssets: publicChangedAsset,
+        bundleGraph: namedBundleGraph,
+      });
 
       await this.#packagerRunner.writeBundles(bundleGraph);
       assertSignalNotAborted(signal);
 
       let event = {
         type: 'buildSuccess',
-        changedAssets: new Map(
-          Array.from(changedAssets).map(([id, asset]) => [
-            id,
-            assetFromValue(asset, options),
-          ]),
-        ),
-        bundleGraph: new BundleGraph(
-          bundleGraph,
-          (bundle, bundleGraph, options) =>
-            new NamedBundle(bundle, bundleGraph, options),
-          options,
-        ),
+        changedAssets: publicChangedAsset,
+        bundleGraph: namedBundleGraph,
         buildTime: Date.now() - startTime,
       };
 
