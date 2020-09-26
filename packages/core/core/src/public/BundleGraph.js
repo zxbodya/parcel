@@ -199,6 +199,9 @@ export default class BundleGraph<TBundle: IBundle>
         this.#createBundle.call(null, bundle, this.#graph, this.#options),
       );
   }
+  isRootBundleGroup(bundleGroup: BundleGroup): boolean {
+    return this.#graph.isRootBundleGroup(bundleGroup);
+  }
 
   getBundles(): Array<TBundle> {
     return this.#graph

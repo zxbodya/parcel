@@ -87,10 +87,14 @@ export function isEntry(
   bundle: NamedBundle,
   bundleGraph: BundleGraph<NamedBundle>,
 ): boolean {
-  // If there is no parent JS bundle (e.g. in an HTML page), or environment is isolated (e.g. worker)
-  // then this bundle is an "entry"
   return (
+    // is used in an entyr bundlegroup
+    bundleGraph
+      .getBundleGroupsContainingBundle(bundle)
+      .some(g => bundleGraph.isRootBundleGroup(g)) ||
+    // there is no parent JS bundle (e.g. in an HTML page)
     !bundleGraph.hasParentBundleOfType(bundle, 'js') ||
+    // environment is isolated (e.g. worker)
     bundle.env.isIsolated() ||
     !!bundle.getMainEntry()?.isIsolated
   );

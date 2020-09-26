@@ -1165,4 +1165,13 @@ export default class BundleGraph {
     hash.update(JSON.stringify(objectSortedEntriesDeep(bundle.env)));
     return hash.digest('hex');
   }
+
+  isRootBundleGroup(bundleGroup: BundleGroup): boolean {
+    return this._graph
+      .getNodesConnectedTo(
+        nullthrows(this._graph.getNode(getBundleGroupId(bundleGroup))),
+        'bundle',
+      )
+      .some(n => n.type === 'root');
+  }
 }

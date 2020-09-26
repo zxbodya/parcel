@@ -15,32 +15,49 @@ import type {
 
 import babelGenerate from '@babel/generator';
 import invariant from 'assert';
-import {isEntry} from './utils';
+import path from 'path';
+import fs from 'fs';
+import {needsPrelude} from './utils';
 import SourceMap from '@parcel/source-map';
 import * as t from '@babel/types';
 import template from '@babel/template';
+import {parse} from '@babel/parser';
 
-const REGISTER_TEMPLATE = template.statement<
-  {|
-    REFERENCED_IDS: ArrayExpression,
-    STATEMENTS: Array<Statement>,
-  |},
-  ExpressionStatement,
->(`(function() {
-  function $parcel$bundleWrapper() {
-    if ($parcel$bundleWrapper._executed) return;
-    STATEMENTS;
-    $parcel$bundleWrapper._executed = true;
-  }
-  var $parcel$referencedAssets = REFERENCED_IDS;
-  for (var $parcel$i = 0; $parcel$i < $parcel$referencedAssets.length; $parcel$i++) {
-    parcelRequire.registerBundle($parcel$referencedAssets[$parcel$i], $parcel$bundleWrapper);
-  }
-})()`);
+const REGISTER_TEMPLATE = template.statements<{|
+  REFERENCED_IDS: ArrayExpression,
+  STATEMENTS: Array<Statement>,
+|}>(`
+function $parcel$bundleWrapper() {
+  if ($parcel$bundleWrapper._executed) return;
+  STATEMENTS;
+  $parcel$bundleWrapper._executed = true;
+}
+var $parcel$referencedAssets = REFERENCED_IDS;
+for (var $parcel$i = 0; $parcel$i < $parcel$referencedAssets.length; $parcel$i++) {
+  parcelRequire.registerBundle($parcel$referencedAssets[$parcel$i], $parcel$bundleWrapper);
+}
+`);
 const WRAPPER_TEMPLATE = template.statement<
   {|STATEMENTS: Array<Statement>|},
   ExpressionStatement,
 >('(function () { STATEMENTS; })()');
+
+const PRELUDE_PATH = path.join(__dirname, 'prelude.js');
+const PRELUDE = parse(
+  fs.readFileSync(path.join(__dirname, 'prelude.js'), 'utf8'),
+  {sourceFilename: PRELUDE_PATH},
+);
+
+function isEntry(
+  bundle: NamedBundle,
+  bundleGraph: BundleGraph<NamedBundle>,
+): boolean {
+  return (
+    !bundleGraph.hasParentBundleOfType(bundle, 'js') ||
+    bundle.env.isIsolated() ||
+    !!bundle.getMainEntry()?.isIsolated
+  );
+}
 
 export function generate({
   bundleGraph,
@@ -65,24 +82,26 @@ export function generate({
 
   let isAsync = !isEntry(bundle, bundleGraph);
 
-  // Wrap async bundles in a closure and register with parcelRequire so they are executed
-  // at the right time (after other bundle dependencies are loaded).
   let statements = ast.program.body;
   if (bundle.env.outputFormat === 'global') {
-    statements = isAsync
-      ? [
-          REGISTER_TEMPLATE({
-            STATEMENTS: statements,
-            REFERENCED_IDS: t.arrayExpression(
-              [mainEntry, ...referencedAssets]
-                .filter(Boolean)
-                .map(asset =>
-                  t.stringLiteral(bundleGraph.getAssetPublicId(asset)),
-                ),
-            ),
-          }),
-        ]
-      : [WRAPPER_TEMPLATE({STATEMENTS: statements})];
+    // Wrap async bundles in a closure and register with parcelRequire so they are executed
+    // at the right time (after other bundle dependencies are loaded).
+    if (isAsync) {
+      statements = REGISTER_TEMPLATE({
+        STATEMENTS: statements,
+        REFERENCED_IDS: t.arrayExpression(
+          [mainEntry, ...referencedAssets]
+            .filter(Boolean)
+            .map(asset => t.stringLiteral(bundleGraph.getAssetPublicId(asset))),
+        ),
+      });
+    }
+
+    if (needsPrelude(bundle, bundleGraph)) {
+      statements.unshift(...PRELUDE.program.body);
+    }
+
+    statements = [WRAPPER_TEMPLATE({STATEMENTS: statements})];
   }
 
   ast = t.file(
