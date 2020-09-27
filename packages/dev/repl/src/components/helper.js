@@ -4,7 +4,10 @@ import {useState, useEffect} from 'preact/hooks';
 import {memo} from 'preact/compat';
 import {ctrlKey} from '../utils';
 import renderGraph from '../graphs/index.js';
+// import fs from 'fs';
 /* eslint-disable react/jsx-no-bind */
+
+// const commit = fs.readFileSync(__dirname + '../../../commit', 'utf8');
 
 export function ParcelError({error}) {
   return (
@@ -57,6 +60,11 @@ export function Notes() {
           <code>require</code> calls aren&apos;t statically analyzeable
         </li>
       </ul>
+      {/* <br />
+      Based on commit:{' '}
+      <a href={`https://github.com/parcel-bundler/parcel/tree/${commit}`}>
+        {commit}
+      </a> */}
     </Box>
   );
 }

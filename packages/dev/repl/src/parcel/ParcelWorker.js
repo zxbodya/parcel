@@ -8,35 +8,39 @@ import Parcel from '@parcel/core';
 // import {NodePackageManager} from '@parcel/package-manager';
 // import {prettifyTime} from '@parcel/utils';
 import fs from '../../fs.js';
+import configRepl from '@parcel/config-repl';
 
 import workerFarm from '../../workerFarm.js';
 import {generatePackageJson, nthIndex} from '../utils/';
-import defaultConfig from '@parcel/config-repl';
+
 // TODO
 // import path from 'path';
-function dirname(path) {
-  if (path.length === 0) return '.';
-  var code = path.charCodeAt(0);
-  var hasRoot = code === 47; /*/*/
-  var end = -1;
-  var matchedSlash = true;
-  for (var i = path.length - 1; i >= 1; --i) {
-    code = path.charCodeAt(i);
-    if (code === 47 /*/*/) {
-      if (!matchedSlash) {
-        end = i;
-        break;
+const path = {
+  dirname: function(path) {
+    if (path.length === 0) return '.';
+    var code = path.charCodeAt(0);
+    var hasRoot = code === 47; /*/*/
+    var end = -1;
+    var matchedSlash = true;
+    for (var i = path.length - 1; i >= 1; --i) {
+      code = path.charCodeAt(i);
+      if (code === 47 /*/*/) {
+        if (!matchedSlash) {
+          end = i;
+          break;
+        }
+      } else {
+        // We saw the first non-path separator
+        matchedSlash = false;
       }
-    } else {
-      // We saw the first non-path separator
-      matchedSlash = false;
     }
-  }
 
-  if (end === -1) return hasRoot ? '/' : '.';
-  if (hasRoot && end === 1) return '//';
-  return path.slice(0, end);
-}
+    if (end === -1) return hasRoot ? '/' : '.';
+    if (hasRoot && end === 1) return '//';
+    return path.slice(0, end);
+  },
+};
+
 export type BundleOutput =
   | {|
       type: 'success',
@@ -73,6 +77,14 @@ const PathUtils = {
     return v.replace(PathUtils.APP_REGEX, '');
   },
 };
+
+function removeTrailingNewline(text: string): string {
+  if (text[text.length - 1] === '\n') {
+    return text.slice(0, -1);
+  } else {
+    return text;
+  }
+}
 
 async function convertDiagnostics(inputFS, diagnostics: Array<Diagnostic>) {
   let parsedDiagnostics = new Map<string, Array<CodeMirrorDiagnostic>>();
@@ -179,10 +191,7 @@ async function bundle(
     logLevel: 'verbose',
     patchConsole: false,
     workerFarm,
-    defaultConfig: {
-      ...defaultConfig,
-      filePath: '<noop>',
-    },
+    defaultConfig: '@parcel/config-repl',
     inputFS: fs,
     outputFS: fs,
     minify: options.minify,
@@ -200,12 +209,16 @@ async function bundle(
     PathUtils.addAppDir('package.json'),
     generatePackageJson(options),
   );
+  await fs.writeFile(
+    PathUtils.addAppDir('.parcelrc'),
+    JSON.stringify(configRepl, null, 2),
+  );
   await fs.writeFile(PathUtils.addAppDir('yarn.lock'), '');
 
   await fs.mkdirp(PathUtils.addAppDir('src'));
   for (let {name, content} of assets) {
     let p = PathUtils.addAppDir(name);
-    await fs.mkdirp(dirname(p));
+    await fs.mkdirp(path.dirname(p));
     await fs.writeFile(p, content);
   }
 
@@ -218,7 +231,7 @@ async function bundle(
       for (let {filePath, size, time} of output.success.bundles) {
         bundleContents.push({
           name: PathUtils.removeAppDir(filePath),
-          content: await fs.readFile(filePath, 'utf8'),
+          content: removeTrailingNewline(await fs.readFile(filePath, 'utf8')),
           size,
           time,
         });
@@ -238,10 +251,12 @@ async function bundle(
       };
     }
   } catch (error) {
+    console.error(error);
     return {
       type: 'failure',
       error: error,
-      diagnostics: await convertDiagnostics(fs, error.diagnostics),
+      diagnostics:
+        error.diagnostics && (await convertDiagnostics(fs, error.diagnostics)),
     };
   }
 }

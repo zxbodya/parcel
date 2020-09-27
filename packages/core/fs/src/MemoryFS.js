@@ -914,7 +914,7 @@ function makeShared(contents: Buffer | string): Buffer {
   if (typeof contents === 'string') {
     buffer.write(contents);
   } else {
-    contents.copy(buffer);
+    buffer.set(contents);
   }
 
   return buffer;

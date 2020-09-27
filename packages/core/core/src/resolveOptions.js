@@ -6,7 +6,7 @@ import type {ParcelOptions} from './types';
 import path from 'path';
 import nullthrows from 'nullthrows';
 import Cache from '@parcel/cache';
-import {NodeFS} from '@parcel/fs';
+// import {NodeFS} from '@parcel/fs';
 import {NodePackageManager} from '@parcel/package-manager';
 import {getRootDir, md5FromString, resolveConfig} from '@parcel/utils';
 import loadDotEnv from './loadDotEnv';
@@ -25,10 +25,12 @@ function generateInstanceId(entries: Array<FilePath>): string {
 export default async function resolveOptions(
   initialOptions: InitialParcelOptions,
 ): Promise<ParcelOptions> {
-  // $FlowFixMe
-  let inputFS = process.browser
-    ? nullthrows(initialOptions.inputFS)
-    : initialOptions.inputFS || new NodeFS();
+  let inputFS = nullthrows(
+    // $FlowFixMe
+    process.browser
+      ? initialOptions.inputFS
+      : initialOptions.inputFS /*  || new NodeFS() */,
+  );
   let outputFS = initialOptions.outputFS || inputFS; // || new NodeFS();
 
   let inputCwd = inputFS.cwd();

@@ -10,7 +10,8 @@
     "copy-wasm": "yarn copy-wasm:dot-svg && yarn copy-wasm:source-map",
     "copy-wasm:dot-svg": "cp $(node -p 'require.resolve(\"@mischnic/dot-svg/dist/index-browser.wasm\")') dist/",
     "copy-wasm:source-map": "cp $(node -p 'require.resolve(\"@parcel/source-map/wasm-browser/source-map.wasm\")') dist/",
-    "serve": "serve dist/ -c ../serve.json"
+    "serve": "serve dist/ -c ../serve.json",
+    "prebuild": "node write-commit.js"
   },
   "dependencies": {
     "@codemirror/next": "^0.5.5",
