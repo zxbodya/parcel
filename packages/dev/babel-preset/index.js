@@ -28,6 +28,7 @@ module.exports = api => {
       ],
       require('@babel/preset-react'),
       require('@babel/preset-flow'),
+      require('@babel/preset-typescript'),
     ],
     plugins: [
       [
