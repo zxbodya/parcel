@@ -10,7 +10,7 @@ module.exports = () => ({
       },
     ],
     require('@babel/preset-react'),
-    require('@babel/preset-flow'),
+    require('@babel/preset-typescript'),
   ],
   plugins: [
     [
