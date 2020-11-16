@@ -23,7 +23,7 @@ export default new Packager({
     logger,
     options,
   }) {
-    let queue = new PromiseQueue({
+    let queue = new PromiseQueue<[any, string, Buffer]>({
       maxConcurrent: 32,
     });
     let hoistedImports = [];

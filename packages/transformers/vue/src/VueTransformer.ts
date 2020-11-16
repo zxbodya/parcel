@@ -32,7 +32,7 @@ export default new Transformer({
       ],
       {packageKey: 'vue'},
     );
-    let contents = {};
+    let contents: any = {};
     if (conf) {
       config.invalidateOnStartup();
       contents = conf.contents;

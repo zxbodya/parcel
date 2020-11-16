@@ -11,15 +11,15 @@ import type {Asset, Dependency, ParcelOptions} from '../types';
 import nullthrows from 'nullthrows';
 import {fromInternalSourceLocation, toInternalSourceLocation} from '../utils';
 
-const EMPTY_ITERABLE = {
+const EMPTY_ITERABLE: Iterable<any> = {
   [Symbol.iterator]() {
     return EMPTY_ITERATOR;
   },
 };
 
-const EMPTY_ITERATOR = {
+const EMPTY_ITERATOR: Iterator<any> = {
   next() {
-    return {done: true};
+    return {done: true, value: undefined};
   },
 };
 
@@ -78,8 +78,8 @@ export class AssetSymbols implements IAssetSymbols {
     return this.#value.symbols?.keys() ?? [];
   }
   // @@iterator(): Iterator<[ISymbol, {|local: ISymbol, loc: ?SourceLocation, meta?: ?Meta|}]> { return ({}: any); }
-  // $FlowFixMe
-  [Symbol.iterator]() {
+  // @ts-ignore
+  [Symbol.iterator](): Iterator<[ISymbol, {local: ISymbol, loc: SourceLocation | null | undefined, meta?: Meta | null | undefined}]> {
     return this.#value.symbols
       ? this.#value.symbols[Symbol.iterator]()
       : EMPTY_ITERATOR;
@@ -152,8 +152,7 @@ export class MutableAssetSymbols implements IMutableAssetSymbols {
     return this.#value.symbols.keys();
   }
   // @@iterator(): Iterator<[ISymbol, {|local: ISymbol, loc: ?SourceLocation, meta?: ?Meta|}]> { return ({}: any); }
-  // $FlowFixMe
-  [Symbol.iterator]() {
+  [Symbol.iterator](): Iterator<[ISymbol, {local: ISymbol, loc: SourceLocation | null | undefined, meta?: Meta | null | undefined}]> {
     return this.#value.symbols
       ? this.#value.symbols[Symbol.iterator]()
       : EMPTY_ITERATOR;
@@ -249,13 +248,13 @@ export class MutableDependencySymbols implements IMutableDependencySymbols {
   }
 
   exportSymbols(): Iterable<ISymbol> {
-    // $FlowFixMe
+    // @ts-ignore
     return this.#value.symbols ? this.#value.symbols.keys() : EMPTY_ITERABLE;
   }
 
   // @@iterator(): Iterator<[ISymbol, {|local: ISymbol, loc: ?SourceLocation, isWeak: boolean, meta?: ?Meta|}]> { return ({}: any); }
-  // $FlowFixMe
-  [Symbol.iterator]() {
+  // @ts-ignore
+  [Symbol.iterator](): Iterator<[ISymbol, {local: ISymbol, loc: SourceLocation | null | undefined, meta?: Meta | null | undefined}]> {
     return this.#value.symbols
       ? this.#value.symbols[Symbol.iterator]()
       : EMPTY_ITERATOR;

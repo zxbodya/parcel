@@ -14,7 +14,7 @@ export async function load({config}: {config: Config}): Promise<ConfigResult> {
     },
   );
 
-  let configContents = {};
+  let configContents: any = {};
   if (configFile != null) {
     configContents = configFile.contents;
 

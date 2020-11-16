@@ -2,11 +2,12 @@ import type {JSONObject} from '@parcel/types';
 
 import logger from '@parcel/logger';
 import {Transform} from 'stream';
+import type {TransformOptions} from 'stream';
 
 // Transforms chunks of json strings to parsed objects.
 // Pair with split2 to parse stream of newline-delimited text.
 export default class JSONParseStream extends Transform {
-  constructor(options: unknown) {
+  constructor(options: TransformOptions) {
     super({...options, objectMode: true});
   }
 

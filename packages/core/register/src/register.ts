@@ -12,7 +12,7 @@ import Parcel, {INTERNAL_RESOLVE, INTERNAL_TRANSFORM} from '@parcel/core';
 
 import syncPromise from './syncPromise';
 
-let hooks = {};
+let hooks: any = {};
 let lastDisposable;
 let packageManager = new NodePackageManager(new NodeFS(), '/');
 let defaultConfig = {
@@ -82,13 +82,13 @@ function register(inputOpts?: InitialParcelOptions): IDisposable {
     return '';
   }
 
-  let hookFunction = (...args) => syncPromise(fileProcessor(...args));
+  let hookFunction = (code, filePath) => syncPromise(fileProcessor(code, filePath));
 
   function resolveFile(currFile, targetFile) {
     try {
       isProcessing = true;
 
-      let resolved = syncPromise(
+      let resolved = syncPromise<string>(
         // $FlowFixMe
         parcel[INTERNAL_RESOLVE]({
           specifier: targetFile,

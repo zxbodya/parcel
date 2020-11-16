@@ -67,7 +67,7 @@ export default class Profiler {
 
   sendCommand(
     method: string,
-    params: unknown,
+    params?: unknown,
   ): Promise<{
     profile: Profile;
   }> {

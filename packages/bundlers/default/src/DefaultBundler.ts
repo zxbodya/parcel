@@ -59,7 +59,7 @@ export default new Bundler({
     > = new DefaultMap(() => []);
 
     // Step 1: create bundles for each of the explicit code split points.
-    bundleGraph.traverse({
+    bundleGraph.traverse<any>({
       enter: (node, context, actions) => {
         if (node.type !== 'dependency') {
           return {

@@ -60,6 +60,7 @@ export function createDependency(
         (opts.priority ?? 'sync'),
     );
 
+  // @ts-expect-error todo(flow->ts) it does not really match
   return {
     ...opts,
     resolveFrom: toProjectPath(projectRoot, opts.resolveFrom),

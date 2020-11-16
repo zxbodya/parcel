@@ -1,1 +1,1 @@
-exports.local = process.env.NODE_ENV;
+export let local = process.env.NODE_ENV;

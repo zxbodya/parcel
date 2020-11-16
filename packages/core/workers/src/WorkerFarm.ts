@@ -11,7 +11,7 @@ import type {HandleFunction} from './Handle';
 
 import invariant from 'assert';
 import nullthrows from 'nullthrows';
-import EventEmitter from 'events';
+import {EventEmitter} from 'events';
 import {
   deserialize,
   prepareForSerialization,

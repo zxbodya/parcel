@@ -3,7 +3,7 @@ import type {BackendType, WorkerImpl, WorkerMessage} from './types';
 import type {SharedReference} from './WorkerFarm';
 
 import nullthrows from 'nullthrows';
-import EventEmitter from 'events';
+import {EventEmitter} from 'events';
 import ThrowableDiagnostic from '@parcel/diagnostic';
 import {getWorkerBackend} from './backend';
 

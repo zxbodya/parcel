@@ -30,7 +30,7 @@ async function closeSocket(ws: WebSocket) {
   });
 }
 // flowlint-next-line unclear-type:off
-async function openSocket(uri: string, opts: any) {
+async function openSocket(uri: string, opts?: any) {
   let ws = new WebSocket(uri, opts);
 
   await new Promise((resolve, reject) => {

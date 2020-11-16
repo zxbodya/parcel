@@ -37,9 +37,7 @@ import ParcelConfig from '../ParcelConfig';
 import {createBuildCache} from '../buildCache';
 import {toProjectPath} from '../projectPath';
 
-type ConfigMap<K, V> = {
-  [k in K]: V;
-};
+type ConfigMap<K extends keyof any, V> = Record<K,V>;
 
 export type ConfigAndCachePath = {
   config: ProcessedParcelConfig;

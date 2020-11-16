@@ -345,7 +345,7 @@ export class AssetGraphBuilder {
       // ----------------------------------------------------------
       for (let dep of outgoingDeps) {
         let depUsedSymbolsDownOld = dep.usedSymbolsDown;
-        let depUsedSymbolsDown = new Set();
+        let depUsedSymbolsDown = new Set<string>();
         dep.usedSymbolsDown = depUsedSymbolsDown;
         if (
           assetNode.value.sideEffects ||

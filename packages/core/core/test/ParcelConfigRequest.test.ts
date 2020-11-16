@@ -101,6 +101,7 @@ describe('ParcelConfigRequest', () => {
           // $FlowExpectedError[incompatible-call]
           {
             filePath: '.parcelrc',
+            // @ts-expect-error
             resolvers: '123',
           },
           '.parcelrc',
@@ -113,7 +114,7 @@ describe('ParcelConfigRequest', () => {
         validateConfigFile(
           {
             filePath: '.parcelrc',
-            // $FlowExpectedError[incompatible-call]
+            // @ts-expect-error
             resolvers: [1, '123', 5],
           },
           '.parcelrc',
@@ -158,7 +159,7 @@ describe('ParcelConfigRequest', () => {
         validateConfigFile(
           {
             filePath: '.parcelrc',
-            // $FlowExpectedError[incompatible-call]
+            // @ts-expect-error
             transformers: ['parcel-transformer-test', '...'],
           },
           '.parcelrc',
@@ -187,6 +188,7 @@ describe('ParcelConfigRequest', () => {
           // $FlowExpectedError[incompatible-call]
           {
             filePath: '.parcelrc',
+            // @ts-expect-error
             extends: 2,
           },
           '.parcelrc',
@@ -197,7 +199,7 @@ describe('ParcelConfigRequest', () => {
         validateConfigFile(
           {
             filePath: '.parcelrc',
-            // $FlowExpectedError[incompatible-call]
+            // @ts-expect-error
             extends: [2, 7],
           },
           '.parcelrc',

@@ -102,7 +102,7 @@ export default class CommittedAsset {
       })();
     }
 
-    return this.mapBuffer ?? Promise.resolve();
+    return this.mapBuffer ?? Promise.resolve(undefined);
   }
 
   getMap(): Promise<SourceMap | undefined | null> {

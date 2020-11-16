@@ -10,6 +10,7 @@ import commander from 'commander';
 import path from 'path';
 import getPort from 'get-port';
 import {version} from '../package.json';
+import {HTTPSOptions, InitialServerOptions} from '@parcel/types';
 
 require('v8-compile-cache');
 
@@ -392,7 +393,7 @@ async function normalizeOptions(
   // available in JS configs and plugins.
   process.env.NODE_ENV = nodeEnv;
 
-  let https = !!command.https;
+  let https: HTTPSOptions | boolean = !!command.https;
   if (command.cert && command.key) {
     https = {
       cert: command.cert,
@@ -400,7 +401,7 @@ async function normalizeOptions(
     };
   }
 
-  let serveOptions = false;
+  let serveOptions: InitialServerOptions | false = false;
   let {host} = command;
 
   // Ensure port is valid and available

@@ -9,8 +9,7 @@ import type {
 export type FileOptions = {
   mode?: number;
 };
-export type ReaddirOptions =
-  | {
+export type ReaddirOptions = {
       withFileTypes?: false;
     }
   | {

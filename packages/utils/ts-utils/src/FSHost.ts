@@ -1,6 +1,6 @@
 import type {FileSystem} from '@parcel/fs';
 import type {FilePath} from '@parcel/types';
-type TypeScriptModule = typeof import('typescript').default;
+type TypeScriptModule = typeof import('typescript');
 import path from 'path';
 
 export class FSHost {
@@ -24,7 +24,7 @@ export class FSHost {
     }
   }
 
-  readFile(filePath: FilePath): void | string {
+  readFile(filePath: FilePath): string {
     try {
       return this.fs.readFileSync(filePath, 'utf8');
     } catch (err) {

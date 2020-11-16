@@ -24,13 +24,15 @@ export type ConfigResultWithFilePath<T> = {
 export type EnvMap = typeof process.env;
 
 export type JSONValue =
-  | null // ? Is this okay?
-  | void
+  | null
+  | undefined // ? Is this okay?
   | boolean
   | number
   | string
   | Array<JSONValue>
-  | JSONObject;
+  | JSONObject
+  // todo(flow->ts) fixing type errors. should this be just "unknown"?
+  | any;
 
 /** A JSON object (as in "map") */
 export type JSONObject = {
@@ -1159,7 +1161,7 @@ export type GraphTraversalCallback<TNode, TContext> = (
   node: TNode,
   context: TContext | undefined | null,
   actions: TraversalActions,
-) => TContext | undefined | null;
+) => TContext | undefined | null | void;
 
 /**
  * @section bundler
@@ -1264,7 +1266,7 @@ export type SymbolResolution = {
   /** under which name the symbol is exported */
   readonly exportSymbol: Symbol | string;
   /** The identifier under which the symbol can be referenced. */
-  readonly symbol: void | null | false | Symbol;
+  readonly symbol: undefined | null | false | Symbol;
   /** The location of the specifier that lead to this result. */
   readonly loc: SourceLocation | undefined | null;
 };

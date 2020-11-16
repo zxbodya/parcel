@@ -1423,7 +1423,7 @@ export default class BundleGraph {
   ): Array<Bundle> {
     let recursive = opts?.recursive ?? true;
     let includeInline = opts?.includeInline ?? false;
-    let referencedBundles = new Set();
+    let referencedBundles = new Set<Bundle>();
     this._graph.dfs({
       visit: (nodeId, _, actions) => {
         let node = nullthrows(this._graph.getNode(nodeId));

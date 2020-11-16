@@ -20,7 +20,7 @@ export const SOURCEMAP_EXTENSIONS: Set<string> = new Set<string>([
 
 export function matchSourceMappingURL(
   contents: string,
-): null | RegExp$matchResult {
+): null | RegExpMatchArray {
   return contents.match(SOURCEMAP_RE);
 }
 

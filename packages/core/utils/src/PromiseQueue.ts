@@ -58,7 +58,7 @@ export default class PromiseQueue<T> {
       return Promise.resolve([]);
     }
 
-    let {deferred, promise} = makeDeferredWithPromise();
+    let {deferred, promise} = makeDeferredWithPromise<Array<T>>();
     this._deferred = deferred;
     this._runPromise = promise;
 

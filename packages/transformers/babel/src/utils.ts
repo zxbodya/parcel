@@ -49,7 +49,7 @@ export function enginesToBabelTargets(env: Environment): BabelTargets {
   // This should not be confused with Parcel's own targets.
   // Unlike Parcel's engines, @babel/preset-env expects to work with minimum
   // versions, not semver ranges, of its targets.
-  let targets = {};
+  let targets: BabelTargets = {};
   for (let engineName of Object.keys(env.engines)) {
     let engineValue = env.engines[engineName];
 

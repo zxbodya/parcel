@@ -630,11 +630,11 @@ export class RequestGraph extends ContentGraph<
         let node = nullthrows(this.getNode(nodeId));
         switch (node.type) {
           case 'file':
-            return {type: 'file', filePath: node.value.filePath};
+            return {type: 'file' as const, filePath: node.value.filePath};
           case 'env':
-            return {type: 'env', key: node.value.key};
+            return {type: 'env' as const, key: node.value.key};
           case 'option':
-            return {type: 'option', key: node.value.key};
+            return {type: 'option' as const, key: node.value.key};
         }
       })
       .filter(Boolean);

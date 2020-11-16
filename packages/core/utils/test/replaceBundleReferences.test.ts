@@ -9,7 +9,7 @@ describe('replace bundle references', () => {
     let fromBundle: NamedBundle = {
       filePath: '/user/dist/reformat.html',
       name: 'reformat.html',
-      // $FlowFixMe
+      // @ts-expect-error
       target: {
         distDir: '/user/dist',
         publicUrl: '/',
@@ -21,14 +21,14 @@ describe('replace bundle references', () => {
       filePath:
         '/user/dist/image.HASH_REF_87f9d66c16c2216ccc7e5664cf089305.webp',
       name: 'image.HASH_REF_87f9d66c16c2216ccc7e5664cf089305.webp',
-      // $FlowFixMe
+      // @ts-expect-error
       target: {
         distDir: '/user/dist',
         publicUrl: '/',
       },
     };
 
-    // $FlowFixMe
+    // @ts-expect-error
     let dependency: Dependency = {
       id: '074b36596e3147e900a8ad17ceb5c90b',
       specifier: 'url:./image.jpg?as=webp',
@@ -54,7 +54,7 @@ describe('replace bundle references', () => {
     let fromBundle: NamedBundle = {
       filePath: '/user/dist/reformat.html',
       name: 'reformat.html',
-      // $FlowFixMe
+      // @ts-expect-error
       target: {
         distDir: '/user/dist',
         publicUrl: '/',
@@ -66,14 +66,14 @@ describe('replace bundle references', () => {
       filePath:
         '/user/dist/image.HASH_REF_87f9d66c16c2216ccc7e5664cf089305.webp',
       name: 'image.HASH_REF_87f9d66c16c2216ccc7e5664cf089305.webp',
-      // $FlowFixMe
+      // @ts-expect-error
       target: {
         distDir: '/user/dist',
         publicUrl: '/',
       },
     };
 
-    // $FlowFixMe
+    // @ts-expect-error
     let dependency: Dependency = {
       id: '074b36596e3147e900a8ad17ceb5c90b',
       specifier: 'url:./image.jpg?as=webp',
@@ -99,7 +99,7 @@ describe('replace bundle references', () => {
     let fromBundle: NamedBundle = {
       filePath: '/user/dist/reformat.html',
       name: 'reformat.html',
-      // $FlowFixMe
+      // @ts-expect-error
       target: {
         distDir: '/user/dist',
         publicUrl: 'https://test.com/static',
@@ -111,14 +111,14 @@ describe('replace bundle references', () => {
       filePath:
         '/user/dist/image.HASH_REF_87f9d66c16c2216ccc7e5664cf089305.webp',
       name: 'image.HASH_REF_87f9d66c16c2216ccc7e5664cf089305.webp',
-      // $FlowFixMe
+      // @ts-expect-error
       target: {
         distDir: '/user/dist',
         publicUrl: 'https://test.com/static',
       },
     };
 
-    // $FlowFixMe
+    // @ts-expect-error
     let dependency: Dependency = {
       id: '074b36596e314797845a8ad17ceb5c9b',
       specifier: './image.jpg',
@@ -144,7 +144,7 @@ describe('replace bundle references', () => {
     let fromBundle: NamedBundle = {
       filePath: '/user/dist/reformat.html',
       name: 'reformat.html',
-      // $FlowFixMe
+      // @ts-expect-error
       target: {
         distDir: '/user/dist',
         publicUrl: 'https://test.com/static',
@@ -156,14 +156,14 @@ describe('replace bundle references', () => {
       filePath:
         '/user/dist/assets/image.HASH_REF_87f9d66c16c2216ccc7e5664cf089305.webp',
       name: 'image.HASH_REF_87f9d66c16c2216ccc7e5664cf089305.webp',
-      // $FlowFixMe
+      // @ts-expect-error
       target: {
         distDir: '/user/dist/assets',
         publicUrl: 'https://test.com/static',
       },
     };
 
-    // $FlowFixMe
+    // @ts-expect-error
     let dependency: Dependency = {
       id: '074b36596e3147e900a8ad17ceb5c90b',
       specifier: 'url:./image.jpg?as=webp',

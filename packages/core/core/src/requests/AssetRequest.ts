@@ -160,6 +160,7 @@ async function run({input, api, farm, invalidateReason, options}: RunInput) {
         api.invalidateOnOptionChange(invalidation.key);
         break;
       default:
+        // @ts-expect-error
         throw new Error(`Unknown invalidation type: ${invalidation.type}`);
     }
   }
