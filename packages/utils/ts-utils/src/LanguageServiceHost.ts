@@ -1,6 +1,6 @@
 import type {FileSystem} from '@parcel/fs';
 import type {FilePath} from '@parcel/types';
-type TypeScriptModule = typeof import('typescript').default;
+type TypeScriptModule = typeof import('typescript');
 import type {
   CompilerOptions,
   LanguageServiceHost as ILanguageServiceHost,

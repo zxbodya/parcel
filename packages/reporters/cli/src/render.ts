@@ -16,8 +16,8 @@ export const isTTY: any | boolean | true =
   // $FlowFixMe
   process.env.NODE_ENV !== 'test' && process.stdout.isTTY;
 
-let stdout = process.stdout;
-let stderr = process.stderr;
+let stdout:Writable = process.stdout;
+let stderr:Writable = process.stderr;
 
 // Some state so we clear the output properly
 let lineCount = 0;

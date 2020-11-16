@@ -1,4 +1,4 @@
-type TypeScriptModule = typeof import('typescript').default;
+type TypeScriptModule = typeof import('typescript');
 
 export function getExportedName(
   ts: TypeScriptModule,

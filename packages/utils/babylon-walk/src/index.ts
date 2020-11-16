@@ -70,7 +70,7 @@ export function ancestor<T>(
 
     if (enter) {
       for (let visitor of enter) {
-        // $FlowFixMe
+        // @ts-expect-error todo(flow->ts)
         visitor(node, state || ancestors, ancestors);
       }
     }
@@ -89,7 +89,7 @@ export function ancestor<T>(
 
     if (exit) {
       for (let visitor of exit) {
-        // $FlowFixMe
+        // @ts-expect-error todo(flow->ts)
         visitor(node, state || ancestors, ancestors);
       }
     }

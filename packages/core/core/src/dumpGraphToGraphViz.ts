@@ -28,7 +28,7 @@ const TYPE_COLORS = {
 
 export default async function dumpGraphToGraphViz(
   // $FlowFixMe
-  graph: Graph<AssetGraphNode> | Graph<BundleGraphNode>,
+  graph: Graph<AssetGraphNode|BundleGraphNode>,
   name: string,
 ): Promise<void> {
   if (

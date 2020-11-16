@@ -54,7 +54,7 @@ export default new Bundler({
     let bundlesByEntryAsset: Map<Asset, Bundle> = new Map();
 
     // Step 1: create bundles for each of the explicit code split points.
-    bundleGraph.traverse({
+    bundleGraph.traverse<any>({
       enter: (node, context, actions) => {
         if (node.type !== 'dependency') {
           return {

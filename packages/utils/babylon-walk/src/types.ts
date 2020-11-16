@@ -322,6 +322,7 @@ export type Visitors<S> = {
 
 export type SimpleVisitors<F> = {
   shouldSkip?: (a: t.Node) => boolean;
+} & {
   [x: string]:
     | F
     | {
@@ -332,6 +333,7 @@ export type SimpleVisitors<F> = {
 
 export type VisitorsExploded<F> = {
   shouldSkip?: (a: t.Node) => boolean;
+} & {
   [x: string]: {
     enter?: Array<F>;
     exit?: Array<F>;

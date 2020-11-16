@@ -12,7 +12,7 @@ import {registerSerializableClass} from '@parcel/core';
 import packageJSON from '../package.json';
 import WorkerFarm, {Handle} from '@parcel/workers';
 import nullthrows from 'nullthrows';
-import EventEmitter from 'events';
+import {EventEmitter} from 'events';
 import {findAncestorFile, findNodeModule, findFirstFile} from './find';
 
 const instances: Map<number, MemoryFS> = new Map();
@@ -48,7 +48,7 @@ export class MemoryFS implements FileSystem {
   farm: WorkerFarm;
   _cwd: FilePath;
   _eventQueue: Array<Event>;
-  _watcherTimer: TimeoutID;
+  _watcherTimer: any;
   _numWorkerInstances: number = 0;
   _workerHandles: Array<Handle>;
   _workerRegisterResolves: Array<ResolveFunction> = [];

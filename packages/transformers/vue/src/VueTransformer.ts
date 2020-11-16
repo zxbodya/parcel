@@ -22,7 +22,7 @@ export default new Transformer({
       ['.vuerc', '.vuerc.json', '.vuerc.js', 'vue.config.js'],
       {packageKey: 'vue'},
     );
-    let contents = {};
+    let contents: any = {};
     if (conf) {
       config.invalidateOnStartup();
       contents = conf.contents;

@@ -206,8 +206,8 @@ export let scopeVisitor: Visitors<ScopeState> = {
 
     // Create new scope
     let type = t.isArrowFunctionExpression(node)
-      ? 'arrow_function'
-      : 'function';
+      ? 'arrow_function' as const
+      : 'function' as const;
     state.scope = new Scope(type, state.scope);
 
     // Add inner bindings to inner scope

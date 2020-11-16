@@ -12,7 +12,7 @@ export type GraphOpts<TNode, TEdgeType extends string | null = null> = {
   nextNodeId?: number | null;
 };
 
-export const ALL_EDGE_TYPES = '@@all_edge_types';
+export const ALL_EDGE_TYPES = '@@all_edge_types' as const;
 
 export default class Graph<TNode, TEdgeType extends string | null = null> {
   nodes: Map<NodeId, TNode>;

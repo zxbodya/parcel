@@ -11,7 +11,7 @@ export async function load({config}: {config: Config}): Promise<ConfigResult> {
     packageKey: 'less',
   });
 
-  let configContents = {};
+  let configContents: any = {};
   if (configFile != null) {
     configContents = configFile.contents;
 

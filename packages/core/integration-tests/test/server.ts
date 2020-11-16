@@ -21,7 +21,7 @@ const config = path.join(
   './integration/custom-configs/.parcelrc-dev-server',
 );
 
-function get(file, port, client = http) {
+function get(file, port, client: any = http) {
   return new Promise((resolve, reject) => {
     // $FlowFixMe
     client.get(

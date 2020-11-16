@@ -34,7 +34,7 @@ if (MessageChannel) {
         root,
         window,
         subscription,
-        randoms = {};
+        randoms:any = {};
 
       beforeEach(async () => {
         ({b, root, window, subscription, randoms} = await setup(
@@ -119,7 +119,7 @@ if (MessageChannel) {
         root,
         window,
         subscription,
-        randoms = {};
+        randoms: any = {};
 
       beforeEach(async () => {
         ({b, root, window, subscription, randoms} = await setup(

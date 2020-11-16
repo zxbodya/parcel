@@ -1,6 +1,6 @@
 import type {FileSystem} from '@parcel/fs';
 import type {FilePath} from '@parcel/types';
-type TypeScriptModule = typeof import('typescript').default;
+type TypeScriptModule = typeof import('typescript');
 import type {ParseConfigHost as IParseConfigHost} from 'typescript'; // eslint-disable-line import/no-extraneous-dependencies
 import {FSHost} from './FSHost';
 
@@ -14,7 +14,7 @@ export class ParseConfigHost extends FSHost implements IParseConfigHost {
     this.useCaseSensitiveFileNames = ts.sys.useCaseSensitiveFileNames;
   }
 
-  readFile(filePath: FilePath): void | string {
+  readFile(filePath: FilePath): string {
     this.filesRead.add(filePath);
     return super.readFile(filePath);
   }

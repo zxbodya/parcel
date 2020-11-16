@@ -5,8 +5,19 @@ import {_setStdio} from '../src/render';
 import {inputFS, outputFS} from '@parcel/test-utils';
 import {NodePackageManager} from '@parcel/package-manager';
 import stripAnsi from 'strip-ansi';
+import type {PluginOptions} from '../../../core/types';
 
-const EMPTY_OPTIONS = {
+const EMPTY_OPTIONS: PluginOptions & {
+  // todo (flow->ts) should this properties be added to PluginOptions?
+  entries,
+  targets,
+  distDir
+  lockFile,
+  scopeHoist,
+  minify,
+  disableCache,
+  sourceMaps
+} = {
   cacheDir: '.parcel-cache',
   entries: [],
   logLevel: 'info',
@@ -69,7 +80,7 @@ describe('CLIReporter', () => {
   it('writes log, info, success, and verbose log messages to stdout', async () => {
     let options = {
       ...EMPTY_OPTIONS,
-      logLevel: 'verbose',
+      logLevel: 'verbose' as const,
     };
 
     await _report(

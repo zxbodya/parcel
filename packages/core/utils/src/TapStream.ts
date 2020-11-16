@@ -6,7 +6,7 @@ import {Transform} from 'stream';
  */
 export default class TapStream extends Transform {
   _tap: (a: Buffer) => unknown;
-  constructor(tap: (a: Buffer) => unknown, options: unknown) {
+  constructor(tap: (a: Buffer) => unknown, options?: any) {
     super({...options});
     this._tap = tap;
   }

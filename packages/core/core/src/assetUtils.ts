@@ -210,6 +210,7 @@ export function getInvalidationId(invalidation: RequestInvalidation): string {
     case 'option':
       return 'option:' + invalidation.key;
     default:
+      // @ts-expect-error
       throw new Error('Unknown invalidation type: ' + invalidation.type);
   }
 }
@@ -253,6 +254,7 @@ export async function getInvalidationHash(
           invalidation.key + ':' + hashFromOption(options[invalidation.key]);
         break;
       default:
+        // @ts-expect-error
         throw new Error('Unknown invalidation type: ' + invalidation.type);
     }
   }

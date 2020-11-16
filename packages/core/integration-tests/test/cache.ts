@@ -53,7 +53,7 @@ type UpdateFn = (
   | InitialParcelOptions
   | undefined
   | null
-  | Promise<InitialParcelOptions | undefined | null>;
+  | Promise<InitialParcelOptions | undefined | null | void>;
 
 type TestConfig = {
   entries?: Array<string>;
@@ -61,7 +61,7 @@ type TestConfig = {
   update: UpdateFn;
 } & InitialParcelOptions;
 
-async function testCache(update: UpdateFn | TestConfig, integration) {
+async function testCache(update: UpdateFn | TestConfig, integration?) {
   await overlayFS.rimraf(path.join(__dirname, '/input'));
   await ncp(
     path.join(__dirname, '/integration', integration ?? 'cache'),

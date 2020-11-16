@@ -1,7 +1,7 @@
 import type {BuildSuccessEvent, PluginOptions} from '@parcel/types';
 import type {Diagnostic} from '@parcel/diagnostic';
 import type {AnsiDiagnosticResult} from '@parcel/utils';
-import type {ServerError, HMRServerOptions} from './types.js.flow';
+import type {ServerError, HMRServerOptions} from './types';
 
 import WebSocket from 'ws';
 import invariant from 'assert';

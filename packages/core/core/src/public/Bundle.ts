@@ -60,9 +60,9 @@ export function bundleToInternalBundleGraph(bundle: IBundle): BundleGraph {
 let _private = {};
 
 export class Bundle implements IBundle {
-  #bundle /*: InternalBundle */;
-  #bundleGraph /*: BundleGraph */;
-  #options /*: ParcelOptions */;
+  #bundle: InternalBundle;
+  #bundleGraph: BundleGraph;
+  #options: ParcelOptions;
 
   constructor(
     sentinel: unknown,
@@ -195,9 +195,9 @@ export class Bundle implements IBundle {
 }
 
 export class NamedBundle extends Bundle implements INamedBundle {
-  #bundle /*: InternalBundle */;
-  #bundleGraph /*: BundleGraph */;
-  #options /*: ParcelOptions */;
+  #bundle: InternalBundle;
+  #bundleGraph: BundleGraph;
+  #options: ParcelOptions;
 
   constructor(
     sentinel: unknown,

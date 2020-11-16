@@ -55,7 +55,7 @@ function traverseWalk<T>(
   visitors: VisitorsExploded<(b: Path, a: T) => void>,
   state: T,
   node: Node,
-  parent?: Node | null,
+  parent: Node | null | undefined,
   listkey,
   key,
 ) {

@@ -1,6 +1,7 @@
 import type {PackageInstaller, InstallerOptions} from './types';
 
-import fs from 'fs';
+// todo(flow->ts) backport
+import fs from 'fs/promises';
 import path from 'path';
 import spawn from 'cross-spawn';
 import logger from '@parcel/logger';

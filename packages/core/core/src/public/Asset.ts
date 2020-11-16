@@ -209,7 +209,7 @@ export class Asset extends BaseAsset implements IAsset {
 }
 
 export class MutableAsset extends BaseAsset implements IMutableAsset {
-  #asset /*: UncommittedAsset */;
+  #asset: UncommittedAsset;
 
   constructor(asset: UncommittedAsset) {
     let existing = assetValueToMutableAsset.get(asset.value);

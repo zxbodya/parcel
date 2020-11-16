@@ -11,15 +11,15 @@ import type {Asset, Dependency, ParcelOptions} from '../types';
 import nullthrows from 'nullthrows';
 import {fromInternalSourceLocation, toInternalSourceLocation} from '../utils';
 
-const EMPTY_ITERABLE = {
+const EMPTY_ITERABLE: Iterable<any> = {
   [Symbol.iterator]() {
     return EMPTY_ITERATOR;
   },
 };
 
-const EMPTY_ITERATOR = {
+const EMPTY_ITERATOR: Iterator<any> = {
   next() {
-    return {done: true};
+    return {done: true, value: undefined};
   },
 };
 
@@ -28,9 +28,6 @@ const inspect = Symbol.for('nodejs.util.inspect.custom');
 let valueToSymbols: WeakMap<Asset, AssetSymbols> = new WeakMap();
 
 export class AssetSymbols implements IAssetSymbols {
-  /*::
-  @@iterator(): Iterator<[ISymbol, {|local: ISymbol, loc: ?SourceLocation, meta?: ?Meta|}]> { return ({}: any); }
-  */
   #value: Asset;
   #options: ParcelOptions;
 
@@ -82,8 +79,8 @@ export class AssetSymbols implements IAssetSymbols {
     // $FlowFixMe
     return this.#value.symbols?.keys() ?? [];
   }
-  // $FlowFixMe
-  [Symbol.iterator]() {
+  // @ts-ignore
+  [Symbol.iterator](): Iterator<[ISymbol, {local: ISymbol, loc: SourceLocation | null | undefined, meta?: Meta | null | undefined}]> {
     return this.#value.symbols
       ? this.#value.symbols[Symbol.iterator]()
       : EMPTY_ITERATOR;
@@ -104,9 +101,6 @@ export class AssetSymbols implements IAssetSymbols {
 let valueToMutableAssetSymbols: WeakMap<Asset, MutableAssetSymbols> =
   new WeakMap();
 export class MutableAssetSymbols implements IMutableAssetSymbols {
-  /*::
-  @@iterator(): Iterator<[ISymbol, {|local: ISymbol, loc: ?SourceLocation, meta?: ?Meta|}]> { return ({}: any); }
-  */
   #value: Asset;
   #options: ParcelOptions;
 
@@ -158,8 +152,8 @@ export class MutableAssetSymbols implements IMutableAssetSymbols {
     // $FlowFixMe
     return this.#value.symbols.keys();
   }
-  // $FlowFixMe
-  [Symbol.iterator]() {
+
+  [Symbol.iterator](): Iterator<[ISymbol, {local: ISymbol, loc: SourceLocation | null | undefined, meta?: Meta | null | undefined}]> {
     return this.#value.symbols
       ? this.#value.symbols[Symbol.iterator]()
       : EMPTY_ITERATOR;
@@ -207,9 +201,6 @@ let valueToMutableDependencySymbols: WeakMap<
   MutableDependencySymbols
 > = new WeakMap();
 export class MutableDependencySymbols implements IMutableDependencySymbols {
-  /*::
-  @@iterator(): Iterator<[ISymbol, {|local: ISymbol, loc: ?SourceLocation, isWeak: boolean, meta?: ?Meta|}]> { return ({}: any); }
-  */
   #value: Dependency;
   #options: ParcelOptions;
 
@@ -258,12 +249,12 @@ export class MutableDependencySymbols implements IMutableDependencySymbols {
   }
 
   exportSymbols(): Iterable<ISymbol> {
-    // $FlowFixMe
+    // @ts-ignore
     return this.#value.symbols ? this.#value.symbols.keys() : EMPTY_ITERABLE;
   }
 
-  // $FlowFixMe
-  [Symbol.iterator]() {
+  // @ts-ignore
+  [Symbol.iterator](): Iterator<[ISymbol, {local: ISymbol, loc: SourceLocation | null | undefined, meta?: Meta | null | undefined}]> {
     return this.#value.symbols
       ? this.#value.symbols[Symbol.iterator]()
       : EMPTY_ITERATOR;

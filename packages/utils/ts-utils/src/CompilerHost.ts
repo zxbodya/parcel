@@ -1,6 +1,6 @@
 import type {FileSystem} from '@parcel/fs';
 import type {FilePath, PackageJSON, PluginLogger} from '@parcel/types';
-type TypeScriptModule = typeof import('typescript').default;
+type TypeScriptModule = typeof import('typescript');
 import type {CompilerOptions, SourceFile} from 'typescript';
 type ScriptTarget = typeof import('typescript').ScriptTarget;
 
@@ -19,7 +19,7 @@ export class CompilerHost extends FSHost {
     this.logger = logger;
   }
 
-  readFile(filePath: FilePath): void | string {
+  readFile(filePath: FilePath): undefined | string {
     let contents = super.readFile(filePath);
     if (contents && path.basename(filePath) === 'package.json') {
       let json: PackageJSON = JSON.parse(contents);
