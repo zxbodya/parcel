@@ -395,10 +395,8 @@ export type Symbol = string;
 /**
  * A map of export names to the corresponding asset's local variable names.
  */
-export interface AssetSymbols // eslint-disable-next-line no-undef
-  extends Iterable<
-    [Symbol, {|local: Symbol, loc: ?SourceLocation, meta?: ?Meta|}],
-  > {
+export interface AssetSymbols extends
+  Iterable<[Symbol, {|local: Symbol, loc: ?SourceLocation, meta?: ?Meta|}]> {
   /**
    * The exports of the asset are unknown, rather than just empty.
    * This is the default state.
@@ -431,7 +429,7 @@ export interface MutableAssetSymbols extends AssetSymbols {
 /**
  * isWeak means: the symbol is not used by the parent asset itself and is merely reexported
  */
-export interface MutableDependencySymbols // eslint-disable-next-line no-undef
+export interface MutableDependencySymbols
   extends Iterable<
     [
       Symbol,
