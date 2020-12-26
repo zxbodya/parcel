@@ -15,7 +15,7 @@
     "url": "https://github.com/parcel-bundler/parcel.git"
   },
   "main": "lib/register.js",
-  "source": "src/register.js",
+  "source": "src/register.ts",
   "engines": {
     "node": ">= 12.0.0"
   },

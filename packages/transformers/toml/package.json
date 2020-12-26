@@ -14,7 +14,7 @@
     "url": "https://github.com/parcel-bundler/parcel.git"
   },
   "main": "lib/TOMLTransformer.js",
-  "source": "src/TOMLTransformer.js",
+  "source": "src/TOMLTransformer.ts",
   "engines": {
     "node": ">= 12.0.0",
     "parcel": "^2.7.0"
