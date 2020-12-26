@@ -3,6 +3,8 @@ const path = require('path');
 
 function resolveSource(specifier, from) {
   return resolve.sync(specifier, {
+    // todo(flow->ts): maybe share this with babel config?
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
     basedir: path.dirname(from),
     packageFilter(pkg) {
       if (pkg.name.startsWith('@parcel/') && pkg.name !== '@parcel/watcher') {

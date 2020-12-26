@@ -7,7 +7,8 @@ import {INITIAL_BUILD} from '../src/constants';
 import {makeDeferredWithPromise} from '@parcel/utils';
 
 const options = DEFAULT_OPTIONS;
-const farm = new WorkerFarm({workerPath: require.resolve('../src/worker.js')});
+// todo(flow->ts):
+const farm = new WorkerFarm({workerPath: require.resolve('../src/worker_js.js')});
 
 describe('RequestTracker', () => {
   it('should not run requests that have not been invalidated', async () => {
