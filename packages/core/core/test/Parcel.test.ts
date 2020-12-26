@@ -78,7 +78,13 @@ function createParcel(opts?: InitialParcelOptions) {
     entries: [path.join(__dirname, 'fixtures/parcel/index.js')],
     logLevel: 'info',
     defaultConfig: path.join(
-      path.dirname(require.resolve('@parcel/test-utils')),
+      __dirname,
+      '..',
+      '..',
+      'test-utils',
+      'src',
+      // todo(flow->ts)
+      //path.dirname(require.resolve('@parcel/test-utils')),
       '.parcelrc-no-reporters',
     ),
     shouldDisableCache: true,

@@ -9,7 +9,7 @@ import {Worker} from 'worker_threads';
 import path from 'path';
 import {prepareForSerialization, restoreDeserializedObject} from '@parcel/core';
 
-const WORKER_PATH = path.join(__dirname, 'ThreadsChild.js');
+const WORKER_PATH = path.join(__dirname, 'ThreadsChild_js.js');
 
 export default class ThreadsWorker implements WorkerImpl {
   execArgv: any;
