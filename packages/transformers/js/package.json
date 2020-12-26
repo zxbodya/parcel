@@ -14,7 +14,7 @@
     "url": "https://github.com/parcel-bundler/parcel.git"
   },
   "main": "lib/JSTransformer.js",
-  "source": "src/JSTransformer.js",
+  "source": "src/JSTransformer.ts",
   "napi": {
     "name": "parcel-swc"
   },
