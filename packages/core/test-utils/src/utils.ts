@@ -592,7 +592,7 @@ function prepareBrowserContext(
   bundle: PackagedBundle,
   globals: unknown,
 ): {
-  ctx: vm$Context;
+  ctx: vm.Context;
   promises: Array<Promise<unknown>>;
 } {
   // for testing dynamic imports
