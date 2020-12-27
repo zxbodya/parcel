@@ -27,11 +27,10 @@ import BundleGroup, {bundleGroupToInternalBundleGroup} from './BundleGroup';
 
 export default class MutableBundleGraph
   extends BundleGraph<IBundle>
-  implements IMutableBundleGraph
-{
-  #graph /*: InternalBundleGraph */;
-  #options /*: ParcelOptions */;
-  #bundlePublicIds /*: Set<string> */ = new Set<string>();
+  implements IMutableBundleGraph {
+  #graph: InternalBundleGraph;
+  #options: ParcelOptions;
+  #bundlePublicIds: Set<string>  = new Set<string>();
 
   constructor(graph: InternalBundleGraph, options: ParcelOptions) {
     super(graph, Bundle.get.bind(Bundle), options);

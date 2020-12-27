@@ -186,7 +186,7 @@ class BaseAsset {
 }
 
 export class Asset extends BaseAsset implements IAsset {
-  #asset /*: CommittedAsset | UncommittedAsset */;
+  #asset : CommittedAsset | UncommittedAsset;
 
   constructor(asset: CommittedAsset | UncommittedAsset) {
     let assetValueToAsset = asset.value.committed

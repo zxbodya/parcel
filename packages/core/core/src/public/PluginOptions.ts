@@ -16,7 +16,7 @@ let parcelOptionsToPluginOptions: WeakMap<ParcelOptions, PluginOptions> =
   new WeakMap();
 
 export default class PluginOptions implements IPluginOptions {
-  #options /*: ParcelOptions */;
+  #options: ParcelOptions;
 
   constructor(options: ParcelOptions) {
     let existing = parcelOptionsToPluginOptions.get(options);

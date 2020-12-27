@@ -38,8 +38,8 @@ export function dependencyToInternalDependency(
 }
 
 export default class Dependency implements IDependency {
-  #dep /*: InternalDependency */;
-  #options /*: ParcelOptions */;
+  #dep: InternalDependency;
+  #options: ParcelOptions;
 
   constructor(dep: InternalDependency, options: ParcelOptions) {
     let existing = internalDependencyToDependency.get(dep);
