@@ -27,7 +27,8 @@ import {fromProjectPathRelative} from '../projectPath';
 import {BundleBehavior} from '../types';
 import BundleGroup, {bundleGroupToInternalBundleGroup} from './BundleGroup';
 
-export default class MutableBundleGraph extends BundleGraph<IBundle>
+export default class MutableBundleGraph
+  extends BundleGraph<IBundle>
   implements IMutableBundleGraph {
   #graph /*: InternalBundleGraph */;
   #options /*: ParcelOptions */;

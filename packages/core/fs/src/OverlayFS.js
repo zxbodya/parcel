@@ -14,7 +14,7 @@ import packageJSON from '../package.json';
 import {findAncestorFile, findNodeModule, findFirstFile} from './find';
 
 function read(method) {
-  return async function(...args: Array<any>) {
+  return async function (...args: Array<any>) {
     try {
       return await this.writable[method](...args);
     } catch (err) {
@@ -24,7 +24,7 @@ function read(method) {
 }
 
 function readSync(method) {
-  return function(...args: Array<any>) {
+  return function (...args: Array<any>) {
     try {
       return this.writable[method](...args);
     } catch (err) {
@@ -34,13 +34,13 @@ function readSync(method) {
 }
 
 function write(method) {
-  return function(...args: Array<any>) {
+  return function (...args: Array<any>) {
     return this.writable[method](...args);
   };
 }
 
 function checkExists(method) {
-  return function(filePath: FilePath, ...args: Array<any>) {
+  return function (filePath: FilePath, ...args: Array<any>) {
     if (this.writable.existsSync(filePath)) {
       return this.writable[method](filePath, ...args);
     }

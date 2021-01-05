@@ -3,7 +3,7 @@ import {bundle, distDir, inputFS, outputFS} from '@parcel/test-utils';
 import path from 'path';
 import sharp from 'sharp';
 
-describe('image', function() {
+describe('image', function () {
   this.timeout(10000);
 
   it('Should be able to resize images', async () => {
@@ -89,7 +89,7 @@ describe('image', function() {
     });
   });
 
-  it('should optimise JPEGs', async function() {
+  it('should optimise JPEGs', async function () {
     let img = path.join(__dirname, '/integration/image/image.jpg');
     let b = await bundle(img, {
       defaultTargetOptions: {
@@ -100,19 +100,15 @@ describe('image', function() {
     const imagePath = b.getBundles().find(b => b.type === 'jpg').filePath;
 
     let input = await inputFS.readFile(img);
-    let inputRaw = await sharp(input)
-      .toFormat('raw')
-      .toBuffer();
+    let inputRaw = await sharp(input).toFormat('raw').toBuffer();
     let output = await outputFS.readFile(imagePath);
-    let outputRaw = await sharp(output)
-      .toFormat('raw')
-      .toBuffer();
+    let outputRaw = await sharp(output).toFormat('raw').toBuffer();
 
     assert(outputRaw.equals(inputRaw));
     assert(output.length < input.length);
   });
 
-  it('should optimise PNGs', async function() {
+  it('should optimise PNGs', async function () {
     let img = path.join(__dirname, '/integration/image/clock.png');
     let b = await bundle(img, {
       defaultTargetOptions: {
@@ -123,13 +119,9 @@ describe('image', function() {
     const imagePath = b.getBundles().find(b => b.type === 'png').filePath;
 
     let input = await inputFS.readFile(img);
-    let inputRaw = await sharp(input)
-      .toFormat('raw')
-      .toBuffer();
+    let inputRaw = await sharp(input).toFormat('raw').toBuffer();
     let output = await outputFS.readFile(imagePath);
-    let outputRaw = await sharp(output)
-      .toFormat('raw')
-      .toBuffer();
+    let outputRaw = await sharp(output).toFormat('raw').toBuffer();
 
     assert(outputRaw.equals(inputRaw));
     assert(output.length < input.length);
