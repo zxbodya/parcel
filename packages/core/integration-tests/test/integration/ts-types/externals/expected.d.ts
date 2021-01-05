@@ -8,4 +8,4 @@ interface Props {
 export const Component: React.FC<Props>;
 export { External, Default, Named };
 
-//# sourceMappingURL=types.d.ts.map
+//# sourceMappingURL=types.ts.map

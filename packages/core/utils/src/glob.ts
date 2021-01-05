@@ -3,7 +3,7 @@ import type {FileSystem} from '@parcel/fs';
 
 import _isGlob from 'is-glob';
 import fastGlob from 'fast-glob';
-import type {FastGlobOptions} from 'fast-glob';
+import type {Options as FastGlobOptions} from 'fast-glob';
 import {isMatch} from 'micromatch';
 import {normalizeSeparators} from './path';
 
@@ -18,7 +18,7 @@ export function isGlobMatch(filePath: FilePath, glob: Glob): any {
 export function globSync(
   p: FilePath,
   fs: FileSystem,
-  options?: FastGlobOptions<FilePath>,
+  options?: FastGlobOptions,
 ): Array<FilePath> {
   // $FlowFixMe
   options = {
@@ -45,7 +45,7 @@ export function globSync(
 export function glob(
   p: FilePath,
   fs: FileSystem,
-  options: FastGlobOptions<FilePath>,
+  options: FastGlobOptions,
 ): Promise<Array<FilePath>> {
   // $FlowFixMe
   options = {

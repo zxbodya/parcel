@@ -1053,16 +1053,16 @@ export type DedicatedThreadValidator = {
 export type MultiThreadValidator = {
   validate: (a: {
     asset: Asset;
-    config: ConfigResult | void;
+    config?: ConfigResult;
     options: PluginOptions;
     logger: PluginLogger;
-  }) => Async<ValidateResult | void>;
+  }) => Async<ValidateResult | undefined>;
   getConfig?: (a: {
     asset: Asset;
     resolveConfig: ResolveConfigFn;
     options: PluginOptions;
     logger: PluginLogger;
-  }) => Async<ConfigResult | void>;
+  }) => Async<ConfigResult | undefined>;
 };
 
 /**
@@ -1644,7 +1644,7 @@ export type Runtime<ConfigType> = {
     config: ConfigType;
     options: PluginOptions;
     logger: PluginLogger;
-  }): Async<void | RuntimeAsset | Array<RuntimeAsset>>;
+  }): Async<undefined | RuntimeAsset | Array<RuntimeAsset>>;
 };
 
 /**

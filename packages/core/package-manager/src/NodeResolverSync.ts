@@ -7,7 +7,7 @@ import {NodeResolverBase} from './NodeResolverBase';
 
 export class NodeResolverSync extends NodeResolverBase<ResolveResult> {
   resolve(id: DependencySpecifier, from: FilePath): ResolveResult {
-    let ctx = {
+    let ctx: ResolverContext = {
       invalidateOnFileCreate: [],
       invalidateOnFileChange: new Set(),
     };

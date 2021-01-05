@@ -49,7 +49,7 @@ async function loadPlugin(
   options: unknown = {},
   packageManager: PackageManager,
   shouldAutoInstall: boolean,
-): unknown {
+): Promise<unknown> {
   if (typeof pluginArg !== 'string') {
     return pluginArg;
   }

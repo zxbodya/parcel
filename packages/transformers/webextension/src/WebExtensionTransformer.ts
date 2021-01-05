@@ -45,9 +45,9 @@ async function collectDependencies(
   if (program.default_locale) {
     const locales = path.join(path.dirname(filePath), '_locales');
     let err = !(await fs.exists(locales))
-      ? 'key'
+      ? 'key' as const
       : !(await fs.exists(path.join(locales, program.default_locale)))
-      ? 'value'
+      ? 'value' as const
       : null;
     if (err) {
       throw new ThrowableDiagnostic({

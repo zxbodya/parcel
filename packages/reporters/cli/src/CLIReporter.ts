@@ -155,6 +155,7 @@ export async function _report(
           await writeDiagnostic(options, event.diagnostics, 'red', true);
           break;
         default:
+          // @ts-ignore not expected to happen
           throw new Error('Unknown log level ' + event.level);
       }
     }

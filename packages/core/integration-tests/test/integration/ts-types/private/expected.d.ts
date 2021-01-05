@@ -3,4 +3,4 @@ export class Test {
     protected _protected: string;
 }
 
-//# sourceMappingURL=types.d.ts.map
+//# sourceMappingURL=types.ts.map

@@ -43,6 +43,7 @@ import {
 import {BROWSER_ENVS} from '../public/Environment';
 import {optionsProxy, toInternalSourceLocation} from '../utils';
 import {fromProjectPath, toProjectPath, joinProjectPath} from '../projectPath';
+import type {EnvironmentContext} from '@parcel/types';
 
 type RunOpts = {
   input: Entry;
@@ -461,15 +462,15 @@ export class TargetResolver {
 
     // If there is a separate `browser` target, or an `engines.node` field but no browser targets, then
     // the `main` and `module` targets refer to node, otherwise browser.
-    let mainContext =
+    let mainContext: EnvironmentContext =
       pkg.browser ?? pkgTargets.browser ?? (node != null && !browsers)
         ? 'node'
         : 'browser';
-    let moduleContext =
+    let moduleContext: EnvironmentContext =
       pkg.browser ?? pkgTargets.browser ? 'browser' : mainContext;
 
     let defaultEngines = this.options.defaultTargetOptions.engines;
-    let context = browsers ?? !node ? 'browser' : 'node';
+    let context: EnvironmentContext = browsers ?? !node ? 'browser' : 'node';
     if (
       context === 'browser' &&
       pkgEngines.browsers == null &&
@@ -1071,7 +1072,7 @@ function parseDescriptor(
   );
 
   // $FlowFixMe we just verified this
-  return descriptor;
+  return descriptor as TargetDescriptor;
 }
 
 function parsePackageDescriptor(

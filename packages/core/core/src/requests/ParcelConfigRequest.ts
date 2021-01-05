@@ -669,6 +669,7 @@ export function mergeMaps<K extends string, V>(
   merger?: (a: V, b: V) => V,
 ): ConfigMap<K, V> {
   if (!ext || Object.keys(ext).length === 0) {
+    // @ts-ignore
     return base || {};
   }
 
@@ -676,6 +677,7 @@ export function mergeMaps<K extends string, V>(
     return ext;
   }
 
+  // @ts-ignore
   let res: ConfigMap<K, V> = {};
   // Add the extension options first so they have higher precedence in the output glob map
   for (let k in ext) {

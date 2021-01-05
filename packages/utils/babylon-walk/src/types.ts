@@ -317,6 +317,7 @@ export type Visitors<S> = {
   Private?: SingleVisitor<t.Private, S>;
   TSTypeElement?: SingleVisitor<t.TSTypeElement, S>;
   TSType?: SingleVisitor<t.TSType, S>;
+} & {
   [x: string]: SingleVisitor<t.Node, S>;
 };
 

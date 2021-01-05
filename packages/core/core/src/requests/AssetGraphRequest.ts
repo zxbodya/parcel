@@ -91,7 +91,6 @@ const typesWithRequests = new Set([
 
 export class AssetGraphBuilder {
   assetGraph: AssetGraph;
-  assetRequests: Array<AssetGroup>;
   queue: PromiseQueue<unknown>;
   changedAssets: Map<string, Asset> = new Map();
   optionsRef: SharedReference;

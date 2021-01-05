@@ -10,7 +10,7 @@ export type FileOptions = {
   mode?: number;
 };
 export type ReaddirOptions = {
-      withFileTypes?: false;
+      withFileTypes?: boolean;
     }
   | {
       withFileTypes: true;

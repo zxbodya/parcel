@@ -7,11 +7,11 @@ import chalk from 'chalk';
 import nullthrows from 'nullthrows';
 
 import * as emoji from './emoji';
-import {writeOut, table} from './render';
+import {writeOut, table, ColumnType} from './render';
 import {formatFilename} from './utils';
 
 const LARGE_BUNDLE_SIZE = 1024 * 1024;
-const COLUMNS = [
+const COLUMNS: Array<ColumnType> = [
   {align: 'left'}, // name
   {align: 'right'}, // size
   {align: 'right'}, // time
@@ -89,7 +89,7 @@ export default async function bundleReport(
   table(COLUMNS, rows);
 }
 
-function prettifySize(size, isLarge) {
+function prettifySize(size, isLarge?) {
   let res = filesize(size);
   if (isLarge) {
     return chalk.yellow(emoji.warning + '  ' + res);

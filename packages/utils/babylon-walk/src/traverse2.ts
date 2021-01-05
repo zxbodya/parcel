@@ -129,6 +129,7 @@ export function mergeVisitors<T, U>(
 ): VisitorsExploded<VisitorFunc<Node, T & U>> {
   let res: VisitorsExploded<VisitorFunc<Node, T & U>> = {};
   // $FlowFixMe
+  // @ts-expect-error todo(flow->ts) maybe add it to VisitorsExploded type?
   res._exploded = true;
 
   for (let visitor of [a, b]) {
@@ -139,10 +140,12 @@ export function mergeVisitors<T, U>(
       }
 
       if (exploded[type].enter) {
+        // @ts-expect-error todo(flow->ts)
         res[type].enter = [...(res[type].enter || []), ...exploded[type].enter];
       }
 
       if (exploded[type].exit) {
+        // @ts-expect-error todo(flow->ts)
         res[type].exit = [...(res[type].exit || []), ...exploded[type].exit];
       }
     }

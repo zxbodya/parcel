@@ -12,4 +12,4 @@ export function foo(): number;
 export var x: number;
 export var hi: number;
 
-//# sourceMappingURL=types.d.ts.map
+//# sourceMappingURL=types.ts.map

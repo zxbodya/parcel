@@ -8,7 +8,7 @@ import type {PadAlign} from './utils';
 import {pad, countLines} from './utils';
 import * as emoji from './emoji';
 
-type ColumnType = {
+export type ColumnType = {
   align: PadAlign;
 };
 

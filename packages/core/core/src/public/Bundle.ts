@@ -171,7 +171,7 @@ export class Bundle implements IBundle {
       mapVisitor(node => {
         if (node.type === 'asset') {
           return {
-            type: 'asset',
+            type: 'asset' as const,
             value: assetFromValue(node.value, this.#options),
           };
         } else if (node.type === 'dependency') {
@@ -249,10 +249,10 @@ export class NamedBundle extends Bundle implements INamedBundle {
 }
 
 export class PackagedBundle extends NamedBundle implements IPackagedBundle {
-  #bundle /*: InternalBundle */;
-  #bundleGraph /*: BundleGraph */;
-  #options /*: ParcelOptions */;
-  #bundleInfo /*: ?PackagedBundleInfo */;
+  #bundle: InternalBundle;
+  #bundleGraph: BundleGraph;
+  #options: ParcelOptions;
+  #bundleInfo: ?PackagedBundleInfo;
 
   constructor(
     sentinel: unknown,

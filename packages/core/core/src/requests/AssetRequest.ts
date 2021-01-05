@@ -82,7 +82,7 @@ async function run({input, api, farm, invalidateReason, options}: RunInput) {
         .map(async req => [
           req.id,
           nullthrows(await api.getRequestResult<DevDepRequest>(req.id)),
-        ]),
+        ] as const),
     ),
   );
 

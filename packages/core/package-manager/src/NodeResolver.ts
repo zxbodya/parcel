@@ -10,7 +10,7 @@ export class NodeResolver extends NodeResolverBase<Promise<ResolveResult>> {
     id: DependencySpecifier,
     from: FilePath,
   ): Promise<ResolveResult> {
-    let ctx = {
+    let ctx: ResolverContext = {
       invalidateOnFileCreate: [],
       invalidateOnFileChange: new Set(),
     };

@@ -67,7 +67,9 @@ console.warn = (...args) => {
 /* eslint-enable no-console */
 
 type ExternalModules = {
-  [name: string]: (a: vm$Context) => {
+  [name: string]: (
+    a: vm.Context,
+  ) => {
     [x: string]: unknown;
   };
 };
@@ -470,7 +472,7 @@ export async function runBundle(
 
 export function run(
   bundleGraph: BundleGraph<PackagedBundle>,
-  globals: unknown,
+  globals?: unknown,
   opts: RunOpts = {},
   // $FlowFixMe[unclear-type]
   externalModules?: ExternalModules,
@@ -621,7 +623,7 @@ function prepareBrowserContext(
           ).runInContext(ctx);
 
           el.onload();
-          deferred.resolve();
+          deferred.resolve(undefined);
         }, 0);
       } else if (typeof el.onload === 'function') {
         el.onload();
@@ -783,7 +785,7 @@ function prepareWorkerContext(
   filePath: FilePath,
   globals: unknown,
 ): {
-  ctx: vm$Context;
+  ctx: vm.Context;
   promises: Array<Promise<unknown>>;
 } {
   let promises = [];
@@ -953,7 +955,7 @@ let instanceId = 0;
 export async function runESM(
   baseDir: FilePath,
   entries: Array<[string, string]>,
-  context: vm$Context,
+  context: vm.Context,
   fs: FileSystem,
   externalModules: ExternalModules = {},
   requireExtensions: boolean = false,

@@ -73,7 +73,7 @@ export default class Profiler {
   }> {
     invariant(this.session != null);
     return new Promise((resolve, reject) => {
-      this.session.post(method, params, (err, params) => {
+      this.session.post(method, params, (err, params: any) => {
         if (err == null) {
           resolve(params);
         } else {

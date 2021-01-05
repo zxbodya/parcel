@@ -21,7 +21,7 @@ export async function ncp(
     let destPath = path.join(destination, file);
     let stats = await sourceFS.stat(sourcePath);
     if (stats.isFile()) {
-      await new Promise((resolve, reject) => {
+      await new Promise<void>((resolve, reject) => {
         sourceFS
           .createReadStream(sourcePath)
           .pipe(destinationFS.createWriteStream(destPath))

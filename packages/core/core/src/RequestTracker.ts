@@ -136,8 +136,8 @@ export type RunAPI = {
   invalidateOnFileDelete: (a: ProjectPath) => void;
   invalidateOnFileUpdate: (a: ProjectPath) => void;
   invalidateOnStartup: () => void;
-  invalidateOnEnvChange: (a: string) => void;
-  invalidateOnOptionChange: (a: string) => void;
+  invalidateOnEnvChange: (key: string|number|symbol) => void;
+  invalidateOnOptionChange: (key: string|number|symbol) => void;
   getInvalidations(): Array<RequestInvalidation>;
   storeResult: (result: unknown, cacheKey?: string) => void;
   getRequestResult<T>(contentKey: ContentKey): Async<T | undefined | null>;

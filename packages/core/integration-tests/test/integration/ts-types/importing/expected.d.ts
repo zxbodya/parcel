@@ -11,4 +11,4 @@ declare class Message {
 export function foo(f: Test): number;
 export function file(f: File): Message;
 
-//# sourceMappingURL=types.d.ts.map
+//# sourceMappingURL=types.ts.map

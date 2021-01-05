@@ -5,10 +5,13 @@ import {
   IncomingMessage as HTTPIncomingMessage,
   ServerResponse as HTTPServerResponse,
 } from 'http';
-import {
-  IncomingMessage as HTTPSIncomingMessage,
-  ServerResponse as HTTPSServerResponse,
-} from 'https';
+// import {
+//   IncomingMessage as HTTPSIncomingMessage,
+//   ServerResponse as HTTPSServerResponse,
+// } from 'https';
+//
+type HTTPSIncomingMessage = HTTPIncomingMessage;
+type HTTPSServerResponse = HTTPServerResponse;
 
 interface HTTPRequest extends HTTPIncomingMessage {
   originalUrl?: string;

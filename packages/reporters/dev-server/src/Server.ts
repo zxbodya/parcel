@@ -1,4 +1,4 @@
-import type {DevServerOptions, Request, Response} from './types.js.flow';
+import type {DevServerOptions, Request, Response} from './types';
 import type {
   BuildSuccessEvent,
   BundleGraph,

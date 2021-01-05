@@ -23,9 +23,9 @@ import clone from 'lodash.clone';
 export default function explode<T>(
   visitor: SimpleVisitors<T>,
 ): VisitorsExploded<T> {
-  // $FlowFixMe
+  // @ts-expect-error todo(flow->ts) maybe add _exploded type annotation?
   if (visitor._exploded) return visitor;
-  // $FlowFixMe
+  // @ts-expect-error todo(flow->ts) maybe add _exploded type annotation?
   visitor._exploded = true;
 
   // normalise pipes
@@ -92,7 +92,7 @@ export default function explode<T>(
     ensureCallbackArrays(visitor[nodeType]);
   }
 
-  // $FlowFixMe
+  // @ts-expect-error todo(flow->ts)
   return visitor;
 }
 

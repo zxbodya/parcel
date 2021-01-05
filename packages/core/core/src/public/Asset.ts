@@ -189,6 +189,7 @@ export class Asset extends BaseAsset implements IAsset {
   #asset : CommittedAsset | UncommittedAsset;
 
   constructor(asset: CommittedAsset | UncommittedAsset) {
+    super(asset);
     let assetValueToAsset = asset.value.committed
       ? committedAssetValueToAsset
       : uncommittedAssetValueToAsset;
@@ -212,6 +213,7 @@ export class MutableAsset extends BaseAsset implements IMutableAsset {
   #asset: UncommittedAsset;
 
   constructor(asset: UncommittedAsset) {
+    super(asset);
     let existing = assetValueToMutableAsset.get(asset.value);
     if (existing != null) {
       return existing;

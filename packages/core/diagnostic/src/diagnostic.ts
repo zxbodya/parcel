@@ -185,6 +185,7 @@ type ThrowableDiagnosticOpts = {
  * build error).
  */
 export default class ThrowableDiagnostic extends Error {
+  declare code?: string;
   diagnostics: Array<Diagnostic>;
 
   constructor(opts: ThrowableDiagnosticOpts) {
@@ -289,7 +290,7 @@ type TemplateInput = any;
 
 const mdVerbatim = Symbol();
 export function md(
-  strings: Array<string>,
+  strings: TemplateStringsArray,
   ...params: Array<TemplateInput>
 ): string {
   let result = [];

@@ -38,7 +38,6 @@ export class Child {
   loggerDisposable: IDisposable;
   child: ChildImpl;
   profiler: Profiler | undefined | null;
-  workerApi: WorkerApi;
   handles: Map<number, Handle> = new Map();
   sharedReferences: Map<SharedReference, unknown> = new Map();
   sharedReferencesByValue: Map<unknown, SharedReference> = new Map();
@@ -58,14 +57,7 @@ export class Child {
     });
   }
 
-  workerApi: {
-    callMaster: (
-      request: CallRequest,
-      awaitResponse?: boolean | null,
-    ) => Promise<unknown>;
-    createReverseHandle: (fn: (...args: Array<any>) => unknown) => Handle;
-    getSharedReference: (ref: SharedReference) => unknown;
-    resolveSharedReference: (value: unknown) => void | SharedReference;
+  workerApi: WorkerApi & {
     runHandle: (handle: Handle, args: Array<any>) => Promise<unknown>;
   } = {
     callMaster: (
