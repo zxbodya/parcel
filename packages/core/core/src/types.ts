@@ -362,6 +362,7 @@ export type RootNode = {
   id: ContentKey;
   readonly type: 'root';
   value: string | null;
+  hasDeferred?: boolean;
 };
 
 export type AssetRequestInput = {
@@ -419,6 +420,7 @@ export type EntrySpecifierNode = {
   readonly type: 'entry_specifier';
   value: ProjectPath;
   correspondingRequest?: string;
+  hasDeferred?: boolean;
 };
 
 export type Entry = {
@@ -433,6 +435,7 @@ export type EntryFileNode = {
   readonly type: 'entry_file';
   value: Entry;
   correspondingRequest?: string;
+  hasDeferred?: boolean;
 };
 
 export type AssetGraphNode =

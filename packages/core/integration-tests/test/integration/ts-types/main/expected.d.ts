@@ -15,4 +15,4 @@ export declare module mod {
     function bar(): number;
 }
 
-//# sourceMappingURL=types.d.ts.map
+//# sourceMappingURL=types.ts.map

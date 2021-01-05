@@ -45,10 +45,11 @@ const LOADERS = {
 };
 
 function getLoaders(ctx: Environment):
-  | {
+  | ({
       IMPORT_POLYFILL: null | false | string;
+    } & {
       [x: string]: string;
-    }
+    })
   | undefined
   | null {
   if (ctx.isWorker()) return LOADERS.worker;

@@ -31,7 +31,7 @@ function sortEntry(entry: unknown) {
 }
 
 export function setDifference<T>(a: Set<T>, b: Set<T>): Set<T> {
-  let difference = new Set();
+  let difference = new Set<T>();
   for (let e of a) {
     if (!b.has(e)) {
       difference.add(e);

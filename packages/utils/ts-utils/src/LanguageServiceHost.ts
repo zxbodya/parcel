@@ -53,7 +53,7 @@ export class LanguageServiceHost
     return this.files[fileName] && this.files[fileName].version.toString();
   }
 
-  getScriptSnapshot(fileName: string): IScriptSnapshot | void {
+  getScriptSnapshot(fileName: string): IScriptSnapshot | undefined {
     if (!this.fileExists(fileName)) {
       return;
     }

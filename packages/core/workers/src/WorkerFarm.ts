@@ -49,7 +49,7 @@ type WorkerModule = {
 };
 
 export type WorkerApi = {
-  callMaster(b: CallRequest, a?: boolean | null): Promise<unknown>;
+  callMaster(request: CallRequest, awaitResponse?: boolean | null): Promise<unknown>;
   createReverseHandle(fn: HandleFunction): Handle;
   getSharedReference(ref: SharedReference): unknown;
   resolveSharedReference(value: unknown): SharedReference | undefined | null;

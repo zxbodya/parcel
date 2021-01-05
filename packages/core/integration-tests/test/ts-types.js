@@ -28,7 +28,7 @@ describe('typescript types', function () {
 
     let dist = (
       await outputFS.readFile(
-        path.join(__dirname, '/integration/ts-types/main/dist/types.d.ts'),
+        path.join(__dirname, '/integration/ts-types/main/dist/types.ts'),
         'utf8',
       )
     ).replace(/\r\n/g, '\n');
@@ -57,7 +57,7 @@ describe('typescript types', function () {
 
     let dist = (
       await outputFS.readFile(
-        path.join(__dirname, '/integration/ts-types/importing/dist/types.d.ts'),
+        path.join(__dirname, '/integration/ts-types/importing/dist/types.ts'),
         'utf8',
       )
     ).replace(/\r\n/g, '\n');
@@ -124,7 +124,7 @@ describe('typescript types', function () {
 
     let dist = (
       await outputFS.readFile(
-        path.join(__dirname, '/integration/ts-types/exporting/dist/types.d.ts'),
+        path.join(__dirname, '/integration/ts-types/exporting/dist/types.ts'),
         'utf8',
       )
     ).replace(/\r\n/g, '\n');
@@ -188,7 +188,7 @@ describe('typescript types', function () {
 
     let dist = (
       await outputFS.readFile(
-        path.join(__dirname, '/integration/ts-types/externals/dist/types.d.ts'),
+        path.join(__dirname, '/integration/ts-types/externals/dist/types.ts'),
         'utf8',
       )
     ).replace(/\r\n/g, '\n');
@@ -244,7 +244,7 @@ describe('typescript types', function () {
 
     let dist = (
       await outputFS.readFile(
-        path.join(__dirname, '/integration/ts-types/private/dist/types.d.ts'),
+        path.join(__dirname, '/integration/ts-types/private/dist/types.ts'),
         'utf8',
       )
     ).replace(/\r\n/g, '\n');
@@ -264,7 +264,7 @@ describe('typescript types', function () {
       await outputFS.readFile(
         path.join(
           __dirname,
-          '/integration/ts-types/promise-or-value/dist/types.d.ts',
+          '/integration/ts-types/promise-or-value/dist/types.ts',
         ),
         'utf8',
       )

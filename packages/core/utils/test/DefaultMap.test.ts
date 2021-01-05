@@ -29,7 +29,7 @@ describe('DefaultMap', () => {
   });
 
   it('respects undefined/null if it already existed in the map', () => {
-    let map = new DefaultMap<number, number | void | null>(k => k);
+    let map = new DefaultMap<number, number | undefined | null>(k => k);
     map.set(3, undefined);
     assert.equal(map.get(3), undefined);
 

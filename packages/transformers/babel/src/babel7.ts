@@ -19,7 +19,7 @@ type Babel7TransformOptions = {
 
 export default async function babel7(
   opts: Babel7TransformOptions,
-): Promise<AST | undefined | null> {
+): Promise<void> {
   let {asset, options, babelOptions, additionalPlugins = []} = opts;
   const babelCore: BabelCore = await options.packageManager.require(
     '@babel/core',

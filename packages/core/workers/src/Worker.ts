@@ -157,7 +157,7 @@ export default class Worker extends EventEmitter {
     let idx = this.callId++;
     this.calls.set(idx, call);
 
-    let msg = {
+    let msg: WorkerMessage = {
       type: 'request',
       idx: idx,
       child: this.id,

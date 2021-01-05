@@ -1,6 +1,6 @@
 import type {
   AsyncSubscription,
-  BuildEvent,
+  BuildEvent, BuildFailureEvent,
   BuildSuccessEvent,
   InitialParcelOptions,
   PackagedBundle as IPackagedBundle,
@@ -64,11 +64,11 @@ export default class Parcel {
   #watchEvents: ValueEmitter<
     | {
         readonly error: Error;
-        readonly buildEvent?: void;
+        readonly buildEvent?: undefined;
       }
     | {
         readonly buildEvent: BuildEvent;
-        readonly error?: void;
+        readonly error?: undefined;
       }
   >;
   #watcherSubscription: AsyncSubscription | undefined | null;
@@ -281,7 +281,7 @@ export default class Parcel {
         requestGraphEdgeTypes,
       );
 
-      let event = {
+      let event: BuildSuccessEvent = {
         type: 'buildSuccess',
         changedAssets: new Map(
           Array.from(changedAssets).map(([id, asset]) => [
@@ -350,7 +350,7 @@ export default class Parcel {
       }
 
       let diagnostic = anyToDiagnostic(e);
-      let event = {
+      let event: BuildFailureEvent = {
         type: 'buildFailure',
         diagnostics: Array.isArray(diagnostic) ? diagnostic : [diagnostic],
       };

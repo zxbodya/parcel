@@ -171,7 +171,7 @@ export class Bundle implements IBundle {
       mapVisitor(node => {
         if (node.type === 'asset') {
           return {
-            type: 'asset',
+            type: 'asset' as const,
             value: assetFromValue(node.value, this.#options),
           };
         } else if (node.type === 'dependency') {

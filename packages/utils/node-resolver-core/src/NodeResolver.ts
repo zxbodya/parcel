@@ -149,7 +149,7 @@ export default class NodeResolver {
   }): Promise<ResolveResult | undefined | null> {
     let ctx = {
       invalidateOnFileCreate: [],
-      invalidateOnFileChange: new Set(),
+      invalidateOnFileChange: new Set<string>(),
       specifierType,
       range,
       loc,

@@ -22,6 +22,7 @@ let id = 0;
 type HandleFunction = (...args: Array<any>) => any;
 
 type SerializedMemoryFS = {
+  $$raw?: boolean;
   id: number;
   handle: any;
   dirs: Map<FilePath, Directory>;
@@ -556,7 +557,9 @@ export class MemoryFS implements FileSystem {
   async _sendWorkerEvent(event: WorkerEvent) {
     // Wait for worker instances to register their handles
     while (this._workerHandles.length < this._numWorkerInstances) {
-      await new Promise(resolve => this._workerRegisterResolves.push(resolve));
+      await new Promise<void>(resolve =>
+        this._workerRegisterResolves.push(resolve),
+      );
     }
 
     await Promise.all(
@@ -735,7 +738,7 @@ class WriteStream extends Writable {
     callback();
   }
 
-  _final(callback: (error?: Error) => void) {
+  _final(callback: ((error?: Error) => void) & (()=>void)) {
     this.fs
       .writeFile(this.filePath, this.buffer, this.options)
       .then(callback)
@@ -940,7 +943,7 @@ class WorkerFS extends MemoryFS {
 
   constructor(id: number, handle: Handle) {
     // TODO Make this not a subclass
-    // $FlowFixMe
+    // @ts-expect-error
     super();
     this.id = id;
     this.handleFn = (methodName, args) =>
@@ -973,7 +976,7 @@ class WorkerFS extends MemoryFS {
   }
 
   serialize(): SerializedMemoryFS {
-    // $FlowFixMe
+    // @ts-expect-error todo(flow->ts) this looks wrong
     return {
       id: this.id,
     };

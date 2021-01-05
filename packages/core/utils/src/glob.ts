@@ -2,7 +2,7 @@ import type {FilePath, Glob} from '@parcel/types';
 import type {FileSystem} from '@parcel/fs';
 
 import _isGlob from 'is-glob';
-import fastGlob, {type FastGlobOptions} from 'fast-glob';
+import fastGlob, {type Options as FastGlobOptions} from 'fast-glob';
 import {isMatch, makeRe, type Options} from 'micromatch';
 import {normalizeSeparators} from './path';
 
@@ -28,7 +28,7 @@ export function globToRegex(glob: Glob, opts?: Options): RegExp {
 export function globSync(
   p: FilePath,
   fs: FileSystem,
-  options?: FastGlobOptions<FilePath>,
+  options?: FastGlobOptions,
 ): Array<FilePath> {
   // $FlowFixMe
   options = {
@@ -55,7 +55,7 @@ export function globSync(
 export function glob(
   p: FilePath,
   fs: FileSystem,
-  options: FastGlobOptions<FilePath>,
+  options: FastGlobOptions,
 ): Promise<Array<FilePath>> {
   // $FlowFixMe
   options = {

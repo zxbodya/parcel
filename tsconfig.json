@@ -4,9 +4,11 @@
 
     /* Basic Options */
     // "incremental": true,                   /* Enable incremental compilation */
-    "target": "ES2015",                          /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', or 'ESNEXT'. */
-    "module": "commonjs",                     /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', 'es2020', or 'ESNext'. */
-    // "lib": [],                             /* Specify library files to be included in the compilation. */
+    "target": "ES2015" /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', or 'ESNEXT'. */,
+    "module": "commonjs" /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', 'es2020', or 'ESNext'. */,
+    "lib": [
+      "ES2019"
+    ] /* Specify library files to be included in the compilation. */,
     // "allowJs": true,                       /* Allow javascript files to be compiled. */
     // "checkJs": true,                       /* Report errors in .js files. */
     // "jsx": "preserve",                     /* Specify JSX code generation: 'preserve', 'react-native', or 'react'. */
@@ -19,13 +21,13 @@
     // "composite": true,                     /* Enable project compilation */
     // "tsBuildInfoFile": "./",               /* Specify file to store incremental compilation information */
     // "removeComments": true,                /* Do not emit comments to output. */
-     "noEmit": true,                        /* Do not emit outputs. */
+    "noEmit": true /* Do not emit outputs. */,
     // "importHelpers": true,                 /* Import emit helpers from 'tslib'. */
     // "downlevelIteration": true,            /* Provide full support for iterables in 'for-of', spread, and destructuring when targeting 'ES5' or 'ES3'. */
     // "isolatedModules": true,               /* Transpile each file as a separate module (similar to 'ts.transpileModule'). */
 
     /* Strict Type-Checking Options */
-    "strict": false,                           /* Enable all strict type-checking options. */
+    "strict": false /* Enable all strict type-checking options. */,
     // "noImplicitAny": true,                 /* Raise error on expressions and declarations with an implied 'any' type. */
     // "strictNullChecks": true,              /* Enable strict null checks. */
     // "strictFunctionTypes": true,           /* Enable strict checking of function types. */
@@ -41,113 +43,141 @@
     // "noFallthroughCasesInSwitch": true,    /* Report errors for fallthrough cases in switch statement. */
 
     /* Module Resolution Options */
-     "moduleResolution": "node",            /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */
-     "baseUrl": "./",                       /* Base directory to resolve non-absolute module names. */
+    "moduleResolution": "node" /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */,
+    "baseUrl": "./" /* Base directory to resolve non-absolute module names. */,
     // "paths": {},                           /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
     "paths": {
-      "@parcel/bundler-default":["packages/bundlers/default/src"],
-      "@parcel/config-default":["packages/configs/default/src"],
-      "@parcel/babel-preset":["packages/dev/babel-preset/src"],
-      "@parcel/eslint-config":["packages/dev/eslint-config/src"],
-      "@parcel/eslint-config-browser":["packages/dev/eslint-config-browser/src"],
-      "@parcel/babel-register":["packages/dev/babel-register/src"],
-      "@parcel/eslint-plugin":["packages/dev/eslint-plugin/src"],
-      "@parcel/cache":["packages/core/cache/src/Cache.ts"],
-      "@parcel/codeframe":["packages/core/codeframe/src/codeframe.ts"],
-      "@parcel/core":["packages/core/core/src"],
-      "@parcel/diagnostic":["packages/core/diagnostic/src/diagnostic.ts"],
-      "@parcel/fs":["packages/core/fs/src"],
-      "@parcel/integration-tests":["packages/core/integration-tests/src"],
-      "@parcel/is-v2-ready-yet":["packages/core/is-v2-ready-yet/src"],
-      "@parcel/logger":["packages/core/logger/src/Logger.ts"],
-      "@parcel/markdown-ansi":["packages/core/markdown-ansi/src/markdown-ansi.ts"],
-      "@parcel/package-manager":["packages/core/package-manager/src"],
-      "parcel":["packages/core/parcel/src"],
-      "parcel-bundler":["packages/core/parcel-bundler/src"],
-      "@parcel/plugin":["packages/core/plugin/src/PluginAPI.ts"],
-      "@parcel/register":["packages/core/register/src"],
-      "@parcel/test-utils":["packages/core/test-utils/src"],
-      "@parcel/types":["packages/core/types/src"],
-      "@parcel/utils":["packages/core/utils/src"],
-      "@parcel/workers":["packages/core/workers/src"],
-      "@parcel/namer-default":["packages/namers/default/src"],
-      "@parcel/eslint-example":["packages/examples/eslint-example/src"],
-      "@parcel/kitchen-sink-example":["packages/examples/kitchen-sink/src"],
-      "@parcel/html-example":["packages/examples/html/src"],
-      "@parcel/react-hmr-example":["packages/examples/react-hmr/src"],
-      "@parcel/simple-example":["packages/examples/simple/src"],
-      "@parcel/react-refresh-example":["packages/examples/react-refresh/src"],
-      "@parcel/three-js-stresstest":["packages/examples/three/src"],
-      "@parcel/optimizer-blob-url":["packages/optimizers/blob-url/src"],
-      "@parcel/optimizer-data-url":["packages/optimizers/data-url/src"],
-      "@parcel/optimizer-cssnano":["packages/optimizers/cssnano/src"],
-      "@parcel/optimizer-terser":["packages/optimizers/terser/src"],
-      "@parcel/optimizer-htmlnano":["packages/optimizers/htmlnano/src"],
-      "@parcel/packager-css":["packages/packagers/css/src"],
-      "@parcel/packager-html":["packages/packagers/html/src"],
-      "@parcel/packager-js":["packages/packagers/js/src"],
-      "@parcel/packager-raw":["packages/packagers/raw/src"],
-      "@parcel/packager-raw-url":["packages/packagers/raw-url/src"],
-      "@parcel/packager-ts":["packages/packagers/ts/src"],
-      "@parcel/reporter-build-metrics":["packages/reporters/build-metrics/src"],
-      "@parcel/reporter-bundle-analyzer":["packages/reporters/bundle-analyzer/src"],
-      "@parcel/reporter-cli":["packages/reporters/cli/src"],
-      "@parcel/reporter-bundle-buddy":["packages/reporters/bundle-buddy/src"],
-      "@parcel/reporter-dev-server":["packages/reporters/dev-server/src"],
-      "@parcel/reporter-json":["packages/reporters/json/src"],
-      "@parcel/reporter-sourcemap-visualiser":["packages/reporters/sourcemap-visualiser/src"],
-      "@parcel/runtime-browser-hmr":["packages/runtimes/hmr/src"],
-      "@parcel/runtime-js":["packages/runtimes/js/src"],
-      "@parcel/runtime-react-refresh":["packages/runtimes/react-refresh/src"],
-      "@parcel/resolver-default":["packages/resolvers/default/src"],
-      "@parcel/babel-ast-utils":["packages/shared/babel-ast-utils/src"],
-      "@parcel/scope-hoisting":["packages/shared/scope-hoisting/src"],
-      "@parcel/transformer-babel":["packages/transformers/babel/src"],
-      "@parcel/transformer-coffeescript":["packages/transformers/coffeescript/src"],
-      "@parcel/transformer-css":["packages/transformers/css/src"],
-      "@parcel/transformer-glsl":["packages/transformers/glsl/src"],
-      "@parcel/transformer-graphql":["packages/transformers/graphql/src"],
-      "@parcel/transformer-html":["packages/transformers/html/src"],
-      "@parcel/transformer-inline":["packages/transformers/inline/src"],
-      "@parcel/transformer-image":["packages/transformers/image/src"],
-      "@parcel/transformer-js":["packages/transformers/js/src"],
-      "@parcel/transformer-inline-string":["packages/transformers/inline-string/src"],
-      "@parcel/transformer-json":["packages/transformers/json/src"],
-      "@parcel/transformer-jsonld":["packages/transformers/jsonld/src"],
-      "@parcel/transformer-less":["packages/transformers/less/src"],
-      "@parcel/transformer-mdx":["packages/transformers/mdx/src"],
-      "@parcel/transformer-postcss":["packages/transformers/postcss/src"],
-      "@parcel/transformer-posthtml":["packages/transformers/posthtml/src"],
-      "@parcel/transformer-pug":["packages/transformers/pug/src"],
-      "@parcel/transformer-react-refresh-babel":["packages/transformers/react-refresh-babel/src"],
-      "@parcel/transformer-raw":["packages/transformers/raw/src"],
-      "@parcel/transformer-react-refresh-wrap":["packages/transformers/react-refresh-wrap/src"],
-      "@parcel/transformer-sass":["packages/transformers/sass/src"],
-      "@parcel/transformer-stylus":["packages/transformers/stylus/src"],
-      "@parcel/transformer-sugarss":["packages/transformers/sugarss/src"],
-      "@parcel/transformer-svg-react":["packages/transformers/svg-react/src"],
-      "@parcel/transformer-svgo":["packages/transformers/svgo/src"],
-      "@parcel/transformer-toml":["packages/transformers/toml/src"],
-      "@parcel/transformer-typescript-tsc":["packages/transformers/typescript-tsc/src"],
-      "@parcel/transformer-typescript-types":["packages/transformers/typescript-types/src"],
-      "@parcel/transformer-vue":["packages/transformers/vue/src"],
-      "@parcel/transformer-yaml":["packages/transformers/yaml/src"],
-      "@parcel/babel-plugin-transform-runtime":["packages/utils/babel-plugin-transform-runtime/src"],
-      "@parcel/babel-preset-env":["packages/utils/babel-preset-env/src"],
-      "@parcel/babylon-walk":["packages/utils/babylon-walk/src"],
-      "@parcel/events":["packages/utils/events/src"],
-      "@parcel/fs-write-stream-atomic":["packages/utils/fs-write-stream-atomic/src"],
-      "@parcel/node-libs-browser":["packages/utils/node-libs-browser/src"],
-      "@parcel/node-resolver-core":["packages/utils/node-resolver-core/src"],
-      "@parcel/ts-utils":["packages/utils/ts-utils/src"],
-      "@parcel/validator-eslint":["packages/validators/eslint/src"],
-      "@parcel/validator-typescript":["packages/validators/typescript/src"]
+      "@parcel/bundler-default": ["packages/bundlers/default/src"],
+      "@parcel/config-default": ["packages/configs/default/src"],
+      "@parcel/babel-preset": ["packages/dev/babel-preset/src"],
+      "@parcel/eslint-config": ["packages/dev/eslint-config/src"],
+      "@parcel/eslint-config-browser": [
+        "packages/dev/eslint-config-browser/src"
+      ],
+      "@parcel/babel-register": ["packages/dev/babel-register/src"],
+      "@parcel/eslint-plugin": ["packages/dev/eslint-plugin/src"],
+      "@parcel/cache": ["packages/core/cache/src/Cache.ts"],
+      "@parcel/codeframe": ["packages/core/codeframe/src/codeframe.ts"],
+      "@parcel/core": ["packages/core/core/src"],
+      "@parcel/diagnostic": ["packages/core/diagnostic/src/diagnostic.ts"],
+      "@parcel/fs": ["packages/core/fs/src"],
+      "@parcel/integration-tests": ["packages/core/integration-tests/src"],
+      "@parcel/is-v2-ready-yet": ["packages/core/is-v2-ready-yet/src"],
+      "@parcel/logger": ["packages/core/logger/src/Logger.ts"],
+      "@parcel/markdown-ansi": [
+        "packages/core/markdown-ansi/src/markdown-ansi.ts"
+      ],
+      "@parcel/package-manager": ["packages/core/package-manager/src"],
+      "parcel": ["packages/core/parcel/src"],
+      "parcel-bundler": ["packages/core/parcel-bundler/src"],
+      "@parcel/plugin": ["packages/core/plugin/src/PluginAPI.ts"],
+      "@parcel/register": ["packages/core/register/src"],
+      "@parcel/test-utils": ["packages/core/test-utils/src"],
+      "@parcel/types": ["packages/core/types/src"],
+      "@parcel/utils": ["packages/core/utils/src"],
+      "@parcel/workers": ["packages/core/workers/src"],
+      "@parcel/namer-default": ["packages/namers/default/src"],
+      "@parcel/eslint-example": ["packages/examples/eslint-example/src"],
+      "@parcel/kitchen-sink-example": ["packages/examples/kitchen-sink/src"],
+      "@parcel/html-example": ["packages/examples/html/src"],
+      "@parcel/react-hmr-example": ["packages/examples/react-hmr/src"],
+      "@parcel/simple-example": ["packages/examples/simple/src"],
+      "@parcel/react-refresh-example": ["packages/examples/react-refresh/src"],
+      "@parcel/three-js-stresstest": ["packages/examples/three/src"],
+      "@parcel/optimizer-blob-url": ["packages/optimizers/blob-url/src"],
+      "@parcel/optimizer-data-url": ["packages/optimizers/data-url/src"],
+      "@parcel/optimizer-cssnano": ["packages/optimizers/cssnano/src"],
+      "@parcel/optimizer-terser": ["packages/optimizers/terser/src"],
+      "@parcel/optimizer-htmlnano": ["packages/optimizers/htmlnano/src"],
+      "@parcel/packager-css": ["packages/packagers/css/src"],
+      "@parcel/packager-html": ["packages/packagers/html/src"],
+      "@parcel/packager-js": ["packages/packagers/js/src"],
+      "@parcel/packager-raw": ["packages/packagers/raw/src"],
+      "@parcel/packager-raw-url": ["packages/packagers/raw-url/src"],
+      "@parcel/packager-ts": ["packages/packagers/ts/src"],
+      "@parcel/reporter-build-metrics": [
+        "packages/reporters/build-metrics/src"
+      ],
+      "@parcel/reporter-bundle-analyzer": [
+        "packages/reporters/bundle-analyzer/src"
+      ],
+      "@parcel/reporter-cli": ["packages/reporters/cli/src"],
+      "@parcel/reporter-bundle-buddy": ["packages/reporters/bundle-buddy/src"],
+      "@parcel/reporter-dev-server": ["packages/reporters/dev-server/src"],
+      "@parcel/reporter-json": ["packages/reporters/json/src"],
+      "@parcel/reporter-sourcemap-visualiser": [
+        "packages/reporters/sourcemap-visualiser/src"
+      ],
+      "@parcel/runtime-browser-hmr": ["packages/runtimes/hmr/src"],
+      "@parcel/runtime-js": ["packages/runtimes/js/src"],
+      "@parcel/runtime-react-refresh": ["packages/runtimes/react-refresh/src"],
+      "@parcel/resolver-default": ["packages/resolvers/default/src"],
+      "@parcel/babel-ast-utils": ["packages/shared/babel-ast-utils/src"],
+      "@parcel/scope-hoisting": ["packages/shared/scope-hoisting/src"],
+      "@parcel/transformer-babel": ["packages/transformers/babel/src"],
+      "@parcel/transformer-coffeescript": [
+        "packages/transformers/coffeescript/src"
+      ],
+      "@parcel/transformer-css": ["packages/transformers/css/src"],
+      "@parcel/transformer-glsl": ["packages/transformers/glsl/src"],
+      "@parcel/transformer-graphql": ["packages/transformers/graphql/src"],
+      "@parcel/transformer-html": ["packages/transformers/html/src"],
+      "@parcel/transformer-inline": ["packages/transformers/inline/src"],
+      "@parcel/transformer-image": ["packages/transformers/image/src"],
+      "@parcel/transformer-js": ["packages/transformers/js/src"],
+      "@parcel/transformer-inline-string": [
+        "packages/transformers/inline-string/src"
+      ],
+      "@parcel/transformer-json": ["packages/transformers/json/src"],
+      "@parcel/transformer-jsonld": ["packages/transformers/jsonld/src"],
+      "@parcel/transformer-less": ["packages/transformers/less/src"],
+      "@parcel/transformer-mdx": ["packages/transformers/mdx/src"],
+      "@parcel/transformer-postcss": ["packages/transformers/postcss/src"],
+      "@parcel/transformer-posthtml": ["packages/transformers/posthtml/src"],
+      "@parcel/transformer-pug": ["packages/transformers/pug/src"],
+      "@parcel/transformer-react-refresh-babel": [
+        "packages/transformers/react-refresh-babel/src"
+      ],
+      "@parcel/transformer-raw": ["packages/transformers/raw/src"],
+      "@parcel/transformer-react-refresh-wrap": [
+        "packages/transformers/react-refresh-wrap/src"
+      ],
+      "@parcel/transformer-sass": ["packages/transformers/sass/src"],
+      "@parcel/transformer-stylus": ["packages/transformers/stylus/src"],
+      "@parcel/transformer-sugarss": ["packages/transformers/sugarss/src"],
+      "@parcel/transformer-svg-react": ["packages/transformers/svg-react/src"],
+      "@parcel/transformer-svgo": ["packages/transformers/svgo/src"],
+      "@parcel/transformer-toml": ["packages/transformers/toml/src"],
+      "@parcel/transformer-typescript-tsc": [
+        "packages/transformers/typescript-tsc/src"
+      ],
+      "@parcel/transformer-typescript-types": [
+        "packages/transformers/typescript-types/src"
+      ],
+      "@parcel/transformer-vue": ["packages/transformers/vue/src"],
+      "@parcel/transformer-yaml": ["packages/transformers/yaml/src"],
+      "@parcel/babel-plugin-transform-runtime": [
+        "packages/utils/babel-plugin-transform-runtime/src"
+      ],
+      "@parcel/babel-preset-env": ["packages/utils/babel-preset-env/src"],
+      "@parcel/babylon-walk": ["packages/utils/babylon-walk/src"],
+      "@parcel/events": ["packages/utils/events/src"],
+      "@parcel/fs-write-stream-atomic": [
+        "packages/utils/fs-write-stream-atomic/src"
+      ],
+      "@parcel/node-libs-browser": ["packages/utils/node-libs-browser/src"],
+      "@parcel/node-resolver-core": [
+        "packages/utils/node-resolver-core/src/NodeResolver"
+      ],
+      "@parcel/ts-utils": ["packages/utils/ts-utils/src"],
+      "@parcel/validator-eslint": ["packages/validators/eslint/src"],
+      "@parcel/validator-typescript": ["packages/validators/typescript/src"]
     },
     // "rootDirs": [],                        /* List of root folders whose combined content represents the structure of the project at runtime. */
     // "typeRoots": [],                       /* List of folders to include type definitions from. */
     // "types": [],                           /* Type declaration files to be included in compilation. */
     // "allowSyntheticDefaultImports": true,  /* Allow default imports from modules with no default export. This does not affect code emit, just typechecking. */
-    "esModuleInterop": true,                  /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */
+    "esModuleInterop": true /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */,
     // "preserveSymlinks": true,              /* Do not resolve the real path of symlinks. */
     // "allowUmdGlobalAccess": true,          /* Allow accessing UMD globals from modules. */
 
@@ -162,8 +192,9 @@
     // "emitDecoratorMetadata": true,         /* Enables experimental support for emitting type metadata for decorators. */
 
     /* Advanced Options */
-    "skipLibCheck": true,                     /* Skip type checking of declaration files. */
-    "forceConsistentCasingInFileNames": true, /* Disallow inconsistently-cased references to the same file. */
+    "skipLibCheck": true /* Skip type checking of declaration files. */,
+    "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */,
     "resolveJsonModule": true
-  }
+  },
+  "exclude": ["packages/core/integration-tests/test/integration/**/*"]
 }

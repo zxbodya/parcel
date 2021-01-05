@@ -1,13 +1,13 @@
 import type {FileSystem} from '@parcel/fs';
 import type {FilePath, PackageJSON, PluginLogger} from '@parcel/types';
 type TypeScriptModule = typeof import('typescript');
-import type {CompilerOptions, SourceFile} from 'typescript';
+import type {CompilerOptions, SourceFile, CompilerHost as TSCompilerHost} from 'typescript';
 type ScriptTarget = typeof import('typescript').ScriptTarget;
 
 import path from 'path';
 import {FSHost} from './FSHost';
 
-export class CompilerHost extends FSHost {
+export class CompilerHost extends FSHost implements TSCompilerHost{
   outputCode: string | undefined | null;
   outputMap: string | undefined | null;
   logger: PluginLogger;
@@ -55,7 +55,7 @@ export class CompilerHost extends FSHost {
   getSourceFile(
     filePath: FilePath,
     languageVersion: ScriptTarget[keyof ScriptTarget],
-  ): void | SourceFile {
+  ): undefined | SourceFile {
     let redirect = this.redirectTypes.get(filePath);
     if (redirect != null) {
       const sourceText = this.readFile(redirect);

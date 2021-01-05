@@ -753,7 +753,7 @@ export default class Transformation {
 
       if (result.invalidateOnFileChange) {
         for (let filePath of result.invalidateOnFileChange) {
-          let invalidation = {
+          let invalidation: RequestInvalidation = {
             type: 'file',
             filePath: toProjectPath(this.options.projectRoot, filePath),
           };

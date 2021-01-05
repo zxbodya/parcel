@@ -45,15 +45,15 @@ export class NodeFS implements FileSystem {
   realpathSync: (path: string, cache?: any) => string =
     process.platform === 'win32' ? fs.realpathSync : fs.realpathSync.native;
   existsSync: (path: string) => boolean = fs.existsSync;
-  readdirSync: any = fs.readdirSync as any;
-  findAncestorFile: any = isPnP
-    ? (...args) => searchJS.findAncestorFile(this, ...args)
+  readdirSync = fs.readdirSync as any;
+  findAncestorFile = isPnP
+    ? (fileNames: Array<string>, fromDir: FilePath) => searchJS.findAncestorFile(this, fileNames, fromDir)
     : searchNative.findAncestorFile;
-  findNodeModule: any = isPnP
-    ? (...args) => searchJS.findNodeModule(this, ...args)
+  findNodeModule = isPnP
+    ? (moduleName: string, fromDir: FilePath) => searchJS.findNodeModule(this, moduleName, fromDir)
     : searchNative.findNodeModule;
-  findFirstFile: any = isPnP
-    ? (...args) => searchJS.findFirstFile(this, ...args)
+  findFirstFile = isPnP
+    ? (filePaths: Array<FilePath>) => searchJS.findFirstFile(this, filePaths)
     : searchNative.findFirstFile;
 
   createWriteStream(filePath: string, options: any): Writable {

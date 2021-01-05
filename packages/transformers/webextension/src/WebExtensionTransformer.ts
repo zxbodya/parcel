@@ -50,11 +50,11 @@ async function collectDependencies(
   if (program.default_locale) {
     const locales = path.join(assetDir, '_locales');
     let err = !(await fs.exists(locales))
-      ? 'key'
+      ? 'key' as const
       : !(await fs.exists(
           path.join(locales, program.default_locale, 'messages.json'),
         ))
-      ? 'value'
+      ? 'value' as const
       : null;
     if (err) {
       throw new ThrowableDiagnostic({

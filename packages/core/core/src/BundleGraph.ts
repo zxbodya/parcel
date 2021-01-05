@@ -458,7 +458,7 @@ export default class BundleGraph {
       if (node.type === 'dependency') {
         for (let [bundleGroupNodeId, bundleGroupNode] of this._graph
           .getNodeIdsConnectedFrom(nodeId)
-          .map(id => [id, nullthrows(this._graph.getNode(id))])
+          .map(id => [id, nullthrows(this._graph.getNode(id))] as const)
           .filter(([, node]) => node.type === 'bundle_group')) {
           invariant(bundleGroupNode.type === 'bundle_group');
           this._graph.addEdge(

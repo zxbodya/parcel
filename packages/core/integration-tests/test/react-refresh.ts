@@ -294,7 +294,7 @@ async function setup(entry) {
     },
   );
   window = dom.window;
-  await new Promise(res =>
+  await new Promise<void>(res =>
     window.document.addEventListener('load', () => {
       res();
     }),

@@ -45,6 +45,7 @@ import {
 import {BROWSER_ENVS} from '../public/Environment';
 import {optionsProxy, toInternalSourceLocation} from '../utils';
 import {fromProjectPath, toProjectPath, joinProjectPath} from '../projectPath';
+import type {EnvironmentContext} from '@parcel/types';
 
 type RunOpts = {
   input: Entry;
@@ -521,7 +522,7 @@ export class TargetResolver {
     let browsers = pkgEngines.browsers;
 
     let defaultEngines = this.options.defaultTargetOptions.engines;
-    let context = browsers ?? node == null ? 'browser' : 'node';
+    let context: EnvironmentContext = browsers ?? node == null ? 'browser' : 'node';
     if (context === 'browser' && pkgEngines.browsers == null) {
       pkgEngines = {
         ...pkgEngines,
@@ -1275,7 +1276,7 @@ function parseDescriptor(
   );
 
   // $FlowFixMe we just verified this
-  return descriptor;
+  return descriptor as TargetDescriptor;
 }
 
 function parsePackageDescriptor(
@@ -1588,7 +1589,7 @@ async function debugResolvedTargets(input, targets, targetInfo, options) {
     logger.verbose({
       origin: '@parcel/core',
       message: md`**Target** "${target.name}"
-      
+
                **Entry**: ${path.relative(
                  process.cwd(),
                  fromProjectPath(options.projectRoot, input.filePath),

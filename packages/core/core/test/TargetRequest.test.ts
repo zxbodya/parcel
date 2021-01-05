@@ -6,6 +6,7 @@ import {md} from '@parcel/diagnostic';
 import {normalizeSeparators} from '@parcel/utils';
 import {TargetResolver} from '../src/requests/TargetRequest';
 import {DEFAULT_OPTIONS as _DEFAULT_OPTIONS, relative} from './test-utils';
+import {RunAPI} from '../src/RequestTracker';
 
 const DEFAULT_OPTIONS = {
   ..._DEFAULT_OPTIONS,
@@ -68,7 +69,7 @@ describe('TargetResolver', () => {
     return fs.rimraf(cacheDir);
   });
 
-  let api = {
+  let api: RunAPI = {
     invalidateOnFileCreate() {},
     invalidateOnFileUpdate() {},
     invalidateOnFileDelete() {},

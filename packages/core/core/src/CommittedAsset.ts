@@ -76,7 +76,7 @@ export default class CommittedAsset {
     }
 
     this.content = bufferStream(content);
-    return this.content;
+    return this.content as Promise<Buffer>;
   }
 
   getStream(): Readable {

@@ -208,7 +208,7 @@ if (!args[2] || !program.commands.some(c => c.name() === args[2])) {
 
 program.parse(args);
 
-function runCommand(...args) {
+function runCommand(...args: Parameters<typeof run>) {
   run(...args).catch(handleUncaughtException);
 }
 
