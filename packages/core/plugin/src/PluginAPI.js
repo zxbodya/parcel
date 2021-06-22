@@ -15,8 +15,8 @@ import type {
 
 const CONFIG = Symbol.for('parcel-plugin-config');
 
-export class Transformer {
-  constructor<T>(opts: TransformerOpts<T>) {
+export class Transformer<T> {
+  constructor(opts: TransformerOpts<T>) {
     // $FlowFixMe
     this[CONFIG] = opts;
   }
@@ -29,22 +29,22 @@ export class Resolver {
   }
 }
 
-export class Bundler {
-  constructor<T>(opts: BundlerOpts<T>) {
+export class Bundler<T> {
+  constructor(opts: BundlerOpts<T>) {
     // $FlowFixMe
     this[CONFIG] = opts;
   }
 }
 
-export class Namer {
-  constructor<T>(opts: NamerOpts<T>) {
+export class Namer<T> {
+  constructor(opts: NamerOpts<T>) {
     // $FlowFixMe
     this[CONFIG] = opts;
   }
 }
 
-export class Runtime {
-  constructor<T>(opts: RuntimeOpts<T>) {
+export class Runtime<T> {
+  constructor(opts: RuntimeOpts<T>) {
     // $FlowFixMe
     this[CONFIG] = opts;
   }
@@ -57,15 +57,15 @@ export class Validator {
   }
 }
 
-export class Packager {
-  constructor<T>(opts: PackagerOpts<T>) {
+export class Packager<T> {
+  constructor(opts: PackagerOpts<T>) {
     // $FlowFixMe
     this[CONFIG] = opts;
   }
 }
 
-export class Optimizer {
-  constructor<T>(opts: OptimizerOpts<T>) {
+export class Optimizer<T> {
+  constructor(opts: OptimizerOpts<T>) {
     // $FlowFixMe
     this[CONFIG] = opts;
   }
