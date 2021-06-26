@@ -1,10 +1,54 @@
-import type {FilePath} from '@parcel/types';
+/// <reference types="node" />
+import { Readable } from 'stream';
+import { FilePath } from '@parcel/types';
+import { FileSystem } from '@parcel/fs';
 
-export type {Cache} from './lib/types';
-export const FSCache: {
-  new (cacheDir: FilePath): Cache
-};
+interface Cache {
+    readonly ensure?: () => Promise<void>;
+    has(key: string): Promise<boolean>;
+    get<T>(key: string): Promise<T | undefined | null>;
+    set(key: string, value: unknown): Promise<void>;
+    getStream(key: string): Readable;
+    setStream(key: string, stream: Readable): Promise<void>;
+    getBlob(key: string): Promise<Buffer>;
+    setBlob(key: string, contents: Buffer | string): Promise<void>;
+    getBuffer(key: string): Promise<Buffer | undefined | null>;
+}
 
-export const LMDBCache: {
-  new (cacheDir: FilePath): Cache
-};
+declare class LMDBCache implements Cache {
+    dir: FilePath;
+    store: any;
+    constructor(cacheDir: FilePath);
+    serialize(): {
+        dir: FilePath;
+    };
+    static deserialize(opts: {
+        dir: FilePath;
+    }): LMDBCache;
+    has(key: string): Promise<boolean>;
+    get<T>(key: string): Promise<T | undefined | null>;
+    set(key: string, value: unknown): Promise<void>;
+    getStream(key: string): Readable;
+    setStream(key: string, stream: Readable): Promise<void>;
+    getBlob(key: string): Promise<Buffer>;
+    setBlob(key: string, contents: Buffer | string): Promise<void>;
+    getBuffer(key: string): Promise<Buffer | undefined | null>;
+}
+
+declare class FSCache implements Cache {
+    fs: FileSystem;
+    dir: FilePath;
+    constructor(fs: FileSystem, cacheDir: FilePath);
+    ensure(): Promise<void>;
+    _getCachePath(cacheId: string): FilePath;
+    getStream(key: string): Readable;
+    setStream(key: string, stream: Readable): Promise<void>;
+    has(key: string): Promise<boolean>;
+    getBlob(key: string): Promise<Buffer>;
+    setBlob(key: string, contents: Buffer | string): Promise<void>;
+    getBuffer(key: string): Promise<Buffer | undefined | null>;
+    get<T>(key: string): Promise<T | undefined | null>;
+    set(key: string, value: unknown): Promise<void>;
+}
+
+export { Cache, FSCache, LMDBCache };
