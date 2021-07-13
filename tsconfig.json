@@ -197,5 +197,5 @@
     "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */,
     "resolveJsonModule": true
   },
-  "exclude": ["packages/core/integration-tests/test/integration/**/*"]
+  "exclude": ["packages/core/integration-tests/test/integration/**/*", "dts-tmp/**/*"]
 }
