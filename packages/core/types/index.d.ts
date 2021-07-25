@@ -167,7 +167,7 @@ declare type EnvironmentOptions = {
 declare type VersionMap = {
     [x: string]: string;
 };
-declare type EnvironmentFeature = 'esmodules' | 'dynamic-import' | 'worker-module' | 'service-worker-module' | 'import-meta-url';
+declare type EnvironmentFeature = 'esmodules' | 'dynamic-import' | 'worker-module' | 'service-worker-module' | 'import-meta-url' | 'arrow-functions';
 /**
  * Defines the environment in for the output bundle
  */
@@ -252,7 +252,6 @@ declare type DetailedReportOptions = {
 };
 declare type InitialParcelOptions = {
     readonly entries?: FilePath | Array<FilePath>;
-    readonly entryRoot?: FilePath;
     readonly config?: DependencySpecifier;
     readonly defaultConfig?: DependencySpecifier;
     readonly env?: EnvMap;
@@ -305,7 +304,6 @@ interface PluginOptions {
     readonly shouldBuildLazily: boolean;
     readonly shouldAutoInstall: boolean;
     readonly logLevel: LogLevel;
-    readonly entryRoot: FilePath;
     readonly projectRoot: FilePath;
     readonly cacheDir: FilePath;
     readonly inputFS: FileSystem;
@@ -1163,12 +1161,12 @@ interface PackagedBundle extends NamedBundle {
  * A collection of sibling bundles (which are stored in the BundleGraph) that should be loaded together (in order).
  * @section bundler
  */
-declare type BundleGroup = {
+interface BundleGroup {
     /** The target of the bundle group. */
     readonly target: Target;
     /** The id of the entry asset in the bundle group, which is executed immediately when the bundle group is loaded. */
     readonly entryAssetId: string;
-};
+}
 /**
  * A BundleGraph in the Bundler that can be modified
  * @section bundler
@@ -1256,6 +1254,7 @@ interface BundleGraph<TBundle extends Bundle> {
     traverse<TContext>(a: GraphVisitor<BundleGraphTraversable, TContext>): TContext | undefined | null;
     traverseBundles<TContext>(visit: GraphVisitor<TBundle, TContext>, startBundle?: Bundle | null): TContext | undefined | null;
     getUsedSymbols(a: Asset | Dependency): ReadonlySet<Symbol>;
+    getEntryRoot(target: Target): FilePath;
 }
 /**
  * @section bundler

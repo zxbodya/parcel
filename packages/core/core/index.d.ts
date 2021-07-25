@@ -25,7 +25,6 @@ declare type ProjectPath = string;
 
 declare type ParcelOptions = {
     entries: Array<ProjectPath>;
-    entryRoot: ProjectPath;
     config?: DependencySpecifier;
     defaultConfig?: DependencySpecifier;
     env: EnvMap;
