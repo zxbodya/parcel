@@ -47,7 +47,7 @@ declare function assertBundles(bundleGraph: BundleGraph<PackagedBundle>, expecte
     assets: Array<string>;
 }>): void;
 declare function normaliseNewlines(text: string): string;
-declare function runESM(entries: Array<[string, string]>, context: vm.Context, fs: FileSystem, externalModules?: ExternalModules, requireExtensions?: boolean): Promise<Array<{
+declare function runESM(baseDir: FilePath, entries: Array<[string, string]>, context: vm.Context, fs: FileSystem, externalModules?: ExternalModules, requireExtensions?: boolean): Promise<Array<{
     [x: string]: unknown;
 }>>;
 declare function assertESMExports(b: BundleGraph<PackagedBundle>, expected: unknown, externalModules?: ExternalModules, evaluate?: ((a: {
