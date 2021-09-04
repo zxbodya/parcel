@@ -39,7 +39,7 @@ export default new Transformer({
 
     return [asset];
   },
-}) as Transformer;
+});
 
 function collectDependencies(asset, ast) {
   for (let dep of ast) {

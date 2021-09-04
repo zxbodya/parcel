@@ -63,4 +63,4 @@ export default new Transformer({
       content: render(ast.program),
     };
   },
-}) as Transformer;
+});

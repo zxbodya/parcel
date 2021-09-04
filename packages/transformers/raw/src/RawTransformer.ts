@@ -5,4 +5,4 @@ export default new Transformer({
     asset.bundleBehavior = 'isolated';
     return [asset];
   },
-}) as Transformer;
+});

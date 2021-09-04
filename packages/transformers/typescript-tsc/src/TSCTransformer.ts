@@ -51,4 +51,4 @@ export default new Transformer({
       },
     ];
   },
-}) as Transformer;
+});

@@ -104,7 +104,7 @@ export default new Transformer({
       }),
     };
   },
-}) as Transformer;
+});
 
 function findFirstMatch(
   ast: AST,

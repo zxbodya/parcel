@@ -282,7 +282,7 @@ export default new Transformer({
       content: code,
     };
   },
-}) as Transformer;
+});
 
 async function createLoader(
   asset: MutableAsset,

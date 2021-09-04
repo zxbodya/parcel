@@ -84,7 +84,7 @@ export default new Transformer({
     asset.setCode(code);
     return [asset];
   },
-}) as Transformer;
+});
 
 // gather extra modules that should be added to the compilation process
 function resolveExtraSources({asset, logger}) {

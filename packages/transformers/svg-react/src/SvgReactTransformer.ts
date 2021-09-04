@@ -41,4 +41,4 @@ export default new Transformer({
 
     return [asset];
   },
-}) as Transformer;
+});

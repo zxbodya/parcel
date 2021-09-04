@@ -64,4 +64,4 @@ export default new Transformer({
     asset.setCode(JSON.stringify(data));
     return [asset];
   },
-}) as Transformer;
+});

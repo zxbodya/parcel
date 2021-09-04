@@ -14,4 +14,4 @@ export default new Transformer({
     asset.setCode(css);
     return [asset];
   },
-}) as Transformer;
+});

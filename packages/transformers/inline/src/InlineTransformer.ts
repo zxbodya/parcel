@@ -5,4 +5,4 @@ export default new Transformer({
     asset.bundleBehavior = 'inline';
     return [asset];
   },
-}) as Transformer;
+});

@@ -279,7 +279,7 @@ export default new Transformer({
 
     return assets;
   },
-}) as Transformer;
+});
 
 let cache = new Map();
 

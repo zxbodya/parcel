@@ -437,4 +437,4 @@ export default new Transformer({
     asset.meta.webextEntry = true;
     return [asset];
   },
-}) as Transformer;
+});

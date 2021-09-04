@@ -896,7 +896,7 @@ export default new Transformer({
 
     return [asset];
   },
-}) as Transformer;
+});
 
 // On linux with older versions of glibc (e.g. CentOS 7), we encounter a segmentation fault
 // when worker threads exit due to thread local variables used by SWC. A workaround is to
