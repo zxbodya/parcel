@@ -19,4 +19,4 @@ export default new Packager({
     });
     return {contents};
   },
-}) as Packager;
+});

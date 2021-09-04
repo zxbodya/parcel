@@ -171,7 +171,7 @@ export default new Packager({
       map,
     });
   },
-}) as Packager;
+});
 
 export function getSpecifier(dep: Dependency): string {
   if (typeof dep.meta.placeholder === 'string') {

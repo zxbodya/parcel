@@ -20,4 +20,4 @@ export default new Packager({
 
     return {contents: code, map};
   },
-}) as Packager;
+});

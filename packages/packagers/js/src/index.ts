@@ -87,7 +87,7 @@ export default new Packager({
       map,
     });
   },
-}) as Packager;
+});
 
 async function getSourceMapSuffix(
   getSourceMapReference: (
