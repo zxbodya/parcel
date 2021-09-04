@@ -1,4 +1,4 @@
-export default function throttle<TArgs extends Iterable<unknown>>(
+export default function throttle<TArgs extends Array<unknown>>(
   fn: (...args: TArgs) => unknown,
   delay: number,
 ): (...args: TArgs) => void {

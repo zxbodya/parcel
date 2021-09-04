@@ -413,7 +413,7 @@ export default new Bundler({
     deduplicate(bundleGraph);
     internalizeReachableAsyncDependencies(bundleGraph);
   },
-}) as Bundler;
+});
 
 function deduplicate(bundleGraph: MutableBundleGraph) {
   bundleGraph.traverse(node => {

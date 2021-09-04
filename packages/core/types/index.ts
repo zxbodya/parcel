@@ -1206,6 +1206,12 @@ export type CreateBundleOpts = // If an entryAsset is provided, a bundle id, typ
   // If an entryAsset is not provided, a bundle id, type, and environment must
   // be provided.
   | {
+  // todo: flowts using undefined properties
+      readonly isSplittable?: undefined;
+      readonly pipeline?: undefined;
+      readonly env?: undefined;
+      readonly uniqueKey?: undefined;
+      readonly type?: undefined;
       /** The entry asset of the bundle. If provided, many bundle properties will be inferred from it. */
       readonly entryAsset: Asset;
       /** The target of the bundle. Should come from the dependency that created the bundle. */
@@ -1225,6 +1231,8 @@ export type CreateBundleOpts = // If an entryAsset is provided, a bundle id, typ
       readonly bundleBehavior?: BundleBehavior | null;
     }
   | {
+  // todo: flowts using undefined properties
+      readonly entryAsset?: undefined;
       /** The type of the bundle. */
       readonly type: string;
       /** The environment of the bundle. */
