@@ -1,16 +1,15 @@
-// @flow
 import type {FileSystem} from '@parcel/fs';
 import type {FilePath, PackageJSON, PluginLogger} from '@parcel/types';
-import typeof TypeScriptModule from 'typescript'; // eslint-disable-line import/no-extraneous-dependencies
+type TypeScriptModule = typeof import('typescript').default;
 import type {CompilerOptions, SourceFile} from 'typescript';
-import typeof {ScriptTarget} from 'typescript'; // eslint-disable-line import/no-extraneous-dependencies
+type ScriptTarget = typeof import('typescript').ScriptTarget;
 
 import path from 'path';
 import {FSHost} from './FSHost';
 
 export class CompilerHost extends FSHost {
-  outputCode: ?string;
-  outputMap: ?string;
+  outputCode: string | undefined | null;
+  outputMap: string | undefined | null;
   logger: PluginLogger;
   // workaround for https://github.com/microsoft/TypeScript/issues/39547
   redirectTypes: Map<FilePath, FilePath> = new Map();
@@ -55,7 +54,7 @@ export class CompilerHost extends FSHost {
 
   getSourceFile(
     filePath: FilePath,
-    languageVersion: $Values<ScriptTarget>,
+    languageVersion: ScriptTarget[keyof ScriptTarget],
   ): void | SourceFile {
     let redirect = this.redirectTypes.get(filePath);
     if (redirect != null) {

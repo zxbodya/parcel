@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {IDisposable, InitialParcelOptions} from '@parcel/types';
 
 import {NodePackageManager} from '@parcel/package-manager';
@@ -150,7 +148,7 @@ function register(inputOpts?: InitialParcelOptions): IDisposable {
 }
 
 let disposable: IDisposable = register();
-register.dispose = (): mixed => disposable.dispose();
+register.dispose = (): unknown => disposable.dispose();
 
 // Support both commonjs and ES6 modules
 module.exports = register;

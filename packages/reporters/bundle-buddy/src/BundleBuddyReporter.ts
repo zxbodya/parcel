@@ -1,9 +1,8 @@
-// @flow strict-local
 import type {PackagedBundle} from '@parcel/types';
 import {Reporter} from '@parcel/plugin';
 import path from 'path';
 
-export default (new Reporter({
+export default new Reporter({
   async report({event, options, logger}) {
     if (event.type !== 'buildSuccess') {
       return;
@@ -52,4 +51,4 @@ export default (new Reporter({
       });
     }
   },
-}): Reporter);
+}) as Reporter;

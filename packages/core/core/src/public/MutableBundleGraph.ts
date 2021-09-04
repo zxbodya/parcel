@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {
   Asset as IAsset,
   Bundle as IBundle,
@@ -29,7 +27,8 @@ import BundleGroup, {bundleGroupToInternalBundleGroup} from './BundleGroup';
 
 export default class MutableBundleGraph
   extends BundleGraph<IBundle>
-  implements IMutableBundleGraph {
+  implements IMutableBundleGraph
+{
   #graph /*: InternalBundleGraph */;
   #options /*: ParcelOptions */;
   #bundlePublicIds /*: Set<string> */ = new Set<string>();
@@ -43,7 +42,7 @@ export default class MutableBundleGraph
   addAssetGraphToBundle(
     asset: IAsset,
     bundle: IBundle,
-    shouldSkipDependency?: IDependency => boolean,
+    shouldSkipDependency?: (a: IDependency) => boolean,
   ) {
     this.#graph.addAssetGraphToBundle(
       assetToAssetValue(asset),
@@ -57,7 +56,7 @@ export default class MutableBundleGraph
   addEntryToBundle(
     asset: IAsset,
     bundle: IBundle,
-    shouldSkipDependency?: IDependency => boolean,
+    shouldSkipDependency?: (a: IDependency) => boolean,
   ) {
     this.#graph.addEntryToBundle(
       assetToAssetValue(asset),
@@ -103,9 +102,8 @@ export default class MutableBundleGraph
       dependencyNode.id,
     );
     let resolvedNodeId = this.#graph._graph.getNodeIdByContentKey(resolved.id);
-    let assetNodes = this.#graph._graph.getNodeIdsConnectedFrom(
-      dependencyNodeId,
-    );
+    let assetNodes =
+      this.#graph._graph.getNodeIdsConnectedFrom(dependencyNodeId);
     this.#graph._graph.addEdge(dependencyNodeId, bundleGroupNodeId);
     this.#graph._graph.replaceNodeIdsConnectedTo(bundleGroupNodeId, assetNodes);
     this.#graph._graph.addEdge(dependencyNodeId, resolvedNodeId, 'references');

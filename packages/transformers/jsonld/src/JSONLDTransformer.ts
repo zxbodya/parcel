@@ -1,5 +1,3 @@
-// @flow
-
 import {Transformer} from '@parcel/plugin';
 import json5 from 'json5';
 
@@ -20,7 +18,7 @@ const SCHEMA_ATTRS = [
   'url',
 ];
 
-export default (new Transformer({
+export default new Transformer({
   async transform({asset}) {
     let rawCode = await asset.getCode();
     // allowing any recieved jsonld to be in json5 format
@@ -34,7 +32,7 @@ export default (new Transformer({
     asset.setCode(JSON.stringify(jsonCode));
     return [asset];
   },
-}): Transformer);
+}) as Transformer;
 
 function extractUrlsFrom(data, asset) {
   if (!data) return null;

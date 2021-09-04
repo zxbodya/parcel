@@ -1,9 +1,8 @@
-// @flow
 import type {Node} from '@babel/types';
 import type {SimpleVisitors, VisitorsExploded} from './types';
 
 import * as t from '@babel/types';
-import explode from './explode.js';
+import explode from './explode';
 import traverse from './traverse';
 
 export * from './traverse2';
@@ -13,12 +12,12 @@ export * from './types';
 
 export function simple<T>(
   node: Node,
-  _visitors: SimpleVisitors<(any, T) => void>,
+  _visitors: SimpleVisitors<(b: any, a: T) => void>,
   state: T,
 ) {
   if (!node) return;
 
-  const visitors: VisitorsExploded<(any, T) => void> = explode(_visitors);
+  const visitors: VisitorsExploded<(b: any, a: T) => void> = explode(_visitors);
 
   (function c(node) {
     if (!node) return;
@@ -53,12 +52,12 @@ export function simple<T>(
 
 export function ancestor<T>(
   node: Node,
-  _visitors: SimpleVisitors<(any, T, Array<Node>) => void>,
+  _visitors: SimpleVisitors<(c: any, b: T, a: Array<Node>) => void>,
   state: T,
 ) {
   if (!node) return;
 
-  const visitors = explode<(any, T, Array<Node>) => void>(_visitors);
+  const visitors = explode<(c: any, b: T, a: Array<Node>) => void>(_visitors);
   let ancestors = [];
 
   (function c(node) {
@@ -101,14 +100,13 @@ export function ancestor<T>(
 
 export function recursive<T>(
   node: Node,
-  _visitors: SimpleVisitors<(any, T, recurse: (Node) => void) => void>,
+  _visitors: SimpleVisitors<(b: any, a: T, recurse: (a: Node) => void) => void>,
   state: T,
 ) {
   if (!node) return;
 
-  const visitors = explode<(any, T, recurse: (Node) => void) => void>(
-    _visitors,
-  );
+  const visitors =
+    explode<(b: any, a: T, recurse: (a: Node) => void) => void>(_visitors);
 
   (function c(node) {
     if (!node) return;

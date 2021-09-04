@@ -1,5 +1,3 @@
-// @flow strict-local
-
 // $FlowFixMe
 import {version} from '../package.json';
 

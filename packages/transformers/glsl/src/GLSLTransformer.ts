@@ -1,12 +1,10 @@
-// @flow
-
 import path from 'path';
 import {promisify} from 'util';
 import {Transformer} from '@parcel/plugin';
 import glslifyDeps from 'glslify-deps';
 import glslifyBundle from 'glslify-bundle';
 
-export default (new Transformer({
+export default new Transformer({
   async transform({asset, resolve}) {
     asset.type = 'js';
 
@@ -39,7 +37,7 @@ export default (new Transformer({
 
     return [asset];
   },
-}): Transformer);
+}) as Transformer;
 
 function collectDependencies(asset, ast) {
   for (let dep of ast) {

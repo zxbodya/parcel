@@ -1,4 +1,3 @@
-// @flow
 import {Resolver} from '@parcel/plugin';
 import {isGlob, glob, relativePath, normalizeSeparators} from '@parcel/utils';
 import micromatch from 'micromatch';
@@ -6,7 +5,7 @@ import path from 'path';
 import nullthrows from 'nullthrows';
 import ThrowableDiagnostic from '@parcel/diagnostic';
 
-export default (new Resolver({
+export default new Resolver({
   async resolve({dependency, options, specifier, pipeline}) {
     if (!isGlob(specifier)) {
       return;
@@ -98,7 +97,7 @@ export default (new Resolver({
       priority: 'sync',
     };
   },
-}): Resolver);
+}) as Resolver;
 
 function set(obj, path, value) {
   for (let i = 0; i < path.length - 1; i++) {
@@ -141,12 +140,11 @@ function generate(matches, isAsync, indent = '', count = 0) {
       res += ',';
     }
 
-    let {imports: i, value, count: c} = generate(
-      matches[key],
-      isAsync,
-      indent + '  ',
-      count,
-    );
+    let {
+      imports: i,
+      value,
+      count: c,
+    } = generate(matches[key], isAsync, indent + '  ', count);
     imports += `${i}\n`;
     count = c;
 

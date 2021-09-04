@@ -1,9 +1,7 @@
-// @flow strict-local
-
 import assert from 'assert';
 import {Packager} from '@parcel/plugin';
 
-export default (new Packager({
+export default new Packager({
   async package({bundle, getSourceMapReference}) {
     let assets = [];
     bundle.traverseAssets(asset => {
@@ -22,4 +20,4 @@ export default (new Packager({
 
     return {contents: code, map};
   },
-}): Packager);
+}) as Packager;

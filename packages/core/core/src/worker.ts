@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {
   Bundle,
   ParcelOptions,
@@ -13,13 +11,13 @@ import type {DevDepSpecifier} from './requests/DevDepRequest';
 import invariant from 'assert';
 import nullthrows from 'nullthrows';
 import BundleGraph from './BundleGraph';
-import Transformation, {
-  type TransformationOpts,
-  type TransformationResult,
-} from './Transformation';
+import Transformation from './Transformation';
+import type {TransformationOpts, TransformationResult} from './Transformation';
 import {reportWorker} from './ReporterRunner';
-import PackagerRunner, {type PackageRequestResult} from './PackagerRunner';
-import Validation, {type ValidationOpts} from './Validation';
+import PackagerRunner from './PackagerRunner';
+import type {PackageRequestResult} from './PackagerRunner';
+import Validation from './Validation';
+import type {ValidationOpts} from './Validation';
 import ParcelConfig from './ParcelConfig';
 import {registerCoreWithSerializer} from './utils';
 import {clearBuildCaches} from './buildCache';
@@ -34,26 +32,25 @@ registerCoreWithSerializer();
 
 // Remove the workerApi type from the TransformationOpts and ValidationOpts types:
 // https://github.com/facebook/flow/issues/2835
-type WorkerTransformationOpts = {|
-  ...$Diff<TransformationOpts, {|workerApi: mixed, options: ParcelOptions|}>,
-  optionsRef: SharedReference,
-  configCachePath: string,
-|};
-type WorkerValidationOpts = {|
-  ...$Diff<ValidationOpts, {|workerApi: mixed, options: ParcelOptions|}>,
-  optionsRef: SharedReference,
-  configCachePath: string,
-|};
+type WorkerTransformationOpts = {
+  optionsRef: SharedReference;
+  configCachePath: string;
+} & Omit<TransformationOpts, 'workerApi' | 'options'>;
+
+type WorkerValidationOpts = {
+  optionsRef: SharedReference;
+  configCachePath: string;
+} & Omit<ValidationOpts, 'workerApi' | 'options'>;
 
 // TODO: this should eventually be replaced by an in memory cache layer
 let parcelConfigCache = new Map();
 
 function loadOptions(ref, workerApi) {
   return nullthrows(
-    ((workerApi.getSharedReference(
+    workerApi.getSharedReference(
       ref,
       // $FlowFixMe
-    ): any): ParcelOptions),
+    ) as any as ParcelOptions,
   );
 }
 
@@ -119,15 +116,15 @@ export async function runPackage(
     previousDevDeps,
     invalidDevDeps,
     previousInvalidations,
-  }: {|
-    bundle: Bundle,
-    bundleGraphReference: SharedReference,
-    configCachePath: string,
-    optionsRef: SharedReference,
-    previousDevDeps: Map<string, string>,
-    invalidDevDeps: Array<DevDepSpecifier>,
-    previousInvalidations: Array<RequestInvalidation>,
-  |},
+  }: {
+    bundle: Bundle;
+    bundleGraphReference: SharedReference;
+    configCachePath: string;
+    optionsRef: SharedReference;
+    previousDevDeps: Map<string, string>;
+    invalidDevDeps: Array<DevDepSpecifier>;
+    previousInvalidations: Array<RequestInvalidation>;
+  },
 ): Promise<PackageRequestResult> {
   let bundleGraph = workerApi.getSharedReference(bundleGraphReference);
   invariant(bundleGraph instanceof BundleGraph);
@@ -150,7 +147,8 @@ export async function childInit() {
   await initHash;
 }
 
-const PKG_RE = /node_modules[/\\]((?:@[^/\\]+[/\\][^/\\]+)|[^/\\]+)(?!.*[/\\]node_modules[/\\])/;
+const PKG_RE =
+  /node_modules[/\\]((?:@[^/\\]+[/\\][^/\\]+)|[^/\\]+)(?!.*[/\\]node_modules[/\\])/;
 export function invalidateRequireCache(workerApi: WorkerApi, file: string) {
   if (process.env.PARCEL_BUILD_ENV === 'test') {
     // Delete this module and all children in the same node_modules folder

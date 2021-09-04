@@ -1,4 +1,3 @@
-// @flow
 import {TSModule} from './TSModule';
 import type {TSModuleGraph} from './TSModuleGraph';
 
@@ -19,7 +18,7 @@ export function shake(
   // Propagate exports from the main module to determine what types should be included
   let exportedNames = moduleGraph.propagate(context);
 
-  let _currentModule: ?TSModule;
+  let _currentModule: TSModule | undefined | null;
   let visit = (node: any): any => {
     if (ts.isBundle(node)) {
       return ts.updateBundle(node, ts.visitNodes(node.sourceFiles, visit));

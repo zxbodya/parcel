@@ -1,5 +1,3 @@
-// @flow
-
 import type {MutableAsset, AST, PluginOptions} from '@parcel/types';
 
 import invariant from 'assert';
@@ -9,19 +7,19 @@ import {remapAstLocations} from '@parcel/babel-ast-utils';
 
 import packageJson from '../package.json';
 
-const transformerVersion: mixed = packageJson.version;
+const transformerVersion: unknown = packageJson.version;
 invariant(typeof transformerVersion === 'string');
 
-type Babel7TransformOptions = {|
-  asset: MutableAsset,
-  options: PluginOptions,
-  babelOptions: any,
-  additionalPlugins?: Array<any>,
-|};
+type Babel7TransformOptions = {
+  asset: MutableAsset;
+  options: PluginOptions;
+  babelOptions: any;
+  additionalPlugins?: Array<any>;
+};
 
 export default async function babel7(
   opts: Babel7TransformOptions,
-): Promise<?AST> {
+): Promise<AST | undefined | null> {
   let {asset, options, babelOptions, additionalPlugins = []} = opts;
   const babelCore = babelOptions.internal
     ? internalBabelCore

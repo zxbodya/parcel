@@ -1,4 +1,3 @@
-// @flow
 /* global HMR_HOST, HMR_PORT, HMR_ENV_HASH, HMR_SECURE */
 
 /*::

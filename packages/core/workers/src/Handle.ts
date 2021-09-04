@@ -1,4 +1,3 @@
-// @flow strict-local
 import {registerSerializableClass} from '@parcel/core';
 // $FlowFixMe
 import packageJson from '../package.json';
@@ -7,18 +6,18 @@ let HANDLE_ID = 0;
 // $FlowFixMe
 export type HandleFunction = (...args: Array<any>) => any;
 
-type HandleOpts = {|
-  fn?: HandleFunction,
-  childId?: ?number,
-  id?: number,
-|};
+type HandleOpts = {
+  fn?: HandleFunction;
+  childId?: number | null;
+  id?: number;
+};
 
 const handleById: Map<number, Handle> = new Map();
 
 export default class Handle {
   id: number;
-  childId: ?number;
-  fn: ?HandleFunction;
+  childId: number | undefined | null;
+  fn: HandleFunction | undefined | null;
 
   constructor(opts: HandleOpts) {
     this.id = opts.id ?? ++HANDLE_ID;
@@ -31,7 +30,10 @@ export default class Handle {
     handleById.delete(this.id);
   }
 
-  serialize(): {|childId: ?number, id: number|} {
+  serialize(): {
+    childId: number | undefined | null;
+    id: number;
+  } {
     return {
       id: this.id,
       childId: this.childId,

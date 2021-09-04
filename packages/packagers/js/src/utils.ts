@@ -1,4 +1,3 @@
-// @flow
 import type {BundleGraph, Dependency, NamedBundle} from '@parcel/types';
 import type SourceMap from '@parcel/source-map';
 import nullthrows from 'nullthrows';
@@ -10,7 +9,7 @@ export function replaceScriptDependencies(
   bundleGraph: BundleGraph<NamedBundle>,
   bundle: NamedBundle,
   code: string,
-  map: ?SourceMap,
+  map: SourceMap | undefined | null,
   parcelRequireName: string,
 ): string {
   let entry = nullthrows(bundle.getMainEntry());

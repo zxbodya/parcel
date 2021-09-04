@@ -1,4 +1,3 @@
-// @flow strict-local
 import assert from 'assert';
 import invariant from 'assert';
 import path from 'path';
@@ -74,16 +73,10 @@ if (MessageChannel) {
         // Wait for the hmr-runtime to process the event
         await sleep(100);
 
-        let [
-          ,
-          indexNum,
-          appNum,
-          fooText,
-          fooNum,
-          fooNum2,
-        ] = root.textContent.match(
-          /^([\d.]+) ([\d.]+) ([\w]+):([\d.]+):([\d.]+)$/,
-        );
+        let [, indexNum, appNum, fooText, fooNum, fooNum2] =
+          root.textContent.match(
+            /^([\d.]+) ([\d.]+) ([\w]+):([\d.]+):([\d.]+)$/,
+          );
         assert.equal(randoms.indexNum, indexNum);
         assert.equal(randoms.appNum, appNum);
         assert.notEqual(randoms.fooNum, fooNum);

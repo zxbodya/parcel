@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {Environment, ParcelOptions, Target} from '../src/types';
 
 import {FSCache} from '@parcel/cache';

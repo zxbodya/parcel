@@ -1,4 +1,3 @@
-// @flow
 import os from 'os';
 import {execSync} from 'child_process';
 
@@ -41,7 +40,7 @@ export function detectRealCores(): number {
 }
 
 let cores;
-export default function getCores(bypassCache?: boolean = false): number {
+export default function getCores(bypassCache: boolean = false): number {
   // Do not re-run commands if we already have the count...
   if (cores && !bypassCache) {
     return cores;
@@ -53,8 +52,9 @@ export default function getCores(bypassCache?: boolean = false): number {
     // Guess the amount of real cores
     cores = os
       .cpus()
-      .filter((cpu, index) => !cpu.model.includes('Intel') || index % 2 === 1)
-      .length;
+      .filter(
+        (cpu, index) => !cpu.model.includes('Intel') || index % 2 === 1,
+      ).length;
   }
 
   // Another fallback

@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import {Readable, PassThrough} from 'stream';
 import type {Blob} from '@parcel/types';
 

@@ -1,4 +1,3 @@
-// @flow
 import type {
   Config,
   FilePath,
@@ -15,22 +14,22 @@ import loadExternalPlugins from './loadPlugins';
 
 const MODULE_BY_NAME_RE = /\.module\./;
 
-type ConfigResult = {|
-  raw: any,
-  hydrated: {|
-    plugins: Array<any>,
-    from: FilePath,
-    to: FilePath,
-    modules: any,
-  |},
-|};
+type ConfigResult = {
+  raw: any;
+  hydrated: {
+    plugins: Array<any>;
+    from: FilePath;
+    to: FilePath;
+    modules: any;
+  };
+};
 
 async function configHydrator(
   configFile: any,
   config: Config,
-  resolveFrom: ?FilePath,
+  resolveFrom: FilePath | undefined | null,
   options: PluginOptions,
-): Promise<?ConfigResult> {
+): Promise<ConfigResult | undefined | null> {
   // Use a basic, modules-only PostCSS config if the file opts in by a name
   // like foo.module.css
   if (configFile == null && config.searchPath.match(MODULE_BY_NAME_RE)) {
@@ -99,11 +98,11 @@ export async function load({
   config,
   options,
   logger,
-}: {|
-  config: Config,
-  options: PluginOptions,
-  logger: PluginLogger,
-|}): Promise<?ConfigResult> {
+}: {
+  config: Config;
+  options: PluginOptions;
+  logger: PluginLogger;
+}): Promise<ConfigResult | undefined | null> {
   let configFile: any = await config.getConfig(
     ['.postcssrc', '.postcssrc.json', '.postcssrc.js', 'postcss.config.js'],
     {packageKey: 'postcss'},

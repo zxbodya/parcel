@@ -1,4 +1,3 @@
-// @flow strict-local
 import assert from 'assert';
 import path from 'path';
 import {inputFS as fs} from '@parcel/test-utils';

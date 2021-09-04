@@ -1,4 +1,3 @@
-// @flow
 import type {
   BuildMode,
   EnvMap,
@@ -13,15 +12,13 @@ import type {FileSystem} from '@parcel/fs';
 import type {PackageManager} from '@parcel/package-manager';
 import type {ParcelOptions} from '../types';
 
-let parcelOptionsToPluginOptions: WeakMap<
-  ParcelOptions,
-  PluginOptions,
-> = new WeakMap();
+let parcelOptionsToPluginOptions: WeakMap<ParcelOptions, PluginOptions> =
+  new WeakMap();
 
 export default class PluginOptions implements IPluginOptions {
   #options /*: ParcelOptions */;
 
-  constructor(options: ParcelOptions): PluginOptions {
+  constructor(options: ParcelOptions) {
     let existing = parcelOptionsToPluginOptions.get(options);
     if (existing != null) {
       return existing;
@@ -44,7 +41,7 @@ export default class PluginOptions implements IPluginOptions {
     return this.#options.env;
   }
 
-  get hmrOptions(): ?HMROptions {
+  get hmrOptions(): HMROptions | undefined | null {
     return this.#options.hmrOptions;
   }
 
@@ -86,7 +83,7 @@ export default class PluginOptions implements IPluginOptions {
     return this.#options.packageManager;
   }
 
-  get detailedReport(): ?DetailedReportOptions {
+  get detailedReport(): DetailedReportOptions | undefined | null {
     return this.#options.detailedReport;
   }
 }

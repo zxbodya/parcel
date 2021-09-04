@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {
   AsyncSubscription,
   BuildEvent,
@@ -55,7 +53,9 @@ export default class Parcel {
   #resolvedOptions /*: ?ParcelOptions*/ = null;
   #optionsRef /*: SharedReference */;
   #watchAbortController /*: AbortController*/;
-  #watchQueue /*: PromiseQueue<?BuildEvent>*/ = new PromiseQueue<?BuildEvent>({
+  #watchQueue /*: PromiseQueue<?BuildEvent>*/ = new PromiseQueue<
+    BuildEvent | undefined | null
+  >({
     maxConcurrent: 1,
   });
   #watchEvents /*: ValueEmitter<
@@ -106,10 +106,8 @@ export default class Parcel {
 
     await resolvedOptions.cache.ensure();
 
-    let {
-      dispose: disposeOptions,
-      ref: optionsRef,
-    } = await this.#farm.createSharedReference(resolvedOptions);
+    let {dispose: disposeOptions, ref: optionsRef} =
+      await this.#farm.createSharedReference(resolvedOptions);
     this.#optionsRef = optionsRef;
 
     this.#disposable = new Disposable();
@@ -166,7 +164,7 @@ export default class Parcel {
     await this.#farm.callAllWorkers('clearConfigCache', []);
   }
 
-  async _startNextBuild(): Promise<?BuildEvent> {
+  async _startNextBuild(): Promise<BuildEvent | undefined | null> {
     this.#watchAbortController = new AbortController();
     await this.#farm.callAllWorkers('clearConfigCache', []);
 
@@ -189,7 +187,7 @@ export default class Parcel {
   }
 
   async watch(
-    cb?: (err: ?Error, buildEvent?: BuildEvent) => mixed,
+    cb?: (err: Error | undefined | null, buildEvent?: BuildEvent) => unknown,
   ): Promise<AsyncSubscription> {
     if (!this.#initialized) {
       await this._init();
@@ -245,10 +243,10 @@ export default class Parcel {
   async _build({
     signal,
     startTime = Date.now(),
-  }: {|
-    signal?: AbortSignal,
-    startTime?: number,
-  |} = {}): Promise<BuildEvent> {
+  }: {
+    signal?: AbortSignal;
+    startTime?: number;
+  } = {}): Promise<BuildEvent> {
     this.#requestTracker.setSignal(signal);
     let options = nullthrows(this.#resolvedOptions);
     try {
@@ -265,12 +263,8 @@ export default class Parcel {
         signal,
       });
 
-      let {
-        bundleGraph,
-        bundleInfo,
-        changedAssets,
-        assetRequests,
-      } = await this.#requestTracker.runRequest(request, {force: true});
+      let {bundleGraph, bundleInfo, changedAssets, assetRequests} =
+        await this.#requestTracker.runRequest(request, {force: true});
 
       this.#requestedAssetIds.clear();
 
@@ -436,7 +430,7 @@ export class BuildError extends ThrowableDiagnostic {
 }
 
 export function createWorkerFarm(
-  options: $Shape<FarmOptions> = {},
+  options: Partial<FarmOptions> = {},
 ): WorkerFarm {
   return new WorkerFarm({
     ...options,

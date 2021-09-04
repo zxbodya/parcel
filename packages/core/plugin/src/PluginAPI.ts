@@ -1,5 +1,3 @@
-// @flow
-
 import type {
   Transformer as TransformerOpts,
   Resolver as ResolverOpts,

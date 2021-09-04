@@ -1,5 +1,4 @@
-// @flow
-import {typeof default as Less} from 'less';
+type Less = typeof import('less').default;
 import path from 'path';
 import {Transformer} from '@parcel/plugin';
 import SourceMap from '@parcel/source-map';
@@ -11,13 +10,12 @@ import {load} from './loadConfig';
 const WEBPACK_ALIAS_RE = /^~[^/]/;
 
 type LessConfig = {
-  sourceMap: any,
-  filename: string,
-  plugins: Array<any>,
-  ...
+  sourceMap: any;
+  filename: string;
+  plugins: Array<any>;
 };
 
-export default (new Transformer({
+export default new Transformer({
   loadConfig({config}) {
     return load({config});
   },
@@ -67,18 +65,20 @@ export default (new Transformer({
 
     return [asset];
   },
-}): Transformer);
+}) as Transformer;
 
 function urlPlugin({asset}) {
   return {
     install(less: Less, pluginManager) {
       // This is a hack; no such interface exists, even conceptually, in Less.
-      type LessNodeWithValue = less.tree.Node & {value: any, ...};
+      type LessNodeWithValue = less.tree.Node & {
+        value: any;
+      };
 
       const visitor = new less.visitors.Visitor({
         visitUrl(node) {
-          const valueNode = ((node.value: any): LessNodeWithValue);
-          const stringValue = (valueNode.value: string);
+          const valueNode = node.value as any as LessNodeWithValue;
+          const stringValue = valueNode.value as string;
           if (
             !stringValue.startsWith('#') // IE's `behavior: url(#default#VML)`)
           ) {

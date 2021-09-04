@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import {Runtime} from '@parcel/plugin';
 import {loadConfig} from '@parcel/utils';
 
@@ -14,7 +12,7 @@ window.$RefreshSig$ = function() {
   };
 };`;
 
-export default (new Runtime({
+export default new Runtime({
   async apply({bundle, options}) {
     if (
       bundle.type !== 'js' ||
@@ -50,4 +48,4 @@ export default (new Runtime({
       }
     }
   },
-}): Runtime);
+}) as Runtime;

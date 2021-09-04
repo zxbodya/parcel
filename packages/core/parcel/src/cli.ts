@@ -1,5 +1,3 @@
-// @flow
-
 import type {InitialParcelOptions} from '@parcel/types';
 import {BuildError} from '@parcel/core';
 import {NodeFS} from '@parcel/fs';
@@ -22,16 +20,11 @@ const program = new commander.Command();
 // https://tldp.org/LDP/abs/html/exitcodes.html
 const SIGINT_EXIT_CODE = 130;
 
-async function logUncaughtError(e: mixed) {
+async function logUncaughtError(e: unknown) {
   if (e instanceof ThrowableDiagnostic) {
     for (let diagnostic of e.diagnostics) {
-      let {
-        message,
-        codeframe,
-        stack,
-        hints,
-        documentation,
-      } = await prettyDiagnostic(diagnostic);
+      let {message, codeframe, stack, hints, documentation} =
+        await prettyDiagnostic(diagnostic);
       INTERNAL_ORIGINAL_CONSOLE.error(chalk.red(message));
       if (codeframe || stack) {
         INTERNAL_ORIGINAL_CONSOLE.error('');
@@ -241,7 +234,7 @@ async function run(
   });
 
   let disposable = new Disposable();
-  let unsubscribe: () => Promise<mixed>;
+  let unsubscribe: () => Promise<unknown>;
   let isExiting;
   async function exit(exitCode: number = 0) {
     if (isExiting) {
@@ -460,7 +453,7 @@ async function normalizeOptions(
 
   let additionalReporters = [
     {packageName: '@parcel/reporter-cli', resolveFrom: __filename},
-    ...(command.reporter: Array<string>).map(packageName => ({
+    ...(command.reporter as Array<string>).map(packageName => ({
       packageName,
       resolveFrom: path.join(inputFS.cwd(), 'index'),
     })),

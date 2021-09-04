@@ -1,7 +1,5 @@
-// @flow strict-local
-
-export default function debounce<TArgs: Array<mixed>>(
-  fn: (...args: TArgs) => mixed,
+export default function debounce<TArgs extends Array<unknown>>(
+  fn: (...args: TArgs) => unknown,
   delay: number,
 ): (...args: TArgs) => void {
   let timeout;

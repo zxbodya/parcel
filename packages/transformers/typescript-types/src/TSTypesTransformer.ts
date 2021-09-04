@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import {Transformer} from '@parcel/plugin';
 import path from 'path';
 import SourceMap from '@parcel/source-map';
@@ -14,7 +12,7 @@ import nullthrows from 'nullthrows';
 import {collect} from './collect';
 import {shake} from './shake';
 
-export default (new Transformer({
+export default new Transformer({
   async loadConfig({config, options}) {
     await loadTSConfig(config, options);
   },
@@ -82,7 +80,7 @@ export default (new Transformer({
             ? diagnostic.messageText
             : diagnostic.messageText.messageText;
 
-        let codeframe: ?DiagnosticCodeFrame;
+        let codeframe: DiagnosticCodeFrame | undefined | null;
         if (file != null && diagnostic.start != null) {
           let source = file.text || diagnostic.source;
           if (file.fileName) {
@@ -155,4 +153,4 @@ export default (new Transformer({
     asset.setMap(sourceMap);
     return [asset];
   },
-}): Transformer);
+}) as Transformer;

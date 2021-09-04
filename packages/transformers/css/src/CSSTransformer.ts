@@ -1,5 +1,3 @@
-// @flow
-
 import type {Root} from 'postcss';
 import type {FilePath} from '@parcel/types';
 
@@ -18,7 +16,7 @@ function canHaveDependencies(filePath: FilePath, code: string) {
   return !/\.css$/.test(filePath) || IMPORT_RE.test(code) || URL_RE.test(code);
 }
 
-export default (new Transformer({
+export default new Transformer({
   canReuseAST({ast}) {
     return ast.type === 'postcss' && semver.satisfies(ast.version, '^8.2.1');
   },
@@ -203,4 +201,4 @@ export default (new Transformer({
       map,
     };
   },
-}): Transformer);
+}) as Transformer;

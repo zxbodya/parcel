@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import program from 'commander';
 // flowlint-next-line untyped-import:off
 import {version} from '../package.json';
@@ -123,10 +121,10 @@ async function fsExists(filePath: string): Promise<boolean> {
 let usesYarn;
 async function installPackages(
   packageExpressions: Array<string>,
-  opts: {|
-    cwd: string,
-    isDevDependency?: boolean,
-  |},
+  opts: {
+    cwd: string;
+    isDevDependency?: boolean;
+  },
 ): Promise<void> {
   log(
     emoji.progress,
@@ -164,7 +162,7 @@ async function installPackages(
   );
 }
 
-function spawn(command: string, args: Array<mixed>, cwd: string) {
+function spawn(command: string, args: Array<unknown>, cwd: string) {
   return _spawn(command, args, {
     cwd,
     shell: process.platform === 'win32',

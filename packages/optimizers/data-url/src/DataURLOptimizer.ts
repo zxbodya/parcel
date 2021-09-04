@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import {Optimizer} from '@parcel/plugin';
 import {blobToBuffer} from '@parcel/utils';
 import mime from 'mime';
@@ -11,7 +9,7 @@ const fixedEncodeURIComponent = (str: string): string => {
   });
 };
 
-export default (new Optimizer({
+export default new Optimizer({
   async optimize({bundle, contents}) {
     let bufferContents = await blobToBuffer(contents);
     let hasBinaryContent = await isBinaryFile(bufferContents);
@@ -29,4 +27,4 @@ export default (new Optimizer({
       contents: `data:${mimeType}${encoding},${content}`,
     };
   },
-}): Optimizer);
+}) as Optimizer;

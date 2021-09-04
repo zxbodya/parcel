@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {Diagnostic} from '@parcel/diagnostic';
 import type {FileSystem} from '@parcel/fs';
 import type {
@@ -46,10 +44,9 @@ import {BROWSER_ENVS} from '../public/Environment';
 import {optionsProxy, toInternalSourceLocation} from '../utils';
 import {fromProjectPath, toProjectPath, joinProjectPath} from '../projectPath';
 
-type RunOpts = {|
-  input: Entry,
-  ...StaticRunOpts,
-|};
+type RunOpts = {
+  input: Entry;
+} & StaticRunOpts;
 
 const DEFAULT_DIST_DIRNAME = 'dist';
 const JS_RE = /\.[mc]?js$/;
@@ -74,12 +71,12 @@ const COMMON_TARGETS = {
   },
 };
 
-export type TargetRequest = {|
-  id: string,
-  +type: 'target_request',
-  run: RunOpts => Async<Array<Target>>,
-  input: Entry,
-|};
+export type TargetRequest = {
+  id: string;
+  readonly type: 'target_request';
+  run: (a: RunOpts) => Async<Array<Target>>;
+  input: Entry;
+};
 
 const type = 'target_request';
 
@@ -154,10 +151,8 @@ export class TargetResolver {
       optionTargets = [exclusiveTarget];
     }
 
-    let packageTargets: Map<
-      string,
-      Target | null,
-    > = await this.resolvePackageTargets(rootDir, exclusiveTarget);
+    let packageTargets: Map<string, Target | null> =
+      await this.resolvePackageTargets(rootDir, exclusiveTarget);
     let targets: Array<Target>;
     if (optionTargets) {
       if (Array.isArray(optionTargets)) {
@@ -322,8 +317,8 @@ export class TargetResolver {
               engines: {},
               shouldOptimize: this.options.defaultTargetOptions.shouldOptimize,
               outputFormat: this.options.defaultTargetOptions.outputFormat,
-              shouldScopeHoist: this.options.defaultTargetOptions
-                .shouldScopeHoist,
+              shouldScopeHoist:
+                this.options.defaultTargetOptions.shouldScopeHoist,
               sourceMap: this.options.defaultTargetOptions.sourceMaps
                 ? {}
                 : undefined,
@@ -367,11 +362,11 @@ export class TargetResolver {
 
     let pkg;
     let pkgContents;
-    let pkgFilePath: ?FilePath;
+    let pkgFilePath: FilePath | undefined | null;
     let pkgDir: FilePath;
     let pkgMap;
     if (conf) {
-      pkg = (conf.config: PackageJSON);
+      pkg = conf.config as PackageJSON;
       let pkgFile = conf.files[0];
       if (pkgFile == null) {
         throw new ThrowableDiagnostic({
@@ -520,7 +515,7 @@ export class TargetResolver {
 
         invariant(pkgMap != null);
 
-        let _descriptor: mixed = pkgTargets[targetName] ?? {};
+        let _descriptor: unknown = pkgTargets[targetName] ?? {};
         if (typeof targetDist === 'string') {
           distDir = toProjectPath(
             this.options.projectRoot,
@@ -750,13 +745,13 @@ export class TargetResolver {
       }
     }
 
-    let customTargets = (Object.keys(pkgTargets): Array<string>).filter(
+    let customTargets = (Object.keys(pkgTargets) as Array<string>).filter(
       targetName => !COMMON_TARGETS[targetName],
     );
 
     // Custom targets
     for (let targetName of customTargets) {
-      let distPath: mixed = pkg[targetName];
+      let distPath: unknown = pkg[targetName];
       let distDir;
       let distEntry;
       let loc;
@@ -942,13 +937,13 @@ export class TargetResolver {
   }
 
   inferOutputFormat(
-    distEntry: ?FilePath,
+    distEntry: FilePath | undefined | null,
     descriptor: PackageTargetDescriptor,
     targetName: string,
     pkg: PackageJSON,
-    pkgFilePath: ?FilePath,
-    pkgContents: ?string,
-  ): ?OutputFormat {
+    pkgFilePath?: FilePath | null,
+    pkgContents?: string | null,
+  ): OutputFormat | undefined | null {
     // Infer the outputFormat based on package.json properties.
     // If the extension is .mjs it's always a module.
     // If the extension is .cjs, it's always commonjs.
@@ -1037,9 +1032,9 @@ export class TargetResolver {
 }
 
 function parseEngines(
-  engines: mixed,
-  pkgPath: ?FilePath,
-  pkgContents: ?string,
+  engines: unknown,
+  pkgPath: FilePath | undefined | null,
+  pkgContents: string | undefined | null,
   prependKey: string,
   message: string,
 ): Engines | typeof undefined {
@@ -1059,9 +1054,9 @@ function parseEngines(
 
 function parseDescriptor(
   targetName: string,
-  descriptor: mixed,
-  pkgPath: ?FilePath,
-  pkgContents: ?string,
+  descriptor: unknown,
+  pkgPath?: FilePath | null,
+  pkgContents?: string | null,
 ): TargetDescriptor {
   validateSchema.diagnostic(
     DESCRIPTOR_SCHEMA,
@@ -1081,9 +1076,9 @@ function parseDescriptor(
 
 function parsePackageDescriptor(
   targetName: string,
-  descriptor: mixed,
-  pkgPath: ?FilePath,
-  pkgContents: ?string,
+  descriptor: unknown,
+  pkgPath?: FilePath | null,
+  pkgContents?: string | null,
 ): PackageTargetDescriptor {
   validateSchema.diagnostic(
     PACKAGE_DESCRIPTOR_SCHEMA,
@@ -1102,9 +1097,9 @@ function parsePackageDescriptor(
 
 function parseCommonTargetDescriptor(
   targetName: string,
-  descriptor: mixed,
-  pkgPath: ?FilePath,
-  pkgContents: ?string,
+  descriptor: unknown,
+  pkgPath?: FilePath | null,
+  pkgContents?: string | null,
 ): PackageTargetDescriptor {
   validateSchema.diagnostic(
     COMMON_TARGET_DESCRIPTOR_SCHEMA,

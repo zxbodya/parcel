@@ -1,4 +1,3 @@
-// @flow strict-local
 import type {SchemaEntity, SchemaObject} from '@parcel/utils';
 
 export const ENGINES_SCHEMA: SchemaEntity = {

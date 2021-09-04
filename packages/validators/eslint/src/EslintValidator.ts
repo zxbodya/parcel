@@ -1,12 +1,12 @@
-// @flow
 import {Validator} from '@parcel/plugin';
-import {type DiagnosticCodeFrame, escapeMarkdown} from '@parcel/diagnostic';
+import {escapeMarkdown} from '@parcel/diagnostic';
+import type {DiagnosticCodeFrame} from '@parcel/diagnostic';
 import eslint from 'eslint';
 import invariant from 'assert';
 
 let cliEngine = null;
 
-export default (new Validator({
+export default new Validator({
   async validate({asset}) {
     if (!cliEngine) {
       cliEngine = new eslint.CLIEngine({});
@@ -64,4 +64,4 @@ export default (new Validator({
 
     return validatorResult;
   },
-}): Validator);
+}) as Validator;

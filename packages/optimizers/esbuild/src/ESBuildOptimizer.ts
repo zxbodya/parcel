@@ -1,5 +1,3 @@
-// @flow
-
 import {startService} from 'esbuild';
 import {Optimizer} from '@parcel/plugin';
 import {blobToString, normalizePath} from '@parcel/utils';
@@ -8,7 +6,7 @@ import path from 'path';
 import invariant from 'assert';
 
 let service = null;
-export default (new Optimizer({
+export default new Optimizer({
   async optimize({contents, map, bundle, options, getSourceMapReference}) {
     if (!bundle.env.shouldOptimize) {
       return {contents, map};
@@ -56,4 +54,4 @@ export default (new Optimizer({
       map: sourcemap || map,
     };
   },
-}): Optimizer);
+}) as Optimizer;

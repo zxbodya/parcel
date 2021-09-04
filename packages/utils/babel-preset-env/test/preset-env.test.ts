@@ -1,5 +1,3 @@
-// @flow
-
 import * as babel from '@babel/core';
 import assert from 'assert';
 

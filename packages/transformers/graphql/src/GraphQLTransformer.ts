@@ -1,9 +1,8 @@
-// @flow
 import {Transformer} from '@parcel/plugin';
 import {parse, print, Source, stripIgnoredCharacters} from 'graphql';
 import {processDocumentImports} from 'graphql-import-macro';
 
-export default (new Transformer({
+export default new Transformer({
   async transform({asset, options, resolve}) {
     const document = parse(new Source(await asset.getCode(), asset.filePath));
     const expandedDocument = await processDocumentImports(document, loadImport);
@@ -27,4 +26,4 @@ export default (new Transformer({
 
     return [asset];
   },
-}): Transformer);
+}) as Transformer;

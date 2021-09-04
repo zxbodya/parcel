@@ -1,5 +1,3 @@
-// @flow
-
 const buildCaches: Array<Map<any, any>> = [];
 
 export function createBuildCache<K, V>(): Map<K, V> {

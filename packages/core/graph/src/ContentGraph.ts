@@ -1,23 +1,25 @@
-// @flow strict-local
 import type {ContentKey, NodeId} from './types';
 
-import Graph, {type GraphOpts} from './Graph';
+import Graph from './Graph';
+import type {GraphOpts} from './Graph';
 import nullthrows from 'nullthrows';
 
-export type SerializedContentGraph<TNode, TEdgeType: string | null = null> = {|
-  ...GraphOpts<TNode, TEdgeType>,
-  _contentKeyToNodeId: Map<ContentKey, NodeId>,
-  _nodeIdToContentKey: Map<NodeId, ContentKey>,
-|};
+export type SerializedContentGraph<
+  TNode,
+  TEdgeType extends string | null = null,
+> = {
+  _contentKeyToNodeId: Map<ContentKey, NodeId>;
+  _nodeIdToContentKey: Map<NodeId, ContentKey>;
+} & GraphOpts<TNode, TEdgeType>;
 
 export default class ContentGraph<
   TNode,
-  TEdgeType: string | null = null,
+  TEdgeType extends string | null = null,
 > extends Graph<TNode, TEdgeType> {
   _contentKeyToNodeId: Map<ContentKey, NodeId>;
   _nodeIdToContentKey: Map<NodeId, ContentKey>;
 
-  constructor(opts: ?SerializedContentGraph<TNode, TEdgeType>) {
+  constructor(opts?: SerializedContentGraph<TNode, TEdgeType> | null) {
     if (opts) {
       let {_contentKeyToNodeId, _nodeIdToContentKey, ...rest} = opts;
       super(rest);
@@ -57,7 +59,7 @@ export default class ContentGraph<
     return nodeId;
   }
 
-  getNodeByContentKey(contentKey: ContentKey): ?TNode {
+  getNodeByContentKey(contentKey: ContentKey): TNode | undefined | null {
     let nodeId = this._contentKeyToNodeId.get(contentKey);
     if (nodeId != null) {
       return super.getNode(nodeId);

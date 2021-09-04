@@ -1,4 +1,3 @@
-// @flow
 import type {Writable} from 'stream';
 
 import readline from 'readline';
@@ -9,9 +8,9 @@ import type {PadAlign} from './utils';
 import {pad, countLines} from './utils';
 import * as emoji from './emoji';
 
-type ColumnType = {|
-  align: PadAlign,
-|};
+type ColumnType = {
+  align: PadAlign;
+};
 
 export const isTTY: any | boolean | true =
   // $FlowFixMe

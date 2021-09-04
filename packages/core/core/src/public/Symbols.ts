@@ -1,4 +1,3 @@
-// @flow
 import type {
   Symbol as ISymbol,
   MutableAssetSymbols as IMutableAssetSymbols,
@@ -35,7 +34,7 @@ export class AssetSymbols implements IAssetSymbols {
   #value: Asset;
   #options: ParcelOptions;
 
-  constructor(options: ParcelOptions, asset: Asset): AssetSymbols {
+  constructor(options: ParcelOptions, asset: Asset) {
     let existing = valueToSymbols.get(asset);
     if (existing != null) {
       return existing;
@@ -61,9 +60,14 @@ export class AssetSymbols implements IAssetSymbols {
     return false;
   }
 
-  get(
-    exportSymbol: ISymbol,
-  ): ?{|local: ISymbol, loc: ?SourceLocation, meta?: ?Meta|} {
+  get(exportSymbol: ISymbol):
+    | {
+        local: ISymbol;
+        loc: SourceLocation | undefined | null;
+        meta?: Meta | null;
+      }
+    | undefined
+    | null {
     return fromInternalAssetSymbol(
       this.#options.projectRoot,
       this.#value.symbols?.get(exportSymbol),
@@ -97,10 +101,8 @@ export class AssetSymbols implements IAssetSymbols {
   }
 }
 
-let valueToMutableAssetSymbols: WeakMap<
-  Asset,
-  MutableAssetSymbols,
-> = new WeakMap();
+let valueToMutableAssetSymbols: WeakMap<Asset, MutableAssetSymbols> =
+  new WeakMap();
 export class MutableAssetSymbols implements IMutableAssetSymbols {
   /*::
   @@iterator(): Iterator<[ISymbol, {|local: ISymbol, loc: ?SourceLocation, meta?: ?Meta|}]> { return ({}: any); }
@@ -108,7 +110,7 @@ export class MutableAssetSymbols implements IMutableAssetSymbols {
   #value: Asset;
   #options: ParcelOptions;
 
-  constructor(options: ParcelOptions, asset: Asset): MutableAssetSymbols {
+  constructor(options: ParcelOptions, asset: Asset) {
     let existing = valueToMutableAssetSymbols.get(asset);
     if (existing != null) {
       return existing;
@@ -134,9 +136,14 @@ export class MutableAssetSymbols implements IMutableAssetSymbols {
     return false;
   }
 
-  get(
-    exportSymbol: ISymbol,
-  ): ?{|local: ISymbol, loc: ?SourceLocation, meta?: ?Meta|} {
+  get(exportSymbol: ISymbol):
+    | {
+        local: ISymbol;
+        loc: SourceLocation | undefined | null;
+        meta?: Meta | null;
+      }
+    | undefined
+    | null {
     return fromInternalAssetSymbol(
       this.#options.projectRoot,
       this.#value.symbols?.get(exportSymbol),
@@ -180,8 +187,8 @@ export class MutableAssetSymbols implements IMutableAssetSymbols {
   set(
     exportSymbol: ISymbol,
     local: ISymbol,
-    loc: ?SourceLocation,
-    meta: ?Meta,
+    loc?: SourceLocation | null,
+    meta?: Meta | null,
   ) {
     nullthrows(this.#value.symbols).set(exportSymbol, {
       local,
@@ -197,7 +204,7 @@ export class MutableAssetSymbols implements IMutableAssetSymbols {
 
 let valueToMutableDependencySymbols: WeakMap<
   Dependency,
-  MutableDependencySymbols,
+  MutableDependencySymbols
 > = new WeakMap();
 export class MutableDependencySymbols implements IMutableDependencySymbols {
   /*::
@@ -206,10 +213,7 @@ export class MutableDependencySymbols implements IMutableDependencySymbols {
   #value: Dependency;
   #options: ParcelOptions;
 
-  constructor(
-    options: ParcelOptions,
-    dep: Dependency,
-  ): MutableDependencySymbols {
+  constructor(options: ParcelOptions, dep: Dependency) {
     let existing = valueToMutableDependencySymbols.get(dep);
     if (existing != null) {
       return existing;
@@ -234,9 +238,15 @@ export class MutableDependencySymbols implements IMutableDependencySymbols {
     return false;
   }
 
-  get(
-    exportSymbol: ISymbol,
-  ): ?{|local: ISymbol, loc: ?SourceLocation, isWeak: boolean, meta?: ?Meta|} {
+  get(exportSymbol: ISymbol):
+    | {
+        local: ISymbol;
+        loc: SourceLocation | undefined | null;
+        isWeak: boolean;
+        meta?: Meta | null;
+      }
+    | undefined
+    | null {
     return fromInternalDependencySymbol(
       this.#options.projectRoot,
       nullthrows(this.#value.symbols).get(exportSymbol),
@@ -281,8 +291,8 @@ export class MutableDependencySymbols implements IMutableDependencySymbols {
   set(
     exportSymbol: ISymbol,
     local: ISymbol,
-    loc: ?SourceLocation,
-    isWeak: ?boolean,
+    loc?: SourceLocation | null,
+    isWeak?: boolean | null,
   ) {
     let symbols = nullthrows(this.#value.symbols);
     symbols.set(exportSymbol, {

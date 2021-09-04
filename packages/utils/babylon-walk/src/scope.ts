@@ -1,5 +1,3 @@
-// @flow
-
 import type {Identifier, Node} from '@babel/types';
 import type {Visitors} from './types';
 import * as t from '@babel/types';
@@ -19,12 +17,12 @@ export class Scope {
   names: Set<string> = new Set();
   bindings: Map<string, Node> = new Map();
   references: Map<string, Set<Identifier>> = new Map();
-  parent: ?Scope;
+  parent: Scope | undefined | null;
   program: Scope;
   renames: Map<string, string> = new Map();
   inverseRenames: Map<string, string> = new Map();
 
-  constructor(type: ScopeType, parent: ?Scope) {
+  constructor(type: ScopeType, parent?: Scope | null) {
     this.type = type;
     this.parent = parent;
     this.program = parent ? parent.program : this;
@@ -79,7 +77,7 @@ export class Scope {
     }
   }
 
-  getBinding(name: string): ?Node {
+  getBinding(name: string): Node | undefined | null {
     return this.bindings.get(name) ?? this.parent?.getBinding(name);
   }
 
@@ -135,9 +133,9 @@ export class Scope {
   }
 }
 
-export type ScopeState = {|
-  scope: Scope,
-|};
+export type ScopeState = {
+  scope: Scope;
+};
 
 export let scopeVisitor: Visitors<ScopeState> = {
   Program(node, state) {

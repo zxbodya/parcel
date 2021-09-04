@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import assert from 'assert';
 import BundleGraph from '../src/BundleGraph';
 import {DEFAULT_ENV, DEFAULT_TARGETS} from './test-utils';

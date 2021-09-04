@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {
   GraphVisitor,
   FilePath,
@@ -35,17 +33,13 @@ import {getBundleGroupId, getPublicId} from './utils';
 import {ISOLATED_ENVS} from './public/Environment';
 import {fromProjectPath} from './projectPath';
 
-type BundleGraphEdgeTypes =
-  // A lack of an edge type indicates to follow the edge while traversing
+type BundleGraphEdgeTypes = // A lack of an edge type indicates to follow the edge while traversing
   // the bundle's contents, e.g. `bundle.traverse()` during packaging.
-  | null
   // Used for constant-time checks of presence of a dependency or asset in a bundle,
   // avoiding bundle traversal in cases like `isAssetInAncestors`
-  | 'contains'
-  // Connections between bundles and bundle groups, for quick traversal of the
+  | null // Connections between bundles and bundle groups, for quick traversal of the
   // bundle hierarchy.
-  | 'bundle'
-  // When dependency -> asset: Indicates that the asset a dependency references
+  | 'contains' // When dependency -> asset: Indicates that the asset a dependency references
   //                           is contained in another bundle.
   // When dependency -> bundle: Indicates the bundle is necessary for any bundles
   //                           with the dependency.
@@ -54,32 +48,31 @@ type BundleGraphEdgeTypes =
   // This type prevents referenced assets from being traversed from dependencies
   // along the untyped edge, and enables traversal to referenced bundles that are
   // not directly connected to bundle group nodes.
-  | 'references'
-  // Signals that the dependency is internally resolvable via the bundle's ancestry,
+  | 'bundle' // Signals that the dependency is internally resolvable via the bundle's ancestry,
   // and that the bundle connected to the dependency is not necessary for the source bundle.
+  | 'references'
   | 'internal_async';
 
-type InternalSymbolResolution = {|
-  asset: Asset,
-  exportSymbol: string,
-  symbol: ?Symbol | false,
-  loc: ?InternalSourceLocation,
-|};
+type InternalSymbolResolution = {
+  asset: Asset;
+  exportSymbol: string;
+  symbol: Symbol | undefined | null | false;
+  loc: InternalSourceLocation | undefined | null;
+};
 
-type InternalExportSymbolResolution = {|
-  ...InternalSymbolResolution,
-  +exportAs: Symbol | string,
-|};
+type InternalExportSymbolResolution = {
+  readonly exportAs: Symbol | string;
+} & InternalSymbolResolution;
 
-type SerializedBundleGraph = {|
-  $$raw: true,
-  graph: SerializedContentGraph<BundleGraphNode, BundleGraphEdgeTypes>,
-  bundleContentHashes: Map<string, string>,
-  assetPublicIds: Set<string>,
-  publicIdByAssetId: Map<string, string>,
-|};
+type SerializedBundleGraph = {
+  $$raw: true;
+  graph: SerializedContentGraph<BundleGraphNode, BundleGraphEdgeTypes>;
+  bundleContentHashes: Map<string, string>;
+  assetPublicIds: Set<string>;
+  publicIdByAssetId: Map<string, string>;
+};
 
-function makeReadOnlySet<T>(set: Set<T>): $ReadOnlySet<T> {
+function makeReadOnlySet<T>(set: Set<T>): ReadonlySet<T> {
   return new Proxy(set, {
     get(target, property) {
       if (property === 'delete' || property === 'add' || property === 'clear') {
@@ -109,12 +102,12 @@ export default class BundleGraph {
     publicIdByAssetId,
     assetPublicIds,
     bundleContentHashes,
-  }: {|
-    graph: ContentGraph<BundleGraphNode, BundleGraphEdgeTypes>,
-    publicIdByAssetId: Map<string, string>,
-    assetPublicIds: Set<string>,
-    bundleContentHashes: Map<string, string>,
-  |}) {
+  }: {
+    graph: ContentGraph<BundleGraphNode, BundleGraphEdgeTypes>;
+    publicIdByAssetId: Map<string, string>;
+    assetPublicIds: Set<string>;
+    bundleContentHashes: Map<string, string>;
+  }) {
     this._graph = graph;
     this._assetPublicIds = assetPublicIds;
     this._publicIdByAssetId = publicIdByAssetId;
@@ -218,7 +211,7 @@ export default class BundleGraph {
   addAssetGraphToBundle(
     asset: Asset,
     bundle: Bundle,
-    shouldSkipDependency: Dependency => boolean = d =>
+    shouldSkipDependency: (a: Dependency) => boolean = d =>
       this.isDependencySkipped(d),
   ) {
     let assetNodeId = this._graph.getNodeIdByContentKey(asset.id);
@@ -270,7 +263,7 @@ export default class BundleGraph {
   addEntryToBundle(
     asset: Asset,
     bundle: Bundle,
-    shouldSkipDependency?: Dependency => boolean,
+    shouldSkipDependency?: (a: Dependency) => boolean,
   ) {
     this.addAssetGraphToBundle(asset, bundle, shouldSkipDependency);
     if (!bundle.entryAssetIds.includes(asset.id)) {
@@ -313,11 +306,18 @@ export default class BundleGraph {
 
   resolveAsyncDependency(
     dependency: Dependency,
-    bundle: ?Bundle,
-  ): ?(
-    | {|type: 'bundle_group', value: BundleGroup|}
-    | {|type: 'asset', value: Asset|}
-  ) {
+    bundle?: Bundle | null,
+  ):
+    | {
+        type: 'bundle_group';
+        value: BundleGroup;
+      }
+    | {
+        type: 'asset';
+        value: Asset;
+      }
+    | undefined
+    | null {
     let depNodeId = this._graph.getNodeIdByContentKey(dependency.id);
     let bundleNodeId =
       bundle != null ? this._graph.getNodeIdByContentKey(bundle.id) : null;
@@ -371,7 +371,10 @@ export default class BundleGraph {
     };
   }
 
-  getReferencedBundle(dependency: Dependency, fromBundle: Bundle): ?Bundle {
+  getReferencedBundle(
+    dependency: Dependency,
+    fromBundle: Bundle,
+  ): Bundle | undefined | null {
     let dependencyNodeId = this._graph.getNodeIdByContentKey(dependency.id);
 
     // If this dependency is async, there will be a bundle group attached to it.
@@ -646,7 +649,10 @@ export default class BundleGraph {
       });
   }
 
-  getResolvedAsset(dep: Dependency, bundle: ?Bundle): ?Asset {
+  getResolvedAsset(
+    dep: Dependency,
+    bundle?: Bundle | null,
+  ): Asset | undefined | null {
     let assets = this.getDependencyAssets(dep);
     let firstAsset = assets[0];
     let resolved =
@@ -689,7 +695,7 @@ export default class BundleGraph {
   traverseAssets<TContext>(
     bundle: Bundle,
     visit: GraphVisitor<Asset, TContext>,
-  ): ?TContext {
+  ): TContext | undefined | null {
     return this.traverseBundle(
       bundle,
       mapVisitor(node => (node.type === 'asset' ? node.value : null), visit),
@@ -886,7 +892,7 @@ export default class BundleGraph {
   traverseBundle<TContext>(
     bundle: Bundle,
     visit: GraphVisitor<AssetNode | DependencyNode, TContext>,
-  ): ?TContext {
+  ): TContext | undefined | null {
     let entries = true;
     let bundleNodeId = this._graph.getNodeIdByContentKey(bundle.id);
 
@@ -942,7 +948,7 @@ export default class BundleGraph {
 
   traverse<TContext>(
     visit: GraphVisitor<AssetNode | DependencyNode, TContext>,
-  ): ?TContext {
+  ): TContext | undefined | null {
     return this._graph.filteredTraverse(
       nodeId => {
         let node = nullthrows(this._graph.getNode(nodeId));
@@ -976,8 +982,8 @@ export default class BundleGraph {
 
   traverseBundles<TContext>(
     visit: GraphVisitor<Bundle, TContext>,
-    startBundle: ?Bundle,
-  ): ?TContext {
+    startBundle?: Bundle | null,
+  ): TContext | undefined | null {
     return this._graph.filteredTraverse(
       nodeId => {
         let node = nullthrows(this._graph.getNode(nodeId));
@@ -989,7 +995,7 @@ export default class BundleGraph {
     );
   }
 
-  getBundles(opts?: {|includeInline: boolean|}): Array<Bundle> {
+  getBundles(opts?: {includeInline: boolean}): Array<Bundle> {
     let bundles = [];
     this.traverseBundles(bundle => {
       if (
@@ -1064,7 +1070,9 @@ export default class BundleGraph {
 
   getBundlesInBundleGroup(
     bundleGroup: BundleGroup,
-    opts?: {|includeInline: boolean|},
+    opts?: {
+      includeInline: boolean;
+    },
   ): Array<Bundle> {
     let bundles: Set<Bundle> = new Set();
     for (let bundleNodeId of this._graph.getNodeIdsConnectedFrom(
@@ -1093,7 +1101,10 @@ export default class BundleGraph {
 
   getReferencedBundles(
     bundle: Bundle,
-    opts?: {|recursive?: boolean, includeInline?: boolean|},
+    opts?: {
+      recursive?: boolean;
+      includeInline?: boolean;
+    },
   ): Array<Bundle> {
     let recursive = opts?.recursive ?? true;
     let includeInline = opts?.includeInline ?? false;
@@ -1151,7 +1162,7 @@ export default class BundleGraph {
       });
   }
 
-  getAssetWithDependency(dep: Dependency): ?Asset {
+  getAssetWithDependency(dep: Dependency): Asset | undefined | null {
     if (!this._graph.hasContentKey(dep.id)) {
       return null;
     }
@@ -1183,16 +1194,16 @@ export default class BundleGraph {
 
   filteredTraverse<TValue, TContext>(
     bundleNodeId: NodeId,
-    filter: (NodeId, TraversalActions) => ?TValue,
+    filter: (b: NodeId, a: TraversalActions) => TValue | undefined | null,
     visit: GraphVisitor<TValue, TContext>,
-  ): ?TContext {
+  ): TContext | undefined | null {
     return this._graph.filteredTraverse(filter, visit, bundleNodeId);
   }
 
   getSymbolResolution(
     asset: Asset,
     symbol: Symbol,
-    boundary: ?Bundle,
+    boundary?: Bundle | null,
   ): InternalSymbolResolution {
     let assetOutside = boundary && !this.bundleHasAsset(boundary, asset);
 
@@ -1367,7 +1378,7 @@ export default class BundleGraph {
 
   getExportedSymbols(
     asset: Asset,
-    boundary: ?Bundle,
+    boundary?: Bundle | null,
   ): Array<InternalExportSymbolResolution> {
     if (!asset.symbols) {
       return [];
@@ -1509,13 +1520,13 @@ export default class BundleGraph {
     }
   }
 
-  getUsedSymbolsAsset(asset: Asset): $ReadOnlySet<Symbol> {
+  getUsedSymbolsAsset(asset: Asset): ReadonlySet<Symbol> {
     let node = this._graph.getNodeByContentKey(asset.id);
     invariant(node && node.type === 'asset');
     return makeReadOnlySet(node.usedSymbols);
   }
 
-  getUsedSymbolsDependency(dep: Dependency): $ReadOnlySet<Symbol> {
+  getUsedSymbolsDependency(dep: Dependency): ReadonlySet<Symbol> {
     let node = this._graph.getNodeByContentKey(dep.id);
     invariant(node && node.type === 'dependency');
     return makeReadOnlySet(node.usedSymbolsUp);

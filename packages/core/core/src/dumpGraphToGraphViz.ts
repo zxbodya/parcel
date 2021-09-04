@@ -1,5 +1,3 @@
-// @flow
-
 import type {Graph} from '@parcel/graph';
 import type {AssetGraphNode, BundleGraphNode, Environment} from './types';
 

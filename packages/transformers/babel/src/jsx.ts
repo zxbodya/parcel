@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {Config, PluginOptions} from '@parcel/types';
 
 import path from 'path';

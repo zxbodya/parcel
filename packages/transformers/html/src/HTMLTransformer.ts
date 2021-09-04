@@ -1,5 +1,3 @@
-// @flow
-
 import {Transformer} from '@parcel/plugin';
 import parse from 'posthtml-parser';
 import nullthrows from 'nullthrows';
@@ -8,7 +6,7 @@ import semver from 'semver';
 import collectDependencies from './dependencies';
 import extractInlineAssets from './inline';
 
-export default (new Transformer({
+export default new Transformer({
   canReuseAST({ast}) {
     return ast.type === 'posthtml' && semver.satisfies(ast.version, '^0.4.0');
   },
@@ -32,10 +30,8 @@ export default (new Transformer({
     let ast = nullthrows(await asset.getAST());
     let hasScripts = collectDependencies(asset, ast);
 
-    const {
-      assets: inlineAssets,
-      hasScripts: hasInlineScripts,
-    } = extractInlineAssets(asset, ast);
+    const {assets: inlineAssets, hasScripts: hasInlineScripts} =
+      extractInlineAssets(asset, ast);
 
     const result = [asset, ...inlineAssets];
 
@@ -70,4 +66,4 @@ export default (new Transformer({
       content: render(ast.program),
     };
   },
-}): Transformer);
+}) as Transformer;

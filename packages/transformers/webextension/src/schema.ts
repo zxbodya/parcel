@@ -1,7 +1,6 @@
-// @flow strict-local
 import type {SchemaEntity} from '@parcel/utils';
 
-const validateVersion = (ver: string): ?string => {
+const validateVersion = (ver: string): string | undefined | null => {
   const parts = ver.split('.', 5);
   if (parts.length == 5) return 'Extension versions to have at most three dots';
   if (
@@ -38,7 +37,7 @@ const arrStr = {
 
 // This has *some* Chrome bias, but let's be real here...
 // It's mainly intended to be highly cross-browser compatible
-export default ({
+export default {
   type: 'object',
   properties: {
     manifest_version: {
@@ -131,7 +130,7 @@ export default ({
         newtab: {type: 'string'},
       },
     },
-    commands: ({
+    commands: {
       type: 'object',
       properties: {},
       additionalProperties: {
@@ -152,7 +151,7 @@ export default ({
           description: {type: 'string'},
         },
       },
-    }: SchemaEntity),
+    } as SchemaEntity,
     content_scripts: {
       type: 'array',
       items: {
@@ -177,11 +176,11 @@ export default ({
     content_security_policy: {type: 'string'},
     devtools_page: {type: 'string'},
     // looks to be FF only
-    dictionaries: ({
+    dictionaries: {
       type: 'object',
       properties: {},
       additionalProperties: {type: 'string'},
-    }: SchemaEntity),
+    } as SchemaEntity,
     externally_connectable: {
       type: 'object',
       properties: {
@@ -228,11 +227,11 @@ export default ({
     },
     // No NaCl modules because deprecated
     offline_enabled: {type: 'boolean'},
-    omnibox: ({
+    omnibox: {
       type: 'object',
       properties: {},
       additionalProperties: {type: 'string'},
-    }: SchemaEntity),
+    } as SchemaEntity,
     optional_permissions: arrStr,
     // options_page is deprecated
     options_ui: {
@@ -389,4 +388,4 @@ export default ({
     version_name: {type: 'string'},
     web_accessible_resources: arrStr,
   },
-}: SchemaEntity);
+} as SchemaEntity;

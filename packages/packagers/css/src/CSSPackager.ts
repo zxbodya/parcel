@@ -1,5 +1,3 @@
-// @flow
-
 import type {Root} from 'postcss';
 import type {Asset} from '@parcel/types';
 
@@ -16,7 +14,7 @@ import {
 import postcss from 'postcss';
 import nullthrows from 'nullthrows';
 
-export default (new Packager({
+export default new Packager({
   async package({
     bundle,
     bundleGraph,
@@ -140,7 +138,7 @@ export default (new Packager({
       map,
     });
   },
-}): Packager);
+}) as Packager;
 
 async function processCSSModule(
   options,
@@ -149,7 +147,7 @@ async function processCSSModule(
   bundle,
   asset,
   media,
-): Promise<[Asset, string, ?Buffer]> {
+): Promise<[Asset, string, Buffer | undefined | null]> {
   let ast: Root = postcss.fromJSON(nullthrows((await asset.getAST())?.program));
 
   let usedSymbols = bundleGraph.getUsedSymbols(asset);

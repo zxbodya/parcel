@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {Async, FilePath, PackageJSON} from '@parcel/types';
 import type {StaticRunOpts} from '../RequestTracker';
 import type {Entry, InternalFile, ParcelOptions} from '../types';
@@ -17,30 +15,31 @@ import ThrowableDiagnostic, {
   getJSONSourceLocation,
 } from '@parcel/diagnostic';
 import path from 'path';
-import jsonMap, {type Mapping} from 'json-source-map';
+import jsonMap from 'json-source-map';
+import type {Mapping} from 'json-source-map';
 import {
-  type ProjectPath,
   fromProjectPath,
   fromProjectPathRelative,
   toProjectPath,
 } from '../projectPath';
 
-type RunOpts = {|
-  input: ProjectPath,
-  ...StaticRunOpts,
-|};
+import type {ProjectPath} from '../projectPath';
 
-export type EntryRequest = {|
-  id: string,
-  +type: 'entry_request',
-  run: RunOpts => Async<EntryResult>,
-  input: ProjectPath,
-|};
+type RunOpts = {
+  input: ProjectPath;
+} & StaticRunOpts;
 
-export type EntryResult = {|
-  entries: Array<Entry>,
-  files: Array<InternalFile>,
-|};
+export type EntryRequest = {
+  id: string;
+  readonly type: 'entry_request';
+  run: (a: RunOpts) => Async<EntryResult>;
+  input: ProjectPath;
+};
+
+export type EntryResult = {
+  entries: Array<Entry>;
+  files: Array<InternalFile>;
+};
 
 const type = 'entry_request';
 
@@ -314,14 +313,19 @@ export class EntryResolver {
     });
   }
 
-  async readPackage(
-    entry: FilePath,
-  ): Promise<?{
-    ...PackageJSON,
-    filePath: FilePath,
-    map: {|data: mixed, pointers: {|[string]: Mapping|}|},
-    ...
-  }> {
+  async readPackage(entry: FilePath): Promise<
+    | ({
+        filePath: FilePath;
+        map: {
+          data: unknown;
+          pointers: {
+            [x: string]: Mapping;
+          };
+        };
+      } & PackageJSON)
+    | undefined
+    | null
+  > {
     let content, pkg;
     let pkgFile = path.join(entry, 'package.json');
     try {

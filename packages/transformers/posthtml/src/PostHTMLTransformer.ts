@@ -1,5 +1,3 @@
-// @flow
-
 import {Transformer} from '@parcel/plugin';
 
 import path from 'path';
@@ -11,7 +9,7 @@ import semver from 'semver';
 import {relativePath} from '@parcel/utils';
 import loadPlugins from './loadPlugins';
 
-export default (new Transformer({
+export default new Transformer({
   async loadConfig({config, options, logger}) {
     let configFile = await config.getConfig(
       ['.posthtmlrc', '.posthtmlrc.js', 'posthtml.config.js'],
@@ -128,4 +126,4 @@ export default (new Transformer({
       content: render(ast.program),
     };
   },
-}): Transformer);
+}) as Transformer;

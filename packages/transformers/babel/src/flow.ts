@@ -1,5 +1,3 @@
-// @flow
-
 import type {Config, PluginOptions, PackageJSON} from '@parcel/types';
 import type {BabelConfig} from './types';
 
@@ -9,7 +7,7 @@ import type {BabelConfig} from './types';
 export default async function getFlowOptions(
   config: Config,
   options: PluginOptions,
-): Promise<?BabelConfig> {
+): Promise<BabelConfig | undefined | null> {
   if (!config.isSource) {
     return null;
   }

@@ -1,4 +1,3 @@
-// @flow strict-local
 import type {FilePath} from '@parcel/types';
 import path from 'path';
 

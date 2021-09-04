@@ -1,9 +1,8 @@
-// @flow
 import type {Node} from '@babel/types';
 import type {VisitorFunc, Visitors, VisitorsExploded} from './types';
 
 import * as t from '@babel/types';
-import explode from './explode.js';
+import explode from './explode';
 
 export const SKIP: symbol = Symbol('traverse.SKIP');
 export const REMOVE: symbol = Symbol('traverse.REMOVE');
@@ -15,7 +14,7 @@ export function traverse2<T>(
 ) {
   let ancestors = [];
   let revisit = [];
-  traverseWalk(explode((visitors: any)), ancestors, revisit, state, node);
+  traverseWalk(explode(visitors as any), ancestors, revisit, state, node);
 
   for (let fn of revisit) {
     fn();
@@ -133,7 +132,7 @@ export function mergeVisitors<T, U>(
   res._exploded = true;
 
   for (let visitor of [a, b]) {
-    let {shouldSkip, ...exploded} = explode((visitor: any));
+    let {shouldSkip, ...exploded} = explode(visitor as any);
     for (let type in exploded) {
       if (!res[type]) {
         res[type] = {};

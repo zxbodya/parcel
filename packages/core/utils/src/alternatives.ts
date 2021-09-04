@@ -1,4 +1,3 @@
-// @flow
 import path from 'path';
 import type {FileSystem} from '@parcel/fs';
 import {fuzzySearch} from './schema';
@@ -64,16 +63,16 @@ async function findAllFilesUp({
   collected,
   leadingDotSlash = true,
   includeDirectories = true,
-}: {|
-  fs: FileSystem,
-  dir: string,
-  root: string,
-  basedir: string,
-  maxlength: number,
-  collected: Array<string>,
-  leadingDotSlash?: boolean,
-  includeDirectories?: boolean,
-|}): Promise<mixed> {
+}: {
+  fs: FileSystem;
+  dir: string;
+  root: string;
+  basedir: string;
+  maxlength: number;
+  collected: Array<string>;
+  leadingDotSlash?: boolean;
+  includeDirectories?: boolean;
+}): Promise<unknown> {
   let dirContent = (await fs.readdir(dir)).sort();
   return Promise.all(
     dirContent.map(async item => {
@@ -107,9 +106,9 @@ export async function findAlternativeFiles(
   fileSpecifier: string,
   dir: string,
   projectRoot: string,
-  leadingDotSlash?: boolean = true,
-  includeDirectories?: boolean = true,
-  includeExtension?: boolean = false,
+  leadingDotSlash: boolean = true,
+  includeDirectories: boolean = true,
+  includeExtension: boolean = false,
 ): Promise<Array<string>> {
   let potentialFiles: Array<string> = [];
   // Find our root, we won't recommend files above the package root as that's bad practise

@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {IDisposable} from './types';
 
 import {AlreadyDisposedError} from './errors';
@@ -12,10 +10,10 @@ export default class ValueEmitter<TValue> implements IDisposable {
   // An array of listeners. One might think a Set would be better for O(1) removal,
   // but splicing a JS array gets pretty close, and copying the array (as is done
   // in emit) is far faster than a Set copy: https://github.com/atom/event-kit/pull/39
-  _listeners: Array<(value: TValue) => mixed> = [];
+  _listeners: Array<(value: TValue) => unknown> = [];
   _disposed: boolean = false;
 
-  addListener(listener: (value: TValue) => mixed): IDisposable {
+  addListener(listener: (value: TValue) => unknown): IDisposable {
     if (this._disposed) {
       throw new AlreadyDisposedError(
         'Cannot add a listener since this ValueEmitter has been disposed',

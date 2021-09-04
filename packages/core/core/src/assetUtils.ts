@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {
   ASTGenerator,
   BundleBehavior,
@@ -33,42 +31,46 @@ import PluginOptions from './public/PluginOptions';
 import {blobToStream, hashFile} from '@parcel/utils';
 import {hashFromOption, toInternalSourceLocation} from './utils';
 import {createBuildCache} from './buildCache';
-import {
-  type ProjectPath,
-  fromProjectPath,
-  fromProjectPathRelative,
-} from './projectPath';
+import {fromProjectPath, fromProjectPathRelative} from './projectPath';
+import type {ProjectPath} from './projectPath';
 import {hashString} from '@parcel/hash';
 import {BundleBehavior as BundleBehaviorMap} from './types';
 
-type AssetOptions = {|
-  id?: string,
-  committed?: boolean,
-  hash?: ?string,
-  idBase?: ?string,
-  filePath: ProjectPath,
-  query?: ?QueryParameters,
-  type: string,
-  contentKey?: ?string,
-  mapKey?: ?string,
-  astKey?: ?string,
-  astGenerator?: ?ASTGenerator,
-  dependencies?: Map<string, Dependency>,
-  bundleBehavior?: ?BundleBehavior,
-  isBundleSplittable?: ?boolean,
-  isSource: boolean,
-  env: Environment,
-  meta?: Meta,
-  outputHash?: ?string,
-  pipeline?: ?string,
-  stats: Stats,
-  symbols?: ?Map<Symbol, {|local: Symbol, loc: ?SourceLocation, meta?: ?Meta|}>,
-  sideEffects?: boolean,
-  uniqueKey?: ?string,
-  plugin?: PackageName,
-  configPath?: ProjectPath,
-  configKeyPath?: string,
-|};
+type AssetOptions = {
+  id?: string;
+  committed?: boolean;
+  hash?: string | null;
+  idBase?: string | null;
+  filePath: ProjectPath;
+  query?: QueryParameters | null;
+  type: string;
+  contentKey?: string | null;
+  mapKey?: string | null;
+  astKey?: string | null;
+  astGenerator?: ASTGenerator | null;
+  dependencies?: Map<string, Dependency>;
+  bundleBehavior?: BundleBehavior | null;
+  isBundleSplittable?: boolean | null;
+  isSource: boolean;
+  env: Environment;
+  meta?: Meta;
+  outputHash?: string | null;
+  pipeline?: string | null;
+  stats: Stats;
+  symbols?: Map<
+    Symbol,
+    {
+      local: Symbol;
+      loc: SourceLocation | undefined | null;
+      meta?: Meta | null;
+    }
+  > | null;
+  sideEffects?: boolean;
+  uniqueKey?: string | null;
+  plugin?: PackageName;
+  configPath?: ProjectPath;
+  configKeyPath?: string;
+};
 
 export function createAssetIdFromOptions(options: AssetOptions): string {
   let uniqueKey = options.uniqueKey ?? '';
@@ -158,7 +160,7 @@ async function _generateFromAST(asset: CommittedAsset | UncommittedAsset) {
   }
 
   let pluginName = nullthrows(asset.value.plugin);
-  let {plugin} = await loadPlugin<Transformer<mixed>>(
+  let {plugin} = await loadPlugin<Transformer<unknown>>(
     pluginName,
     fromProjectPath(
       asset.options.projectRoot,

@@ -1,4 +1,3 @@
-// @flow
 import type {ReadStream, Stats} from 'fs';
 import type {Writable} from 'stream';
 import type {FileOptions, FileSystem, Encoding} from './types';
@@ -49,7 +48,7 @@ export class NodeFS implements FileSystem {
   realpathSync: (path: string, cache?: any) => string =
     process.platform === 'win32' ? fs.realpathSync : fs.realpathSync.native;
   existsSync: (path: string) => boolean = fs.existsSync;
-  readdirSync: any = (fs.readdirSync: any);
+  readdirSync: any = fs.readdirSync as any;
   findAncestorFile: any = isPnP
     ? (...args) => searchJS.findAncestorFile(this, ...args)
     : searchNative.findAncestorFile;
@@ -67,7 +66,7 @@ export class NodeFS implements FileSystem {
   async writeFile(
     filePath: FilePath,
     contents: Buffer | string,
-    options: ?FileOptions,
+    options?: FileOptions | null,
   ): Promise<void> {
     let tmpFilePath = getTempFilePath(filePath);
     await fs.promises.writeFile(
@@ -104,7 +103,7 @@ export class NodeFS implements FileSystem {
 
   watch(
     dir: FilePath,
-    fn: (err: ?Error, events: Array<Event>) => mixed,
+    fn: (err: Error | undefined | null, events: Array<Event>) => unknown,
     opts: WatcherOptions,
   ): Promise<AsyncSubscription> {
     return watcher.subscribe(dir, fn, opts);

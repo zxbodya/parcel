@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {InitialParcelOptions} from '@parcel/types';
 import WorkerFarm from '@parcel/workers';
 // flowlint-next-line untyped-import:off

@@ -1,4 +1,3 @@
-// @flow
 import type {Config, PluginOptions} from '@parcel/types';
 import {ParseConfigHost} from './ParseConfigHost';
 import path from 'path';

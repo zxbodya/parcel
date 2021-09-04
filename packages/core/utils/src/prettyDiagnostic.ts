@@ -1,4 +1,3 @@
-// @flow strict-local
 import type {Diagnostic} from '@parcel/diagnostic';
 import type {PluginOptions} from '@parcel/types';
 
@@ -10,13 +9,13 @@ import nullthrows from 'nullthrows';
 // $FlowFixMe
 import terminalLink from 'terminal-link';
 
-export type AnsiDiagnosticResult = {|
-  message: string,
-  stack: string,
-  codeframe: string,
-  hints: Array<string>,
-  documentation: string,
-|};
+export type AnsiDiagnosticResult = {
+  message: string;
+  stack: string;
+  codeframe: string;
+  hints: Array<string>;
+  documentation: string;
+};
 
 export default async function prettyDiagnostic(
   diagnostic: Diagnostic,

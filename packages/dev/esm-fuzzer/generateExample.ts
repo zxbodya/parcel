@@ -1,4 +1,3 @@
-// @flow strict-local
 const invariant = require('assert');
 const nullthrows = require('nullthrows');
 const t = require('@babel/types');

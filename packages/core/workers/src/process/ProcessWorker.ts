@@ -1,5 +1,3 @@
-// @flow
-
 import type {
   WorkerImpl,
   MessageHandler,
@@ -7,14 +5,15 @@ import type {
   ExitHandler,
   WorkerMessage,
 } from '../types';
-import childProcess, {type ChildProcess} from 'child_process';
+import childProcess from 'child_process';
+import type {ChildProcess} from 'child_process';
 import path from 'path';
 import {serialize, deserialize} from '@parcel/core';
 
 const WORKER_PATH = path.join(__dirname, 'ProcessChild.js');
 
 export default class ProcessWorker implements WorkerImpl {
-  execArgv: Object;
+  execArgv: any;
   onMessage: MessageHandler;
   onError: ErrorHandler;
   onExit: ExitHandler;
@@ -23,7 +22,7 @@ export default class ProcessWorker implements WorkerImpl {
   sendQueue: Array<any> = [];
 
   constructor(
-    execArgv: Object,
+    execArgv: any,
     onMessage: MessageHandler,
     onError: ErrorHandler,
     onExit: ExitHandler,

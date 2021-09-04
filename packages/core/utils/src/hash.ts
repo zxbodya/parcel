@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {Readable} from 'stream';
 import type {FileSystem} from '@parcel/fs';
 
@@ -25,7 +23,7 @@ export function hashStream(stream: Readable): Promise<string> {
   });
 }
 
-export function hashObject(obj: {+[string]: mixed, ...}): string {
+export function hashObject(obj: {readonly [x: string]: unknown}): string {
   return hashString(JSON.stringify(objectSortedEntriesDeep(obj)));
 }
 

@@ -1,14 +1,10 @@
-// @flow strict-local
 import type {TransformerResult} from '@parcel/types';
 
 import {Transformer} from '@parcel/plugin';
 import nullthrows from 'nullthrows';
 import {hashObject} from '@parcel/utils';
-import ThrowableDiagnostic, {
-  type Diagnostic,
-  escapeMarkdown,
-  md,
-} from '@parcel/diagnostic';
+import ThrowableDiagnostic, {escapeMarkdown, md} from '@parcel/diagnostic';
+import type {Diagnostic} from '@parcel/diagnostic';
 import SourceMap from '@parcel/source-map';
 import semver from 'semver';
 import {basename, extname, relative, dirname} from 'path';
@@ -20,7 +16,7 @@ import consolidate from 'consolidate';
 const MODULE_BY_NAME_RE = /\.module\./;
 
 // TODO: Use language-specific config files during preprocessing
-export default (new Transformer({
+export default new Transformer({
   async loadConfig({config}) {
     let conf = await config.getConfig(
       ['.vuerc', '.vuerc.json', '.vuerc.js', 'vue.config.js'],
@@ -147,7 +143,7 @@ export default script;`,
       },
     ];
   },
-}): Transformer);
+}) as Transformer;
 
 function createDiagnostic(err, filePath) {
   if (typeof err === 'string') {

@@ -1,5 +1,3 @@
-// @flow
-
 import assert from 'assert';
 
 import config from '../';
@@ -45,7 +43,7 @@ describe('@parcel/config-default', () => {
 });
 
 function collectConfigPackageReferences(
-  configSection: mixed,
+  configSection: unknown,
   references: Set<string> = new Set(),
 ): Set<string> {
   if (configSection == null || typeof configSection !== 'object') {

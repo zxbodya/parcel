@@ -1,4 +1,3 @@
-// @flow
 import type {MutableAsset} from '@parcel/types';
 
 import {Transformer} from '@parcel/plugin';
@@ -34,7 +33,9 @@ const DEP_LOCS = [
 async function collectDependencies(
   asset: MutableAsset,
   program: any,
-  ptrs: {[key: string]: any, ...},
+  ptrs: {
+    [key: string]: any;
+  },
   hot: boolean,
 ) {
   // isEntry used whenever strictly necessary to preserve filename
@@ -242,7 +243,7 @@ async function collectDependencies(
   }
 }
 
-function cspPatchHMR(policy: ?string) {
+function cspPatchHMR(policy?: string | null) {
   if (policy) {
     const csp = parseCSP(policy);
     policy = '';
@@ -264,7 +265,7 @@ function cspPatchHMR(policy: ?string) {
   }
 }
 
-export default (new Transformer({
+export default new Transformer({
   async transform({asset, options}) {
     const code = await asset.getCode();
     const parsed = jsm.parse(code);
@@ -293,4 +294,4 @@ export default (new Transformer({
     asset.setCode(JSON.stringify(data, null, 2));
     return [asset];
   },
-}): Transformer);
+}) as Transformer;

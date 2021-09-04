@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {Dependency} from '@parcel/types';
 
 import assert from 'assert';

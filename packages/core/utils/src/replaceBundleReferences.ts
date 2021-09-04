@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type SourceMap from '@parcel/source-map';
 import type {
   Async,
@@ -18,7 +16,10 @@ import {bufferStream, relativeBundlePath, urlJoin} from './';
 
 type ReplacementMap = Map<
   string /* dependency id */,
-  {|from: string, to: string|},
+  {
+    from: string;
+    to: string;
+  }
 >;
 
 /*
@@ -34,13 +35,16 @@ export function replaceURLReferences({
   contents,
   map,
   relative = true,
-}: {|
-  bundle: NamedBundle,
-  bundleGraph: BundleGraph<NamedBundle>,
-  contents: string,
-  relative?: boolean,
-  map?: ?SourceMap,
-|}): {|+contents: string, +map: ?SourceMap|} {
+}: {
+  bundle: NamedBundle;
+  bundleGraph: BundleGraph<NamedBundle>;
+  contents: string;
+  relative?: boolean;
+  map?: SourceMap | null;
+}): {
+  readonly contents: string;
+  readonly map: SourceMap | undefined | null;
+} {
   let replacements = new Map();
   let urlDependencies = [];
   bundle.traverse(node => {
@@ -97,21 +101,29 @@ export async function replaceInlineReferences({
   map,
   getInlineReplacement,
   getInlineBundleContents,
-}: {|
-  bundle: Bundle,
-  bundleGraph: BundleGraph<NamedBundle>,
-  contents: string,
+}: {
+  bundle: Bundle;
+  bundleGraph: BundleGraph<NamedBundle>;
+  contents: string;
   getInlineReplacement: (
-    Dependency,
-    ?'string',
-    string,
-  ) => {|from: string, to: string|},
+    c: Dependency,
+    b: 'string' | undefined | null,
+    a: string,
+  ) => {
+    from: string;
+    to: string;
+  };
   getInlineBundleContents: (
-    Bundle,
-    BundleGraph<NamedBundle>,
-  ) => Async<{|contents: Blob|}>,
-  map?: ?SourceMap,
-|}): Promise<{|+contents: string, +map: ?SourceMap|}> {
+    b: Bundle,
+    a: BundleGraph<NamedBundle>,
+  ) => Async<{
+    contents: Blob;
+  }>;
+  map?: SourceMap | null;
+}): Promise<{
+  readonly contents: string;
+  readonly map: SourceMap | undefined | null;
+}> {
   let replacements = new Map();
 
   let dependencies = [];
@@ -131,9 +143,10 @@ export async function replaceInlineReferences({
       entryBundle,
       bundleGraph,
     );
-    let packagedContents = (packagedBundle.contents instanceof Readable
-      ? await bufferStream(packagedBundle.contents)
-      : packagedBundle.contents
+    let packagedContents = (
+      packagedBundle.contents instanceof Readable
+        ? await bufferStream(packagedBundle.contents)
+        : packagedBundle.contents
     ).toString();
 
     let inlineType = nullthrows(entryBundle.getMainEntry()).meta.inlineType;
@@ -153,12 +166,15 @@ export function getURLReplacement({
   fromBundle,
   toBundle,
   relative,
-}: {|
-  dependency: Dependency,
-  fromBundle: NamedBundle,
-  toBundle: NamedBundle,
-  relative: boolean,
-|}): {|from: string, to: string|} {
+}: {
+  dependency: Dependency;
+  fromBundle: NamedBundle;
+  toBundle: NamedBundle;
+  relative: boolean;
+}): {
+  from: string;
+  to: string;
+} {
   let to;
 
   let orig = URL.parse(dependency.specifier);
@@ -197,8 +213,11 @@ export function getURLReplacement({
 function performReplacement(
   replacements: ReplacementMap,
   contents: string,
-  map?: ?SourceMap,
-): {|+contents: string, +map: ?SourceMap|} {
+  map?: SourceMap | null,
+): {
+  readonly contents: string;
+  readonly map: SourceMap | undefined | null;
+} {
   let finalContents = contents;
   for (let {from, to} of replacements.values()) {
     // Perform replacement

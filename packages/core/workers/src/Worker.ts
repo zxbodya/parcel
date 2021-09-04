@@ -1,5 +1,3 @@
-// @flow
-
 import type {FilePath} from '@parcel/types';
 import type {BackendType, WorkerImpl, WorkerMessage} from './types';
 import type {SharedReference} from './WorkerFarm';
@@ -9,32 +7,32 @@ import EventEmitter from 'events';
 import ThrowableDiagnostic from '@parcel/diagnostic';
 import {getWorkerBackend} from './backend';
 
-export type WorkerCall = {|
-  method?: string,
-  handle?: number,
-  args: $ReadOnlyArray<any>,
-  retries: number,
-  skipReadyCheck?: boolean,
-  resolve: (result: Promise<any> | any) => void,
-  reject: (error: any) => void,
-|};
+export type WorkerCall = {
+  method?: string;
+  handle?: number;
+  args: ReadonlyArray<any>;
+  retries: number;
+  skipReadyCheck?: boolean;
+  resolve: (result: Promise<any> | any) => void;
+  reject: (error: any) => void;
+};
 
-type WorkerOpts = {|
-  forcedKillTime: number,
-  backend: BackendType,
-  shouldPatchConsole?: boolean,
-  sharedReferences: $ReadOnlyMap<SharedReference, mixed>,
-|};
+type WorkerOpts = {
+  forcedKillTime: number;
+  backend: BackendType;
+  shouldPatchConsole?: boolean;
+  sharedReferences: ReadonlyMap<SharedReference, unknown>;
+};
 
 let WORKER_ID = 0;
 export default class Worker extends EventEmitter {
-  +options: WorkerOpts;
+  readonly options: WorkerOpts;
   worker: WorkerImpl;
   id: number = WORKER_ID++;
-  sharedReferences: $ReadOnlyMap<SharedReference, mixed> = new Map();
+  sharedReferences: ReadonlyMap<SharedReference, unknown> = new Map();
 
   calls: Map<number, WorkerCall> = new Map();
-  exitCode: ?number = null;
+  exitCode: number | undefined | null = null;
   callId: number = 0;
 
   ready: boolean = false;
@@ -134,7 +132,7 @@ export default class Worker extends EventEmitter {
     this.emit('ready');
   }
 
-  sendSharedReference(ref: SharedReference, value: mixed): Promise<any> {
+  sendSharedReference(ref: SharedReference, value: unknown): Promise<any> {
     return new Promise((resolve, reject) => {
       this.call({
         method: 'createSharedReference',

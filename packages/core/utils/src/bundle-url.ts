@@ -1,6 +1,4 @@
-// @flow strict-local
-
-let bundleURL: ?string = null;
+let bundleURL: string | undefined | null = null;
 function getBundleURLCached(): string {
   if (bundleURL == null) {
     bundleURL = _getBundleURL();
@@ -24,7 +22,7 @@ function _getBundleURL(): string {
   return '/';
 }
 
-export function getBaseURL(url: ?string): string {
+export function getBaseURL(url?: string | null): string {
   if (url == null) {
     return '/';
   }

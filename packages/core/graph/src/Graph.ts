@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import {toNodeId, fromNodeId} from './types';
 import type {Edge, NodeId} from './types';
 import type {TraversalActions, GraphVisitor} from '@parcel/types';
@@ -7,23 +5,23 @@ import type {TraversalActions, GraphVisitor} from '@parcel/types';
 import assert from 'assert';
 import nullthrows from 'nullthrows';
 
-export type GraphOpts<TNode, TEdgeType: string | null = null> = {|
-  nodes?: Map<NodeId, TNode>,
-  edges?: AdjacencyListMap<TEdgeType | null>,
-  rootNodeId?: ?NodeId,
-  nextNodeId?: ?number,
-|};
+export type GraphOpts<TNode, TEdgeType extends string | null = null> = {
+  nodes?: Map<NodeId, TNode>;
+  edges?: AdjacencyListMap<TEdgeType | null>;
+  rootNodeId?: NodeId | null;
+  nextNodeId?: number | null;
+};
 
 export const ALL_EDGE_TYPES = '@@all_edge_types';
 
-export default class Graph<TNode, TEdgeType: string | null = null> {
+export default class Graph<TNode, TEdgeType extends string | null = null> {
   nodes: Map<NodeId, TNode>;
   inboundEdges: AdjacencyList<TEdgeType | null>;
   outboundEdges: AdjacencyList<TEdgeType | null>;
-  rootNodeId: ?NodeId;
+  rootNodeId: NodeId | undefined | null;
   nextNodeId: number = 0;
 
-  constructor(opts: ?GraphOpts<TNode, TEdgeType>) {
+  constructor(opts?: GraphOpts<TNode, TEdgeType> | null) {
     this.nodes = opts?.nodes || new Map();
     this.setRootNodeId(opts?.rootNodeId);
     this.nextNodeId = opts?.nextNodeId ?? 0;
@@ -45,7 +43,7 @@ export default class Graph<TNode, TEdgeType: string | null = null> {
     }
   }
 
-  setRootNodeId(id: ?NodeId) {
+  setRootNodeId(id?: NodeId | null) {
     this.rootNodeId = id;
   }
 
@@ -93,7 +91,7 @@ export default class Graph<TNode, TEdgeType: string | null = null> {
     return this.nodes.has(id);
   }
 
-  getNode(id: NodeId): ?TNode {
+  getNode(id: NodeId): TNode | undefined | null {
     return this.nodes.get(id);
   }
 
@@ -110,7 +108,7 @@ export default class Graph<TNode, TEdgeType: string | null = null> {
     this.inboundEdges.addEdge(to, from, type);
   }
 
-  hasEdge(from: NodeId, to: NodeId, type?: TEdgeType | null = null): boolean {
+  hasEdge(from: NodeId, to: NodeId, type: TEdgeType | null = null): boolean {
     return this.outboundEdges.hasEdge(from, to, type);
   }
 
@@ -303,9 +301,9 @@ export default class Graph<TNode, TEdgeType: string | null = null> {
   // Update a node's downstream nodes making sure to prune any orphaned branches
   replaceNodeIdsConnectedTo(
     fromNodeId: NodeId,
-    toNodeIds: $ReadOnlyArray<NodeId>,
-    replaceFilter?: null | (NodeId => boolean),
-    type?: TEdgeType | null = null,
+    toNodeIds: ReadonlyArray<NodeId>,
+    replaceFilter?: null | ((a: NodeId) => boolean),
+    type: TEdgeType | null = null,
   ): void {
     this._assertHasNodeId(fromNodeId);
 
@@ -330,9 +328,9 @@ export default class Graph<TNode, TEdgeType: string | null = null> {
 
   traverse<TContext>(
     visit: GraphVisitor<NodeId, TContext>,
-    startNodeId: ?NodeId,
+    startNodeId?: NodeId | null,
     type: TEdgeType | null | Array<TEdgeType | null> = null,
-  ): ?TContext {
+  ): TContext | undefined | null {
     return this.dfs({
       visit,
       startNodeId,
@@ -341,19 +339,19 @@ export default class Graph<TNode, TEdgeType: string | null = null> {
   }
 
   filteredTraverse<TValue, TContext>(
-    filter: (NodeId, TraversalActions) => ?TValue,
+    filter: (b: NodeId, a: TraversalActions) => TValue | undefined | null,
     visit: GraphVisitor<TValue, TContext>,
-    startNodeId: ?NodeId,
+    startNodeId?: NodeId | null,
     type?: TEdgeType | null | Array<TEdgeType | null>,
-  ): ?TContext {
+  ): TContext | undefined | null {
     return this.traverse(mapVisitor(filter, visit), startNodeId, type);
   }
 
   traverseAncestors<TContext>(
-    startNodeId: ?NodeId,
+    startNodeId: NodeId | undefined | null,
     visit: GraphVisitor<NodeId, TContext>,
     type: TEdgeType | null | Array<TEdgeType | null> = null,
-  ): ?TContext {
+  ): TContext | undefined | null {
     return this.dfs({
       visit,
       startNodeId,
@@ -365,11 +363,11 @@ export default class Graph<TNode, TEdgeType: string | null = null> {
     visit,
     startNodeId,
     getChildren,
-  }: {|
-    visit: GraphVisitor<NodeId, TContext>,
-    getChildren(nodeId: NodeId): Array<NodeId>,
-    startNodeId?: ?NodeId,
-  |}): ?TContext {
+  }: {
+    visit: GraphVisitor<NodeId, TContext>;
+    getChildren(nodeId: NodeId): Array<NodeId>;
+    startNodeId?: NodeId | null;
+  }): TContext | undefined | null {
     let traversalStartNode = nullthrows(
       startNodeId ?? this.rootNodeId,
       'A start node is required to traverse',
@@ -388,7 +386,7 @@ export default class Graph<TNode, TEdgeType: string | null = null> {
       },
     };
 
-    let walk = (nodeId, context: ?TContext) => {
+    let walk = (nodeId, context?: TContext | null) => {
       if (!this.hasNode(nodeId)) return;
       visited.add(nodeId);
 
@@ -447,7 +445,9 @@ export default class Graph<TNode, TEdgeType: string | null = null> {
     return walk(traversalStartNode);
   }
 
-  bfs(visit: (nodeId: NodeId) => ?boolean): ?NodeId {
+  bfs(
+    visit: (nodeId: NodeId) => boolean | undefined | null,
+  ): NodeId | undefined | null {
     let rootNodeId = nullthrows(
       this.rootNodeId,
       'A root node is required to traverse',
@@ -474,7 +474,10 @@ export default class Graph<TNode, TEdgeType: string | null = null> {
     return null;
   }
 
-  findAncestor(nodeId: NodeId, fn: (nodeId: NodeId) => boolean): ?NodeId {
+  findAncestor(
+    nodeId: NodeId,
+    fn: (nodeId: NodeId) => boolean,
+  ): NodeId | undefined | null {
     let res = null;
     this.traverseAncestors(nodeId, (nodeId, ctx, traversal) => {
       if (fn(nodeId)) {
@@ -499,7 +502,10 @@ export default class Graph<TNode, TEdgeType: string | null = null> {
     return res;
   }
 
-  findDescendant(nodeId: NodeId, fn: (nodeId: NodeId) => boolean): ?NodeId {
+  findDescendant(
+    nodeId: NodeId,
+    fn: (nodeId: NodeId) => boolean,
+  ): NodeId | undefined | null {
     let res = null;
     this.traverse((nodeId, ctx, traversal) => {
       if (fn(nodeId)) {
@@ -532,7 +538,7 @@ export default class Graph<TNode, TEdgeType: string | null = null> {
 }
 
 export function mapVisitor<NodeId, TValue, TContext>(
-  filter: (NodeId, TraversalActions) => ?TValue,
+  filter: (b: NodeId, a: TraversalActions) => TValue | undefined | null,
   visit: GraphVisitor<TValue, TContext>,
 ): GraphVisitor<NodeId, TContext> {
   function makeEnter(visit) {
@@ -582,11 +588,11 @@ class AdjacencyList<TEdgeType> {
     return this._listMap;
   }
 
-  getEdges(from: NodeId, type: TEdgeType): $ReadOnlySet<NodeId> {
+  getEdges(from: NodeId, type: TEdgeType): ReadonlySet<NodeId> {
     return this._listMap.get(from)?.get(type) ?? new Set();
   }
 
-  getEdgesByType(from: NodeId): $ReadOnlyMap<TEdgeType, $ReadOnlySet<NodeId>> {
+  getEdgesByType(from: NodeId): ReadonlyMap<TEdgeType, ReadonlySet<NodeId>> {
     return this._listMap.get(from) ?? new Map();
   }
 

@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import assert from 'assert';
 import ValueEmitter from '../src/ValueEmitter';
 import {AlreadyDisposedError} from '../src/errors';

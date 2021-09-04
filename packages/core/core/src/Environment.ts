@@ -1,4 +1,3 @@
-// @flow
 import type {EnvironmentOptions, FilePath} from '@parcel/types';
 import type {Environment, InternalSourceLocation} from './types';
 import {hashString} from '@parcel/hash';
@@ -9,10 +8,9 @@ const DEFAULT_ENGINES = {
   node: '>= 8.0.0',
 };
 
-type EnvironmentOpts = {|
-  ...EnvironmentOptions,
-  loc?: ?InternalSourceLocation,
-|};
+type EnvironmentOpts = {
+  loc?: InternalSourceLocation | null;
+} & EnvironmentOptions;
 
 export function createEnvironment({
   context,
@@ -107,7 +105,7 @@ export function createEnvironment({
 export function mergeEnvironments(
   projectRoot: FilePath,
   a: Environment,
-  b: ?EnvironmentOptions,
+  b?: EnvironmentOptions | null,
 ): Environment {
   // If merging the same object, avoid copying.
   if (a === b || !b) {

@@ -1,46 +1,45 @@
-// @flow
 import type {Session} from 'inspector';
 import invariant from 'assert';
 import ThrowableDiagnostic from '@parcel/diagnostic';
 
 // https://chromedevtools.github.io/devtools-protocol/tot/Profiler#type-Profile
-export type Profile = {|
-  nodes: Array<ProfileNode>,
-  startTime: number,
-  endTime: number,
-  samples?: Array<number>,
-  timeDeltas?: Array<number>,
-|};
+export type Profile = {
+  nodes: Array<ProfileNode>;
+  startTime: number;
+  endTime: number;
+  samples?: Array<number>;
+  timeDeltas?: Array<number>;
+};
 
 // https://chromedevtools.github.io/devtools-protocol/tot/Profiler#type-ProfileNode
-type ProfileNode = {|
-  id: number,
-  callFrame: CallFrame,
-  hitCount?: number,
-  children?: Array<number>,
-  deoptReason?: string,
-  positionTicks?: PositionTickInfo,
-|};
+type ProfileNode = {
+  id: number;
+  callFrame: CallFrame;
+  hitCount?: number;
+  children?: Array<number>;
+  deoptReason?: string;
+  positionTicks?: PositionTickInfo;
+};
 
 // https://chromedevtools.github.io/devtools-protocol/tot/Runtime#type-CallFrame
-type CallFrame = {|
-  functionName: string,
-  scriptId: string,
-  url: string,
-  lineNumber: string,
-  columnNumber: string,
-|};
+type CallFrame = {
+  functionName: string;
+  scriptId: string;
+  url: string;
+  lineNumber: string;
+  columnNumber: string;
+};
 
 // https://chromedevtools.github.io/devtools-protocol/tot/Profiler#type-PositionTickInfo
-type PositionTickInfo = {|
-  line: number,
-  ticks: number,
-|};
+type PositionTickInfo = {
+  line: number;
+  ticks: number;
+};
 
 export default class Profiler {
   session: Session;
 
-  startProfiling(): Promise<mixed> {
+  startProfiling(): Promise<unknown> {
     let inspector;
     try {
       inspector = require('inspector');
@@ -66,7 +65,12 @@ export default class Profiler {
     ]);
   }
 
-  sendCommand(method: string, params: mixed): Promise<{profile: Profile, ...}> {
+  sendCommand(
+    method: string,
+    params: unknown,
+  ): Promise<{
+    profile: Profile;
+  }> {
     invariant(this.session != null);
     return new Promise((resolve, reject) => {
       this.session.post(method, params, (err, params) => {

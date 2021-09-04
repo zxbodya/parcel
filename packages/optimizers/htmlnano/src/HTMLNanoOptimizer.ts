@@ -1,4 +1,3 @@
-// @flow strict-local
 import type {PostHTMLNode} from 'posthtml';
 
 import htmlnano from 'htmlnano';
@@ -9,7 +8,7 @@ import {SVG_ATTRS, SVG_TAG_NAMES} from './svgMappings';
 // $FlowFixMe
 import {extendDefaultPlugins} from 'svgo';
 
-export default (new Optimizer({
+export default new Optimizer({
   async loadConfig({config, options}) {
     let userConfig = await config.getConfigFrom(
       path.join(options.projectRoot, 'index.html'),
@@ -113,7 +112,7 @@ export default (new Optimizer({
       contents: (await posthtml(plugins).process(contents)).html,
     };
   },
-}): Optimizer);
+}) as Optimizer;
 
 // HTML tags and attributes are case insensitive. The HTML transformer normalizes them so it can
 // more easily process any case. But SVGO requires case sensitive tags and attributes to work correctly.

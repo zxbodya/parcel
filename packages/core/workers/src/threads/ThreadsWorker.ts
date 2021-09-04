@@ -1,5 +1,3 @@
-// @flow
-
 import type {
   WorkerImpl,
   MessageHandler,
@@ -14,14 +12,14 @@ import {prepareForSerialization, restoreDeserializedObject} from '@parcel/core';
 const WORKER_PATH = path.join(__dirname, 'ThreadsChild.js');
 
 export default class ThreadsWorker implements WorkerImpl {
-  execArgv: Object;
+  execArgv: any;
   onMessage: MessageHandler;
   onError: ErrorHandler;
   onExit: ExitHandler;
   worker: Worker;
 
   constructor(
-    execArgv: Object,
+    execArgv: any,
     onMessage: MessageHandler,
     onError: ErrorHandler,
     onExit: ExitHandler,

@@ -1,5 +1,3 @@
-// @flow
-
 import type {AST, MutableAsset, TransformerResult} from '@parcel/types';
 import {hashString} from '@parcel/hash';
 import type {PostHTMLNode} from 'posthtml';

@@ -1,4 +1,3 @@
-// @flow strict-local
 import ThrowableDiagnostic, {
   generateJSONCodeHighlights,
   escapeMarkdown,
@@ -20,105 +19,106 @@ export type SchemaEntity =
   | SchemaAllOf
   | SchemaNot
   | SchemaAny;
-export type SchemaArray = {|
-  type: 'array',
-  items?: SchemaEntity,
-  __type?: string,
-|};
-export type SchemaBoolean = {|
-  type: 'boolean',
-  __type?: string,
-|};
-export type SchemaOneOf = {|
-  oneOf: Array<SchemaEntity>,
-|};
-export type SchemaAllOf = {|
-  allOf: Array<SchemaEntity>,
-|};
-export type SchemaNot = {|
-  not: SchemaEntity,
-  __message: string,
-|};
-export type SchemaString = {|
-  type: 'string',
-  enum?: Array<string>,
-  __validate?: (val: string) => ?string,
-  __type?: string,
-|};
-export type SchemaNumber = {|
-  type: 'number',
-  enum?: Array<number>,
-  __type?: string,
-|};
-export type SchemaEnum = {|
-  enum: Array<mixed>,
-|};
-export type SchemaObject = {|
-  type: 'object',
-  properties: {[string]: SchemaEntity, ...},
-  additionalProperties?: boolean | SchemaEntity,
-  required?: Array<string>,
-  __forbiddenProperties?: Array<string>,
-  __type?: string,
-|};
-export type SchemaAny = {||};
+export type SchemaArray = {
+  type: 'array';
+  items?: SchemaEntity;
+  __type?: string;
+};
+export type SchemaBoolean = {
+  type: 'boolean';
+  __type?: string;
+};
+export type SchemaOneOf = {
+  oneOf: Array<SchemaEntity>;
+};
+export type SchemaAllOf = {
+  allOf: Array<SchemaEntity>;
+};
+export type SchemaNot = {
+  not: SchemaEntity;
+  __message: string;
+};
+export type SchemaString = {
+  type: 'string';
+  enum?: Array<string>;
+  __validate?: (val: string) => string | undefined | null;
+  __type?: string;
+};
+export type SchemaNumber = {
+  type: 'number';
+  enum?: Array<number>;
+  __type?: string;
+};
+export type SchemaEnum = {
+  enum: Array<unknown>;
+};
+export type SchemaObject = {
+  type: 'object';
+  properties: {
+    [x: string]: SchemaEntity;
+  };
+  additionalProperties?: boolean | SchemaEntity;
+  required?: Array<string>;
+  __forbiddenProperties?: Array<string>;
+  __type?: string;
+};
+export type SchemaAny = {};
 export type SchemaError =
-  | {|
-      type: 'type',
-      expectedTypes: Array<string>,
-      dataType: ?'key' | 'value',
+  | {
+      type: 'type';
+      expectedTypes: Array<string>;
+      dataType: 'key' | undefined | null | 'value';
+      dataPath: string;
+      ancestors: Array<SchemaEntity>;
+      prettyType?: string;
+    }
+  | {
+      type: 'enum';
+      expectedValues: Array<unknown>;
+      dataType: 'key' | 'value';
+      actualValue: unknown;
+      dataPath: string;
+      ancestors: Array<SchemaEntity>;
+      prettyType?: string;
+    }
+  | {
+      type: 'forbidden-prop';
+      prop: string;
+      expectedProps: Array<string>;
+      actualProps: Array<string>;
+      dataType: 'key';
+      dataPath: string;
+      ancestors: Array<SchemaEntity>;
+      prettyType?: string;
+    }
+  | {
+      type: 'missing-prop';
+      prop: string;
+      expectedProps: Array<string>;
+      actualProps: Array<string>;
+      dataType: 'key' | 'value';
+      dataPath: string;
+      ancestors: Array<SchemaEntity>;
+      prettyType?: string;
+    }
+  | {
+      type: 'other';
+      actualValue: unknown;
+      dataType: 'key' | undefined | null | 'value';
+      message?: string;
+      dataPath: string;
+      ancestors: Array<SchemaEntity>;
+    };
 
-      dataPath: string,
-      ancestors: Array<SchemaEntity>,
-      prettyType?: string,
-    |}
-  | {|
-      type: 'enum',
-      expectedValues: Array<mixed>,
-      dataType: 'key' | 'value',
-      actualValue: mixed,
-
-      dataPath: string,
-      ancestors: Array<SchemaEntity>,
-      prettyType?: string,
-    |}
-  | {|
-      type: 'forbidden-prop',
-      prop: string,
-      expectedProps: Array<string>,
-      actualProps: Array<string>,
-      dataType: 'key',
-
-      dataPath: string,
-      ancestors: Array<SchemaEntity>,
-      prettyType?: string,
-    |}
-  | {|
-      type: 'missing-prop',
-      prop: string,
-      expectedProps: Array<string>,
-      actualProps: Array<string>,
-      dataType: 'key' | 'value',
-
-      dataPath: string,
-      ancestors: Array<SchemaEntity>,
-      prettyType?: string,
-    |}
-  | {|
-      type: 'other',
-      actualValue: mixed,
-      dataType: ?'key' | 'value',
-      message?: string,
-      dataPath: string,
-      ancestors: Array<SchemaEntity>,
-    |};
-
-function validateSchema(schema: SchemaEntity, data: mixed): Array<SchemaError> {
+function validateSchema(
+  schema: SchemaEntity,
+  data: unknown,
+): Array<SchemaError> {
   function walk(
     schemaAncestors,
     dataNode,
     dataPath,
-  ): ?SchemaError | Array<SchemaError> {
+  ): SchemaError | undefined | null | Array<SchemaError> {
     let [schemaNode] = schemaAncestors;
 
     if (schemaNode.type) {
@@ -218,7 +218,7 @@ function validateSchema(schema: SchemaEntity, data: mixed): Array<SchemaError> {
                       expectedProps: Object.keys(schemaNode.properties),
                       actualProps: keys,
                       ancestors: schemaAncestors,
-                    }: SchemaError),
+                    } as SchemaError),
                 ),
               );
             }
@@ -239,7 +239,7 @@ function validateSchema(schema: SchemaEntity, data: mixed): Array<SchemaError> {
                       expectedProps: schemaNode.required,
                       actualProps: keys,
                       ancestors: schemaAncestors,
-                    }: SchemaError),
+                    } as SchemaError),
                 ),
               );
             }
@@ -380,22 +380,23 @@ export function fuzzySearch(
 
 validateSchema.diagnostic = function (
   schema: SchemaEntity,
-  data: {|
-    ...
-      | {|
-          source?: ?string,
-          data?: mixed,
-        |}
-      | {|
-          source: string,
-          map: {|
-            data: mixed,
-            pointers: {|[key: string]: Mapping|},
-          |},
-        |},
-    filePath?: ?string,
-    prependKey?: ?string,
-  |},
+  data:
+    | ({
+        filePath?: string | null;
+        prependKey?: string | null;
+      } & {
+        source?: string | null;
+        data?: unknown;
+      })
+    | {
+        source: string;
+        map: {
+          data: unknown;
+          pointers: {
+            [key: string]: Mapping;
+          };
+        };
+      },
   origin: string,
   message: string,
 ): void {

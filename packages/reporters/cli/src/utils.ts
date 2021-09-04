@@ -1,4 +1,3 @@
-// @flow
 import type {BuildProgressEvent} from '@parcel/types';
 
 import path from 'path';
@@ -13,7 +12,9 @@ process.stdout.on('resize', function () {
   terminalSize = termSize();
 });
 
-export function getProgressMessage(event: BuildProgressEvent): ?string {
+export function getProgressMessage(
+  event: BuildProgressEvent,
+): string | undefined | null {
   switch (event.phase) {
     case 'transforming':
       return `Building ${path.basename(event.filePath)}...`;

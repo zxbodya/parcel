@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {
   AST,
   Blob,
@@ -41,33 +39,35 @@ import {
 } from './assetUtils';
 import {BundleBehaviorNames} from './types';
 import {invalidateOnFileCreateToInternal} from './utils';
-import {type ProjectPath, fromProjectPath} from './projectPath';
+import {fromProjectPath} from './projectPath';
 
-type UncommittedAssetOptions = {|
-  value: Asset,
-  options: ParcelOptions,
-  content?: ?Blob,
-  mapBuffer?: ?Buffer,
-  ast?: ?AST,
-  isASTDirty?: ?boolean,
-  idBase?: ?string,
-  invalidations?: Map<string, RequestInvalidation>,
-  fileCreateInvalidations?: Array<InternalFileCreateInvalidation>,
-|};
+import type {ProjectPath} from './projectPath';
+
+type UncommittedAssetOptions = {
+  value: Asset;
+  options: ParcelOptions;
+  content?: Blob | null;
+  mapBuffer?: Buffer | null;
+  ast?: AST | null;
+  isASTDirty?: boolean | null;
+  idBase?: string | null;
+  invalidations?: Map<string, RequestInvalidation>;
+  fileCreateInvalidations?: Array<InternalFileCreateInvalidation>;
+};
 
 export default class UncommittedAsset {
   value: Asset;
   options: ParcelOptions;
-  content: ?(Blob | Promise<Buffer>);
-  mapBuffer: ?Buffer;
-  sourceContent: ?string;
-  map: ?SourceMap;
-  ast: ?AST;
+  content: Blob | Promise<Buffer> | undefined | null;
+  mapBuffer: Buffer | undefined | null;
+  sourceContent: string | undefined | null;
+  map: SourceMap | undefined | null;
+  ast: AST | undefined | null;
   isASTDirty: boolean;
-  idBase: ?string;
+  idBase: string | undefined | null;
   invalidations: Map<string, RequestInvalidation>;
   fileCreateInvalidations: Array<InternalFileCreateInvalidation>;
-  generate: ?() => Promise<GenerateOutput>;
+  generate: (() => Promise<GenerateOutput>) | undefined | null;
 
   constructor({
     value,
@@ -230,7 +230,7 @@ export default class UncommittedAsset {
     this.clearAST();
   }
 
-  async loadExistingSourcemap(): Promise<?SourceMap> {
+  async loadExistingSourcemap(): Promise<SourceMap | undefined | null> {
     if (this.map) {
       return this.map;
     }
@@ -254,11 +254,11 @@ export default class UncommittedAsset {
     return this.map;
   }
 
-  getMapBuffer(): Promise<?Buffer> {
+  getMapBuffer(): Promise<Buffer | undefined | null> {
     return Promise.resolve(this.mapBuffer);
   }
 
-  async getMap(): Promise<?SourceMap> {
+  async getMap(): Promise<SourceMap | undefined | null> {
     if (this.map == null) {
       let mapBuffer = this.mapBuffer ?? (await this.getMapBuffer());
       if (mapBuffer) {
@@ -270,7 +270,7 @@ export default class UncommittedAsset {
     return this.map;
   }
 
-  setMap(map: ?SourceMap): void {
+  setMap(map?: SourceMap | null): void {
     // If we have sourceContent available, it means this asset is source code without
     // a previous source map. Ensure that the map set by the transformer has the original
     // source content available.
@@ -287,7 +287,7 @@ export default class UncommittedAsset {
     this.mapBuffer = this.map?.toBuffer();
   }
 
-  getAST(): Promise<?AST> {
+  getAST(): Promise<AST | undefined | null> {
     return Promise.resolve(this.ast);
   }
 

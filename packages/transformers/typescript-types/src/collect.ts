@@ -1,4 +1,3 @@
-// @flow
 import type {TSModuleGraph} from './TSModuleGraph';
 
 import nullthrows from 'nullthrows';
@@ -11,7 +10,7 @@ export function collect(
   context: any,
   sourceFile: any,
 ): any {
-  let _currentModule: ?TSModule;
+  let _currentModule: TSModule | undefined | null;
   let visit = (node: any): any => {
     if (ts.isBundle(node)) {
       return ts.updateBundle(node, ts.visitNodes(node.sourceFiles, visit));

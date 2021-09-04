@@ -1,4 +1,3 @@
-// @flow
 import type {
   Glob,
   Transformer,
@@ -33,34 +32,38 @@ import {makeRe} from 'micromatch';
 import {basename} from 'path';
 import loadPlugin from './loadParcelPlugin';
 import {
-  type ProjectPath,
   fromProjectPath,
   fromProjectPathRelative,
   toProjectPathUnsafe,
 } from './projectPath';
 
-type GlobMap<T> = {[Glob]: T, ...};
-type SerializedParcelConfig = {|
-  $$raw: boolean,
-  config: ProcessedParcelConfig,
-  options: ParcelOptions,
-|};
+import type {ProjectPath} from './projectPath';
 
-export type LoadedPlugin<T> = {|
-  name: string,
-  version: Semver,
-  plugin: T,
-  resolveFrom: ProjectPath,
-  keyPath?: string,
-  range?: ?SemverRange,
-|};
+type GlobMap<T> = {
+  [k in Glob]: T;
+};
+
+type SerializedParcelConfig = {
+  $$raw: boolean;
+  config: ProcessedParcelConfig;
+  options: ParcelOptions;
+};
+
+export type LoadedPlugin<T> = {
+  name: string;
+  version: Semver;
+  plugin: T;
+  resolveFrom: ProjectPath;
+  keyPath?: string;
+  range?: SemverRange | null;
+};
 
 export default class ParcelConfig {
   options: ParcelOptions;
   filePath: ProjectPath;
   resolvers: PureParcelConfigPipeline;
   transformers: GlobMap<ExtendableParcelConfigPipeline>;
-  bundler: ?ParcelPluginNode;
+  bundler: ParcelPluginNode | undefined | null;
   namers: PureParcelConfigPipeline;
   runtimes: PureParcelConfigPipeline;
   packagers: GlobMap<ParcelPluginNode>;
@@ -116,14 +119,12 @@ export default class ParcelConfig {
     };
   }
 
-  _loadPlugin<T>(
-    node: ParcelPluginNode,
-  ): Promise<{|
-    plugin: T,
-    version: Semver,
-    resolveFrom: ProjectPath,
-    range: ?SemverRange,
-  |}> {
+  _loadPlugin<T>(node: ParcelPluginNode): Promise<{
+    plugin: T;
+    version: Semver;
+    resolveFrom: ProjectPath;
+    range: SemverRange | undefined | null;
+  }> {
     let plugin = this.pluginCache.get(node.packageName);
     if (plugin) {
       return plugin;
@@ -171,7 +172,7 @@ export default class ParcelConfig {
     return this.loadPlugins<Resolver>(this.resolvers);
   }
 
-  _getValidatorNodes(filePath: ProjectPath): $ReadOnlyArray<ParcelPluginNode> {
+  _getValidatorNodes(filePath: ProjectPath): ReadonlyArray<ParcelPluginNode> {
     let validators: PureParcelConfigPipeline =
       this.matchGlobMapPipelines(filePath, this.validators) || [];
 
@@ -179,9 +180,8 @@ export default class ParcelConfig {
   }
 
   getValidatorNames(filePath: ProjectPath): Array<string> {
-    let validators: PureParcelConfigPipeline = this._getValidatorNodes(
-      filePath,
-    );
+    let validators: PureParcelConfigPipeline =
+      this._getValidatorNodes(filePath);
     return validators.map(v => v.packageName);
   }
 
@@ -192,7 +192,7 @@ export default class ParcelConfig {
     return this.loadPlugins<Validator>(validators);
   }
 
-  getNamedPipelines(): $ReadOnlyArray<string> {
+  getNamedPipelines(): ReadonlyArray<string> {
     return Object.keys(this.transformers)
       .filter(glob => glob.includes(':'))
       .map(glob => glob.split(':')[0]);
@@ -200,14 +200,11 @@ export default class ParcelConfig {
 
   async getTransformers(
     filePath: ProjectPath,
-    pipeline?: ?string,
+    pipeline?: string | null,
     allowEmpty?: boolean,
-  ): Promise<Array<LoadedPlugin<Transformer<mixed>>>> {
-    let transformers: PureParcelConfigPipeline | null = this.matchGlobMapPipelines(
-      filePath,
-      this.transformers,
-      pipeline,
-    );
+  ): Promise<Array<LoadedPlugin<Transformer<unknown>>>> {
+    let transformers: PureParcelConfigPipeline | null =
+      this.matchGlobMapPipelines(filePath, this.transformers, pipeline);
     if (!transformers || transformers.length === 0) {
       if (allowEmpty) {
         return [];
@@ -222,10 +219,10 @@ export default class ParcelConfig {
       );
     }
 
-    return this.loadPlugins<Transformer<mixed>>(transformers);
+    return this.loadPlugins<Transformer<unknown>>(transformers);
   }
 
-  async getBundler(): Promise<LoadedPlugin<Bundler<mixed>>> {
+  async getBundler(): Promise<LoadedPlugin<Bundler<unknown>>> {
     if (!this.bundler) {
       throw await this.missingPluginError(
         [],
@@ -234,10 +231,10 @@ export default class ParcelConfig {
       );
     }
 
-    return this.loadPlugin<Bundler<mixed>>(this.bundler);
+    return this.loadPlugin<Bundler<unknown>>(this.bundler);
   }
 
-  async getNamers(): Promise<Array<LoadedPlugin<Namer<mixed>>>> {
+  async getNamers(): Promise<Array<LoadedPlugin<Namer<unknown>>>> {
     if (this.namers.length === 0) {
       throw await this.missingPluginError(
         this.namers,
@@ -246,20 +243,20 @@ export default class ParcelConfig {
       );
     }
 
-    return this.loadPlugins<Namer<mixed>>(this.namers);
+    return this.loadPlugins<Namer<unknown>>(this.namers);
   }
 
-  getRuntimes(): Promise<Array<LoadedPlugin<Runtime<mixed>>>> {
+  getRuntimes(): Promise<Array<LoadedPlugin<Runtime<unknown>>>> {
     if (!this.runtimes) {
       return Promise.resolve([]);
     }
 
-    return this.loadPlugins<Runtime<mixed>>(this.runtimes);
+    return this.loadPlugins<Runtime<unknown>>(this.runtimes);
   }
 
   async getPackager(
     filePath: FilePath,
-  ): Promise<LoadedPlugin<Packager<mixed>>> {
+  ): Promise<LoadedPlugin<Packager<unknown>>> {
     let packager = this.matchGlobMap(
       toProjectPathUnsafe(filePath),
       this.packagers,
@@ -271,12 +268,12 @@ export default class ParcelConfig {
         '/packagers',
       );
     }
-    return this.loadPlugin<Packager<mixed>>(packager);
+    return this.loadPlugin<Packager<unknown>>(packager);
   }
 
   _getOptimizerNodes(
     filePath: FilePath,
-    pipeline: ?string,
+    pipeline?: string | null,
   ): PureParcelConfigPipeline {
     // If a pipeline is specified, but it doesn't exist in the optimizers config, ignore it.
     // Pipelines for bundles come from their entry assets, so the pipeline likely exists in transformers.
@@ -296,21 +293,24 @@ export default class ParcelConfig {
     );
   }
 
-  getOptimizerNames(filePath: FilePath, pipeline: ?string): Array<string> {
+  getOptimizerNames(
+    filePath: FilePath,
+    pipeline?: string | null,
+  ): Array<string> {
     let optimizers = this._getOptimizerNodes(filePath, pipeline);
     return optimizers.map(o => o.packageName);
   }
 
   getOptimizers(
     filePath: FilePath,
-    pipeline: ?string,
-  ): Promise<Array<LoadedPlugin<Optimizer<mixed>>>> {
+    pipeline?: string | null,
+  ): Promise<Array<LoadedPlugin<Optimizer<unknown>>>> {
     let optimizers = this._getOptimizerNodes(filePath, pipeline);
     if (optimizers.length === 0) {
       return Promise.resolve([]);
     }
 
-    return this.loadPlugins<Optimizer<mixed>>(optimizers);
+    return this.loadPlugins<Optimizer<unknown>>(optimizers);
   }
 
   async getCompressors(
@@ -340,7 +340,7 @@ export default class ParcelConfig {
   isGlobMatch(
     projectPath: ProjectPath,
     pattern: Glob,
-    pipeline?: ?string,
+    pipeline?: string | null,
   ): boolean {
     // glob's shouldn't be dependant on absolute paths anyway
     let filePath = fromProjectPathRelative(projectPath);
@@ -363,7 +363,12 @@ export default class ParcelConfig {
     );
   }
 
-  matchGlobMap<T>(filePath: ProjectPath, globMap: {|[Glob]: T|}): ?T {
+  matchGlobMap<T>(
+    filePath: ProjectPath,
+    globMap: {
+      [k in Glob]: T;
+    },
+  ): T | undefined | null {
     for (let pattern in globMap) {
       if (this.isGlobMatch(filePath, pattern)) {
         return globMap[pattern];
@@ -375,8 +380,10 @@ export default class ParcelConfig {
 
   matchGlobMapPipelines(
     filePath: ProjectPath,
-    globMap: {|[Glob]: ExtendableParcelConfigPipeline|},
-    pipeline?: ?string,
+    globMap: {
+      [k in Glob]: ExtendableParcelConfigPipeline;
+    },
+    pipeline?: string | null,
   ): PureParcelConfigPipeline {
     let matches = [];
     if (pipeline) {

@@ -1,5 +1,3 @@
-// @flow
-
 import open from 'open';
 import {execSync} from 'child_process';
 import logger from '@parcel/logger';

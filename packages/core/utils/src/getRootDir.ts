@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {FilePath} from '@parcel/types';
 import {isGlob} from './glob';
 import path from 'path';

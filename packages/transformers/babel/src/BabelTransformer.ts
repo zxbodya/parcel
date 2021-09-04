@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import {babelErrorEnhancer} from '@parcel/babel-ast-utils';
 import {Transformer} from '@parcel/plugin';
 import {relativeUrl} from '@parcel/utils';
@@ -9,7 +7,7 @@ import generate from '@babel/generator';
 import babel7 from './babel7';
 import {load} from './config';
 
-export default (new Transformer({
+export default new Transformer({
   loadConfig({config, options, logger}) {
     return load(config, options, logger);
   },
@@ -76,4 +74,4 @@ export default (new Transformer({
       map,
     };
   },
-}): Transformer);
+}) as Transformer;

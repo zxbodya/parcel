@@ -1,5 +1,3 @@
-// @flow
-
 import type {FilePath, DependencySpecifier, PackageJSON} from '@parcel/types';
 import type {ResolverContext} from './NodeResolverBase';
 import type {ResolveResult} from './types';
@@ -42,7 +40,7 @@ export class NodeResolver extends NodeResolverBase<Promise<ResolveResult>> {
   async loadRelative(
     id: FilePath,
     ctx: ResolverContext,
-  ): Promise<?ResolveResult> {
+  ): Promise<ResolveResult | undefined | null> {
     // First try as a file, then as a directory.
     return (
       (await this.loadAsFile(id, null, ctx)) ||
@@ -53,7 +51,7 @@ export class NodeResolver extends NodeResolverBase<Promise<ResolveResult>> {
   findPackage(
     sourceFile: FilePath,
     ctx: ResolverContext,
-  ): Promise<?PackageJSON> {
+  ): Promise<PackageJSON | undefined | null> {
     // If in node_modules, take a shortcut to find the package.json in the root of the package.
     let pkgPath = this.getNodeModulesPackagePath(sourceFile);
     if (pkgPath) {
@@ -110,9 +108,9 @@ export class NodeResolver extends NodeResolverBase<Promise<ResolveResult>> {
 
   async loadAsFile(
     file: FilePath,
-    pkg: ?PackageJSON,
+    pkg: PackageJSON | undefined | null,
     ctx: ResolverContext,
-  ): Promise<?ResolveResult> {
+  ): Promise<ResolveResult | undefined | null> {
     // Try all supported extensions
     let files = this.expandFile(file);
     let found = this.fs.findFirstFile(files);
@@ -144,9 +142,9 @@ export class NodeResolver extends NodeResolverBase<Promise<ResolveResult>> {
 
   async loadDirectory(
     dir: FilePath,
-    pkg: ?PackageJSON = null,
+    pkg: PackageJSON | undefined | null = null,
     ctx: ResolverContext,
-  ): Promise<?ResolveResult> {
+  ): Promise<ResolveResult | undefined | null> {
     try {
       pkg = await this.readPackage(path.join(dir, 'package.json'), ctx);
 
@@ -174,7 +172,7 @@ export class NodeResolver extends NodeResolverBase<Promise<ResolveResult>> {
     id: DependencySpecifier,
     from: FilePath,
     ctx: ResolverContext,
-  ): Promise<?ResolveResult> {
+  ): Promise<ResolveResult | undefined | null> {
     try {
       let module = this.findNodeModulePath(id, from, ctx);
       if (!module || module.resolved) {

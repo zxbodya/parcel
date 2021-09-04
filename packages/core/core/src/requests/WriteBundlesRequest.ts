@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {ContentKey} from '@parcel/graph';
 import type {Async} from '@parcel/types';
 import type {SharedReference} from '@parcel/workers';
@@ -16,22 +14,21 @@ import {hashString} from '@parcel/hash';
 import {createPackageRequest} from './PackageRequest';
 import createWriteBundleRequest from './WriteBundleRequest';
 
-type WriteBundlesRequestInput = {|
-  bundleGraph: BundleGraph,
-  optionsRef: SharedReference,
-|};
+type WriteBundlesRequestInput = {
+  bundleGraph: BundleGraph;
+  optionsRef: SharedReference;
+};
 
-type RunInput = {|
-  input: WriteBundlesRequestInput,
-  ...StaticRunOpts,
-|};
+type RunInput = {
+  input: WriteBundlesRequestInput;
+} & StaticRunOpts;
 
-export type WriteBundlesRequest = {|
-  id: ContentKey,
-  +type: 'write_bundles_request',
-  run: RunInput => Async<Map<string, PackagedBundleInfo>>,
-  input: WriteBundlesRequestInput,
-|};
+export type WriteBundlesRequest = {
+  id: ContentKey;
+  readonly type: 'write_bundles_request';
+  run: (a: RunInput) => Async<Map<string, PackagedBundleInfo>>;
+  input: WriteBundlesRequestInput;
+};
 
 /**
  * Packages, optimizes, and writes all bundles to the dist directory.
@@ -57,9 +54,9 @@ async function run({input, api, farm, options}: RunInput) {
   api.invalidateOnOptionChange('shouldContentHash');
 
   let res = new Map();
-  let bundleInfoMap: {|
-    [string]: BundleInfo,
-  |} = {};
+  let bundleInfoMap: {
+    [x: string]: BundleInfo;
+  } = {};
   let writeEarlyPromises = {};
   let hashRefToNameHash = new Map();
   let bundles = bundleGraph.getBundles().filter(bundle => {

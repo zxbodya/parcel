@@ -1,4 +1,3 @@
-// @flow
 import {Transformer} from '@parcel/plugin';
 
 // from https://github.com/lovell/sharp/blob/df7b8ba73808fc494be413e88cfb621b6279218c/lib/output.js#L6-L17
@@ -17,7 +16,7 @@ const FORMATS = new Map([
 
 const SHARP_RANGE = '^0.28.3';
 
-export default (new Transformer({
+export default new Transformer({
   async transform({asset, options}) {
     asset.bundleBehavior = 'isolated';
 
@@ -63,4 +62,4 @@ export default (new Transformer({
 
     return [asset];
   },
-}): Transformer);
+}) as Transformer;

@@ -1,4 +1,3 @@
-// @flow
 import EventEmitter from 'events';
 import {child} from './childState';
 
@@ -20,4 +19,4 @@ class Bus extends EventEmitter {
   }
 }
 
-export default (new Bus(): Bus);
+export default new Bus() as Bus;

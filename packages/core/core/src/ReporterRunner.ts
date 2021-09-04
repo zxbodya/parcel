@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {ReporterEvent, Reporter} from '@parcel/types';
 import type {WorkerApi} from '@parcel/workers';
 import type {Bundle as InternalBundle, ParcelOptions} from './types';
@@ -22,11 +20,11 @@ import logger, {
 import PluginOptions from './public/PluginOptions';
 import BundleGraph from './BundleGraph';
 
-type Opts = {|
-  config: ParcelConfig,
-  options: ParcelOptions,
-  workerFarm: WorkerFarm,
-|};
+type Opts = {
+  config: ParcelConfig;
+  options: ParcelOptions;
+  workerFarm: WorkerFarm;
+};
 
 export default class ReporterRunner {
   workerFarm: WorkerFarm;
@@ -52,7 +50,7 @@ export default class ReporterRunner {
     }
   }
 
-  eventHandler: ReporterEvent => void = (event): void => {
+  eventHandler: (a: ReporterEvent) => void = (event): void => {
     if (
       event.type === 'buildProgress' &&
       (event.phase === 'optimizing' || event.phase === 'packaging') &&

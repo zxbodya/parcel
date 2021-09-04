@@ -1,4 +1,3 @@
-// @flow
 import type {InitialParcelOptions, BuildSuccessEvent} from '@parcel/types';
 import assert from 'assert';
 import invariant from 'assert';
@@ -48,15 +47,19 @@ function runBundle(entries = 'src/index.js', opts) {
   return bundler(getEntries(entries), getOptions(opts)).run();
 }
 
-type UpdateFn = BuildSuccessEvent =>
-  | ?InitialParcelOptions
-  | Promise<?InitialParcelOptions>;
-type TestConfig = {|
-  ...InitialParcelOptions,
-  entries?: Array<string>,
-  setup?: () => void | Promise<void>,
-  update: UpdateFn,
-|};
+type UpdateFn = (
+  a: BuildSuccessEvent,
+) =>
+  | InitialParcelOptions
+  | undefined
+  | null
+  | Promise<InitialParcelOptions | undefined | null>;
+
+type TestConfig = {
+  entries?: Array<string>;
+  setup?: () => void | Promise<void>;
+  update: UpdateFn;
+} & InitialParcelOptions;
 
 async function testCache(update: UpdateFn | TestConfig, integration) {
   await overlayFS.rimraf(path.join(__dirname, '/input'));
@@ -66,7 +69,7 @@ async function testCache(update: UpdateFn | TestConfig, integration) {
   );
 
   let entries;
-  let options: ?InitialParcelOptions;
+  let options: InitialParcelOptions | undefined | null;
   if (typeof update === 'object') {
     let setup;
     ({entries, setup, update, ...options} = update);
@@ -4212,10 +4215,9 @@ describe('cache', function () {
           );
           await overlayFS.writeFile(
             bundler,
-            (await overlayFS.readFile(bundler, 'utf8')).replace(
-              'Boolean(dependency.isEntry)',
-              'false',
-            ),
+            (
+              await overlayFS.readFile(bundler, 'utf8')
+            ).replace('Boolean(dependency.isEntry)', 'false'),
           );
         },
       });
@@ -4273,10 +4275,9 @@ describe('cache', function () {
           );
           await overlayFS.writeFile(
             namer,
-            (await overlayFS.readFile(namer, 'utf8')).replace(
-              'bundle.id',
-              'bundle.id.slice(-8)',
-            ),
+            (
+              await overlayFS.readFile(namer, 'utf8')
+            ).replace('bundle.id', 'bundle.id.slice(-8)'),
           );
         },
       });
@@ -4332,10 +4333,9 @@ describe('cache', function () {
           );
           await overlayFS.writeFile(
             namer,
-            (await overlayFS.readFile(namer, 'utf8')).replace(
-              'runtime_test',
-              'test_runtime',
-            ),
+            (
+              await overlayFS.readFile(namer, 'utf8')
+            ).replace('runtime_test', 'test_runtime'),
           );
         },
       });
@@ -4522,10 +4522,9 @@ describe('cache', function () {
           );
           await overlayFS.writeFile(
             packager,
-            (await overlayFS.readFile(packager, 'utf8')).replace(
-              'packaged',
-              'updated',
-            ),
+            (
+              await overlayFS.readFile(packager, 'utf8')
+            ).replace('packaged', 'updated'),
           );
         },
       });
@@ -4741,10 +4740,9 @@ describe('cache', function () {
           );
           await overlayFS.writeFile(
             optimizer,
-            (await overlayFS.readFile(optimizer, 'utf8')).replace(
-              'optimized',
-              'updated',
-            ),
+            (
+              await overlayFS.readFile(optimizer, 'utf8')
+            ).replace('optimized', 'updated'),
           );
         },
       });
@@ -4973,10 +4971,9 @@ describe('cache', function () {
           );
           await overlayFS.writeFile(
             packager,
-            (await overlayFS.readFile(packager, 'utf8')).replace(
-              'packaged',
-              'updated',
-            ),
+            (
+              await overlayFS.readFile(packager, 'utf8')
+            ).replace('packaged', 'updated'),
           );
         },
       });
@@ -5174,10 +5171,9 @@ describe('cache', function () {
           );
           await overlayFS.writeFile(
             optimizer,
-            (await overlayFS.readFile(optimizer, 'utf8')).replace(
-              'optimized',
-              'updated',
-            ),
+            (
+              await overlayFS.readFile(optimizer, 'utf8')
+            ).replace('optimized', 'updated'),
           );
         },
       });
@@ -5487,10 +5483,9 @@ describe('cache', function () {
           );
           await overlayFS.writeFile(
             compressor,
-            (await overlayFS.readFile(compressor, 'utf8')).replace(
-              'abc',
-              'def',
-            ),
+            (
+              await overlayFS.readFile(compressor, 'utf8')
+            ).replace('abc', 'def'),
           );
         },
       });

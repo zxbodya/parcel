@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {
   AST,
   BaseAsset,
@@ -65,11 +63,11 @@ export async function parse({
   asset,
   code,
   options,
-}: {|
-  asset: BaseAsset,
-  code: string,
-  options: PluginOptions,
-|}): Promise<AST> {
+}: {
+  asset: BaseAsset;
+  code: string;
+  options: PluginOptions;
+}): Promise<AST> {
   try {
     let program = babelParse(code, {
       sourceFilename: relativeUrl(options.projectRoot, asset.filePath),
@@ -100,12 +98,15 @@ export function generateAST({
   sourceFileName,
   sourceMaps,
   options,
-}: {|
-  ast: BabelNodeFile,
-  sourceFileName?: FilePath,
-  sourceMaps?: boolean,
-  options: PluginOptions,
-|}): {|content: string, map: SourceMap|} {
+}: {
+  ast: BabelNodeFile;
+  sourceFileName?: FilePath;
+  sourceMaps?: boolean;
+  options: PluginOptions;
+}): {
+  content: string;
+  map: SourceMap;
+} {
   let map = new SourceMap(options.projectRoot);
   let mappings = [];
   let generated = astringGenerate(ast.program, {
@@ -143,11 +144,14 @@ export async function generate({
   asset,
   ast,
   options,
-}: {|
-  asset: BaseAsset,
-  ast: AST,
-  options: PluginOptions,
-|}): Promise<{|content: string, map: ?SourceMap|}> {
+}: {
+  asset: BaseAsset;
+  ast: AST;
+  options: PluginOptions;
+}): Promise<{
+  content: string;
+  map: SourceMap | undefined | null;
+}> {
   let sourceFileName: string = relativeUrl(options.projectRoot, asset.filePath);
   let {content, map} = generateAST({
     ast: ast.program,
@@ -174,8 +178,8 @@ export async function generate({
 
 export function convertBabelLoc(
   options: PluginOptions,
-  loc: ?BabelSourceLocation,
-): ?SourceLocation {
+  loc?: BabelSourceLocation | null,
+): SourceLocation | undefined | null {
   if (!loc) return null;
   let {filename, start, end} = loc;
   if (filename == null) return null;

@@ -1,13 +1,14 @@
-// @flow strict-local
 import path from 'path';
 
 import {Reporter} from '@parcel/plugin';
 import {generateBuildMetrics} from '@parcel/utils';
 
-type TimingValue = {|
-  timings: {[key: string]: number, ...},
-  lastPhase: string,
-|};
+type TimingValue = {
+  timings: {
+    [key: string]: number;
+  };
+  lastPhase: string;
+};
 
 let timingsMap = new Map();
 const getValue = (instanceId: string): TimingValue => {
@@ -22,7 +23,7 @@ const getValue = (instanceId: string): TimingValue => {
   return timingsMap.get(instanceId);
 };
 
-export default (new Reporter({
+export default new Reporter({
   async report({event, options}) {
     if (event.type === 'buildProgress') {
       let value = getValue(options.instanceId);
@@ -69,4 +70,4 @@ export default (new Reporter({
       );
     }
   },
-}): Reporter);
+}) as Reporter;

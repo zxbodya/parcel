@@ -1,4 +1,3 @@
-// @flow
 import type {DependencySpecifier} from '@parcel/types';
 import type ParcelConfig from '../ParcelConfig';
 import type {
@@ -90,15 +89,15 @@ export async function createDevDependency(
   return devDepRequest;
 }
 
-export type DevDepSpecifier = {|
-  specifier: DependencySpecifier,
-  resolveFrom: ProjectPath,
-|};
+export type DevDepSpecifier = {
+  specifier: DependencySpecifier;
+  resolveFrom: ProjectPath;
+};
 
-type DevDepRequests = {|
-  devDeps: Map<string, string>,
-  invalidDevDeps: Array<DevDepSpecifier>,
-|};
+type DevDepRequests = {
+  devDeps: Map<string, string>;
+  invalidDevDeps: Array<DevDepSpecifier>;
+};
 
 export async function getDevDepRequests(api: RunAPI): Promise<DevDepRequests> {
   let previousDevDepRequests = new Map(

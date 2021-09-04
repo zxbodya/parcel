@@ -1,9 +1,16 @@
-// @flow
-
-export type Import = {|specifier: string, imported: string|};
+export type Import = {
+  specifier: string;
+  imported: string;
+};
 export type Export =
-  | {|name: string, imported: string, specifier?: ?string|}
-  | {|specifier: string|};
+  | {
+      name: string;
+      imported: string;
+      specifier?: string | null;
+    }
+  | {
+      specifier: string;
+    };
 
 export class TSModule {
   imports: Map<string, Import>;
@@ -28,7 +35,7 @@ export class TSModule {
   }
 
   // if not a reexport: imported = local, name = exported
-  addExport(name: string, imported: string, specifier: ?string) {
+  addExport(name: string, imported: string, specifier?: string | null) {
     this.exports.push({name, specifier, imported});
   }
 

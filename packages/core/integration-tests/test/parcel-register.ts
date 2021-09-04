@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import {execSync} from 'child_process';
 import assert from 'assert';
 import path from 'path';

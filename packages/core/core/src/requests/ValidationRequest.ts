@@ -1,4 +1,3 @@
-// @flow strict-local
 import type {Async} from '@parcel/types';
 import type {SharedReference} from '@parcel/workers';
 import type {StaticRunOpts} from '../RequestTracker';
@@ -11,22 +10,21 @@ import {report} from '../ReporterRunner';
 import Validation from '../Validation';
 import createParcelConfigRequest from './ParcelConfigRequest';
 
-type ValidationRequest = {|
-  id: string,
-  +type: 'validation_request',
-  run: RunOpts => Async<void>,
-  input: ValidationRequestInput,
-|};
+type ValidationRequest = {
+  id: string;
+  readonly type: 'validation_request';
+  run: (a: RunOpts) => Async<void>;
+  input: ValidationRequestInput;
+};
 
-type RunOpts = {|
-  input: ValidationRequestInput,
-  ...StaticRunOpts,
-|};
+type RunOpts = {
+  input: ValidationRequestInput;
+} & StaticRunOpts;
 
-type ValidationRequestInput = {|
-  assetRequests: Array<AssetGroup>,
-  optionsRef: SharedReference,
-|};
+type ValidationRequestInput = {
+  assetRequests: Array<AssetGroup>;
+  optionsRef: SharedReference;
+};
 
 export default function createValidationRequest(
   input: ValidationRequestInput,

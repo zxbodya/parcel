@@ -1,5 +1,3 @@
-// @flow
-
 import type {
   Asset,
   BundleGraph,
@@ -28,7 +26,8 @@ const NON_ID_CONTINUE_RE = /[^$_\u200C\u200D\p{ID_Continue}]/gu;
 
 // General regex used to replace imports with the resolved code, references with resolutions,
 // and count the number of newlines in the file for source maps.
-const REPLACEMENT_RE = /\n|import\s+"([0-9a-f]{16}:.+?)";|(?:\$[0-9a-f]{16}\$exports)|(?:\$[0-9a-f]{16}\$(?:import|importAsync|require)\$[0-9a-f]+(?:\$[0-9a-f]+)?)/g;
+const REPLACEMENT_RE =
+  /\n|import\s+"([0-9a-f]{16}:.+?)";|(?:\$[0-9a-f]{16}\$exports)|(?:\$[0-9a-f]{16}\$(?:import|importAsync|require)\$[0-9a-f]+(?:\$[0-9a-f]+)?)/g;
 
 const BUILTINS = Object.keys(globals.builtin);
 const GLOBALS_BY_CONTEXT = {
@@ -66,16 +65,22 @@ export class ScopeHoistingPackager {
   parcelRequireName: string;
   outputFormat: OutputFormat;
   isAsyncBundle: boolean;
-  globalNames: $ReadOnlySet<string>;
-  assetOutputs: Map<string, {|code: string, map: ?Buffer|}>;
+  globalNames: ReadonlySet<string>;
+  assetOutputs: Map<
+    string,
+    {
+      code: string;
+      map: Buffer | undefined | null;
+    }
+  >;
   exportedSymbols: Map<
     string,
-    {|
-      asset: Asset,
-      exportSymbol: string,
-      local: string,
-      exportAs: Array<string>,
-    |},
+    {
+      asset: Asset;
+      exportSymbol: string;
+      local: string;
+      exportAs: Array<string>;
+    }
   > = new Map();
   externals: Map<string, Map<string, string>> = new Map();
   topLevelNames: Map<string, number> = new Map();
@@ -107,7 +112,10 @@ export class ScopeHoistingPackager {
     this.globalNames = GLOBALS_BY_CONTEXT[bundle.env.context];
   }
 
-  async package(): Promise<{|contents: string, map: ?SourceMap|}> {
+  async package(): Promise<{
+    contents: string;
+    map: SourceMap | undefined | null;
+  }> {
     await this.loadAssets();
     this.buildExportedSymbols();
 
@@ -336,7 +344,7 @@ export class ScopeHoistingPackager {
     return `${obj}[${JSON.stringify(property)}]`;
   }
 
-  visitAsset(asset: Asset): [string, ?SourceMap, number] {
+  visitAsset(asset: Asset): [string, SourceMap | undefined | null, number] {
     invariant(!this.seenAssets.has(asset.id), 'Already visited asset');
     this.seenAssets.add(asset.id);
 
@@ -347,8 +355,8 @@ export class ScopeHoistingPackager {
   buildAsset(
     asset: Asset,
     code: string,
-    map: ?Buffer,
-  ): [string, ?SourceMap, number] {
+    map?: Buffer | null,
+  ): [string, SourceMap | undefined | null, number] {
     let shouldWrap = this.wrappedAssets.has(asset.id);
     let deps = this.bundleGraph.getDependencies(asset);
 
@@ -1035,10 +1043,8 @@ ${code}
     }
 
     // The output format may have specific things to add at the start of the bundle (e.g. imports).
-    let [
-      outputFormatPrelude,
-      outputFormatLines,
-    ] = this.outputFormat.buildBundlePrelude();
+    let [outputFormatPrelude, outputFormatLines] =
+      this.outputFormat.buildBundlePrelude();
     res += outputFormatPrelude;
     lines += outputFormatLines;
 

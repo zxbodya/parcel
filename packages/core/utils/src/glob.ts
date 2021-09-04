@@ -1,10 +1,9 @@
-// @flow
-
 import type {FilePath, Glob} from '@parcel/types';
 import type {FileSystem} from '@parcel/fs';
 
 import _isGlob from 'is-glob';
-import fastGlob, {type FastGlobOptions} from 'fast-glob';
+import fastGlob from 'fast-glob';
+import type {FastGlobOptions} from 'fast-glob';
 import {isMatch} from 'micromatch';
 import {normalizeSeparators} from './path';
 

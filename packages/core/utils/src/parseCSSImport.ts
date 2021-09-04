@@ -1,5 +1,3 @@
-// @flow strict
-
 export default function parseCSSImport(url: string): string {
   if (!/^(~|\.\/|\/)/.test(url)) {
     return './' + url;

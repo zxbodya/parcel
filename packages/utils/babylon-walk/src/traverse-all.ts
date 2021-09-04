@@ -1,4 +1,3 @@
-// @flow
 import type {Node} from '@babel/types';
 
 import * as t from '@babel/types';

@@ -1,15 +1,14 @@
-// @flow
 import type {Node} from '@babel/types';
 import type {SimpleVisitors, VisitorsExploded} from './index';
 
 import * as t from '@babel/types';
 import invariant from 'assert';
-import explode from './explode.js';
+import explode from './explode';
 
 class Path {
   node: Node;
   parent: Node;
-  listkey: ?string;
+  listkey: string | undefined | null;
   key: number | string;
   _skipped: boolean = false;
   _removed: boolean = false;
@@ -17,7 +16,7 @@ class Path {
   constructor(
     node: Node,
     parent: Node,
-    listkey: ?string,
+    listkey: string | undefined | null,
     key: number | string,
   ) {
     this.node = node;
@@ -46,17 +45,17 @@ class Path {
 
 export default function traverse<T>(
   node: Node,
-  visitors: SimpleVisitors<(Path, T) => void>,
+  visitors: SimpleVisitors<(b: Path, a: T) => void>,
   state: T,
 ) {
   traverseWalk(explode(visitors), state, node, null, null, null);
 }
 
 function traverseWalk<T>(
-  visitors: VisitorsExploded<(Path, T) => void>,
+  visitors: VisitorsExploded<(b: Path, a: T) => void>,
   state: T,
   node: Node,
-  parent: ?Node,
+  parent?: Node | null,
   listkey,
   key,
 ) {

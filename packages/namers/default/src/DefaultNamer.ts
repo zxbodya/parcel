@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {Bundle, FilePath} from '@parcel/types';
 
 import {Namer} from '@parcel/plugin';
@@ -13,7 +11,7 @@ const ALLOWED_EXTENSIONS = {
   js: ['js', 'mjs', 'cjs'],
 };
 
-export default (new Namer({
+export default new Namer({
   name({bundle, bundleGraph}) {
     let bundleGroup = bundleGraph.getBundleGroupsContainingBundle(bundle)[0];
     let bundleGroupBundles = bundleGraph.getBundlesInBundleGroup(bundleGroup, {
@@ -100,7 +98,7 @@ export default (new Namer({
 
     return name + '.' + bundle.type;
   },
-}): Namer);
+}) as Namer;
 
 function nameFromContent(
   bundle: Bundle,

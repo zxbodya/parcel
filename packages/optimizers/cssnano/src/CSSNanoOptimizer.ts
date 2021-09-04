@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import SourceMap from '@parcel/source-map';
 import {Optimizer} from '@parcel/plugin';
 import postcss from 'postcss';
@@ -7,7 +5,7 @@ import cssnano from 'cssnano';
 import type {CSSNanoOptions} from 'cssnano'; // TODO the type is based on cssnano 4
 import path from 'path';
 
-export default (new Optimizer({
+export default new Optimizer({
   async loadConfig({config}) {
     const configFile = await config.getConfig(
       ['.cssnanorc', 'cssnano.config.json', 'cssnano.config.js'],
@@ -43,7 +41,7 @@ export default (new Optimizer({
     }
 
     const result = await postcss([
-      cssnano((config ?? {}: CSSNanoOptions)),
+      cssnano(config ?? ({} as CSSNanoOptions)),
     ]).process(prevContents, {
       // Suppress postcss's warning about a missing `from` property. In this
       // case, the input map contains all of the sources.
@@ -74,4 +72,4 @@ export default (new Optimizer({
       map,
     };
   },
-}): Optimizer);
+}) as Optimizer;

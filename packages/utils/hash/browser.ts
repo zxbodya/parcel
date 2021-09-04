@@ -1,4 +1,3 @@
-// @flow
 const xxhash = require('xxhash-wasm');
 
 let h64, h64Raw;

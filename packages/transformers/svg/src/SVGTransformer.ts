@@ -1,5 +1,3 @@
-// @flow
-
 import {Transformer} from '@parcel/plugin';
 import nullthrows from 'nullthrows';
 import semver from 'semver';
@@ -8,7 +6,7 @@ import render from 'posthtml-render';
 import collectDependencies from './dependencies';
 import extractInlineAssets from './inline';
 
-export default (new Transformer({
+export default new Transformer({
   canReuseAST({ast}) {
     return ast.type === 'posthtml' && semver.satisfies(ast.version, '^0.4.0');
   },
@@ -48,4 +46,4 @@ export default (new Transformer({
       content: render(ast.program),
     };
   },
-}): Transformer);
+}) as Transformer;

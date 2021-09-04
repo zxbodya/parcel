@@ -1,5 +1,3 @@
-// @flow strict-local
-
 const supportsEmoji =
   process.platform !== 'win32' || process.env.TERM === 'xterm-256color';
 

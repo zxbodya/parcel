@@ -1,5 +1,3 @@
-// @flow
-
 import assert from 'assert';
 import {objectSortedEntries, objectSortedEntriesDeep} from '../src/collection';
 

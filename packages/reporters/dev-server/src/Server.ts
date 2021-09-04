@@ -1,5 +1,3 @@
-// @flow
-
 import type {DevServerOptions, Request, Response} from './types.js.flow';
 import type {
   BuildSuccessEvent,
@@ -52,7 +50,11 @@ const TEMPLATE_500 = fs.readFileSync(
   path.join(__dirname, 'templates/500.html'),
   'utf8',
 );
-type NextFunction = (req: Request, res: Response, next?: (any) => any) => any;
+type NextFunction = (
+  req: Request,
+  res: Response,
+  next?: (a: any) => any,
+) => any;
 
 export default class Server {
   pending: boolean;
@@ -60,14 +62,17 @@ export default class Server {
   options: DevServerOptions;
   rootPath: string;
   bundleGraph: BundleGraph<PackagedBundle> | null;
-  requestBundle: ?(bundle: PackagedBundle) => Promise<BuildSuccessEvent>;
-  errors: Array<{|
-    message: string,
-    stack: string,
-    hints: Array<string>,
-    documentation: string,
-  |}> | null;
-  stopServer: ?() => Promise<void>;
+  requestBundle:
+    | ((bundle: PackagedBundle) => Promise<BuildSuccessEvent>)
+    | undefined
+    | null;
+  errors: Array<{
+    message: string;
+    stack: string;
+    hints: Array<string>;
+    documentation: string;
+  }> | null;
+  stopServer: (() => Promise<void>) | undefined | null;
 
   constructor(options: DevServerOptions) {
     this.options = options;
@@ -123,7 +128,7 @@ export default class Server {
     );
   }
 
-  respond(req: Request, res: Response): mixed {
+  respond(req: Request, res: Response): unknown {
     let {pathname} = url.parse(req.originalUrl || req.url);
 
     if (pathname == null) {
@@ -244,7 +249,7 @@ export default class Server {
     req: Request,
     res: Response,
     next: NextFunction,
-  ): Promise<void> | Promise<mixed> {
+  ): Promise<void> | Promise<unknown> {
     return this.serve(
       this.options.outputFS,
       this.options.distDir,
@@ -260,7 +265,7 @@ export default class Server {
     req: Request,
     res: Response,
     next: NextFunction,
-  ): Promise<mixed> {
+  ): Promise<unknown> {
     if (req.method !== 'GET' && req.method !== 'HEAD') {
       // method not allowed
       res.statusCode = 405;
@@ -438,11 +443,9 @@ export default class Server {
     server.listen(this.options.port, this.options.host);
     return new Promise((resolve, reject) => {
       server.once('error', err => {
-        this.options.logger.error(
-          ({
-            message: serverErrors(err, this.options.port),
-          }: Diagnostic),
-        );
+        this.options.logger.error({
+          message: serverErrors(err, this.options.port),
+        } as Diagnostic);
         reject(err);
       });
 

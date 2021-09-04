@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {ModuleRequest} from './types';
 import type {FilePath} from '@parcel/types';
 import type {FileSystem} from '@parcel/fs';
@@ -16,9 +14,9 @@ export function npmSpecifierFromModuleRequest(
     : moduleRequest.name;
 }
 
-export function moduleRequestsFromDependencyMap(dependencyMap: {|
-  [string]: string,
-|}): Array<ModuleRequest> {
+export function moduleRequestsFromDependencyMap(dependencyMap: {
+  [x: string]: string;
+}): Array<ModuleRequest> {
   return Object.entries(dependencyMap).map(([name, range]) => {
     invariant(typeof range === 'string');
     return {
@@ -33,7 +31,15 @@ export async function getConflictingLocalDependencies(
   name: string,
   local: FilePath,
   projectRoot: FilePath,
-): Promise<?{|json: string, filePath: FilePath, fields: Array<string>|}> {
+): Promise<
+  | {
+      json: string;
+      filePath: FilePath;
+      fields: Array<string>;
+    }
+  | undefined
+  | null
+> {
   let pkgPath = await resolveConfig(fs, local, ['package.json'], projectRoot);
   if (pkgPath == null) {
     return;

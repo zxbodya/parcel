@@ -1,4 +1,3 @@
-// @flow
 import assert from 'assert';
 import path from 'path';
 import {
@@ -119,9 +118,11 @@ describe('babel', function () {
   it.skip('should support compiling with babel using browserslist for different environments', async function () {
     async function testBrowserListMultipleEnv(projectBasePath) {
       // Transpiled destructuring, like r = p.prop1, o = p.prop2, a = p.prop3;
-      const prodRegExp = /\S+ ?= ?\S+\.prop1,\s*?\S+ ?= ?\S+\.prop2,\s*?\S+ ?= ?\S+\.prop3;/;
+      const prodRegExp =
+        /\S+ ?= ?\S+\.prop1,\s*?\S+ ?= ?\S+\.prop2,\s*?\S+ ?= ?\S+\.prop3;/;
       // ES6 Destructuring, like in the source;
-      const devRegExp = /const ?{\s*prop1(:.+)?,\s*prop2(:.+)?,\s*prop3(:.+)?\s*} ?= ?.*/;
+      const devRegExp =
+        /const ?{\s*prop1(:.+)?,\s*prop2(:.+)?,\s*prop3(:.+)?\s*} ?= ?.*/;
       let file;
       // Dev build test
       await bundle(path.join(__dirname, projectBasePath, '/index.js'));

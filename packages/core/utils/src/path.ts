@@ -1,4 +1,3 @@
-// @flow strict-local
 import type {FilePath} from '@parcel/types';
 import path from 'path';
 
@@ -14,8 +13,7 @@ export function normalizeSeparators(filePath: FilePath): FilePath {
 }
 
 export type PathOptions = {
-  noLeadingDotSlash?: boolean,
-  ...
+  noLeadingDotSlash?: boolean;
 };
 
 export function normalizePath(

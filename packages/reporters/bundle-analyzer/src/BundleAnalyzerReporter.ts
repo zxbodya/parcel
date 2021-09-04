@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {FilePath, PackagedBundle, PluginOptions} from '@parcel/types';
 
 import invariant from 'assert';
@@ -8,7 +6,7 @@ import {DefaultMap, generateBuildMetrics} from '@parcel/utils';
 import path from 'path';
 import nullthrows from 'nullthrows';
 
-export default (new Reporter({
+export default new Reporter({
   async report({event, options}) {
     if (event.type !== 'buildSuccess') {
       return;
@@ -16,7 +14,7 @@ export default (new Reporter({
 
     let bundlesByTarget: DefaultMap<
       string /* target name */,
-      Array<PackagedBundle>,
+      Array<PackagedBundle>
     > = new DefaultMap(() => []);
     for (let bundle of event.bundleGraph.getBundles()) {
       bundlesByTarget.get(bundle.target.name).push(bundle);
@@ -88,11 +86,11 @@ export default (new Reporter({
       }),
     );
   },
-}): Reporter);
+}) as Reporter;
 
-type BundleData = {|
-  groups: Array<Group>,
-|};
+type BundleData = {
+  groups: Array<Group>;
+};
 
 async function getBundleData(
   bundles: Array<PackagedBundle>,
@@ -106,10 +104,11 @@ async function getBundleData(
   };
 }
 
-type File = {|
-  basename: string,
-  size: number,
-|};
+type File = {
+  basename: string;
+  size: number;
+};
+
 type DirMapValue = File | DirMap;
 type DirMap = DefaultMap<FilePath, DirMapValue>;
 let createMap: () => DirMap = () => new DefaultMap(() => createMap());
@@ -148,11 +147,11 @@ async function getBundleNode(bundle: PackagedBundle, options: PluginOptions) {
   };
 }
 
-type Group = {|
-  label: string,
-  weight: number,
-  groups?: Array<Group>,
-|};
+type Group = {
+  label: string;
+  weight: number;
+  groups?: Array<Group>;
+};
 
 function generateGroups(dirMap: DirMap): Array<Group> {
   let groups = [];

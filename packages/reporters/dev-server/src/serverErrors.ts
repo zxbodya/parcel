@@ -1,7 +1,6 @@
-// @flow
-export type ServerError = Error & {|
-  code: string,
-|};
+export type ServerError = Error & {
+  code: string;
+};
 
 const serverErrorList = {
   EACCES: "You don't have access to bind the server to port {port}.",

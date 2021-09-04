@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {
   FilePath,
   GenerateOutput,
@@ -58,38 +56,38 @@ import {
   getConfigHash,
   loadPluginConfig,
   getConfigRequests,
-  type ConfigRequest,
 } from './requests/ConfigRequest';
+import type {ConfigRequest} from './requests/ConfigRequest';
 import {
   createDevDependency,
   invalidateDevDeps,
   getWorkerDevDepRequests,
 } from './requests/DevDepRequest';
 import {
-  type ProjectPath,
   fromProjectPath,
   fromProjectPathRelative,
   toProjectPathUnsafe,
   toProjectPath,
 } from './projectPath';
+import type {ProjectPath} from './projectPath';
 import {invalidateOnFileCreateToInternal} from './utils';
 
 type GenerateFunc = (input: UncommittedAsset) => Promise<GenerateOutput>;
 
-export type TransformationOpts = {|
-  options: ParcelOptions,
-  config: ParcelConfig,
-  request: TransformationRequest,
-  workerApi: WorkerApi,
-|};
+export type TransformationOpts = {
+  options: ParcelOptions;
+  config: ParcelConfig;
+  request: TransformationRequest;
+  workerApi: WorkerApi;
+};
 
-export type TransformationResult = {|
-  assets: Array<AssetValue>,
-  configRequests: Array<ConfigRequest>,
-  invalidations: Array<RequestInvalidation>,
-  invalidateOnFileCreate: Array<InternalFileCreateInvalidation>,
-  devDepRequests: Array<DevDepRequest>,
-|};
+export type TransformationResult = {
+  assets: Array<AssetValue>;
+  configRequests: Array<ConfigRequest>;
+  invalidations: Array<RequestInvalidation>;
+  invalidateOnFileCreate: Array<InternalFileCreateInvalidation>;
+  devDepRequests: Array<DevDepRequest>;
+};
 
 export default class Transformation {
   request: TransformationRequest;
@@ -491,7 +489,9 @@ export default class Transformation {
     return finalAssets.concat(resultingAssets);
   }
 
-  async readFromCache(cacheKey: string): Promise<?Array<UncommittedAsset>> {
+  async readFromCache(
+    cacheKey: string,
+  ): Promise<Array<UncommittedAsset> | undefined | null> {
     if (
       this.options.shouldDisableCache ||
       this.request.code != null ||
@@ -500,9 +500,9 @@ export default class Transformation {
       return null;
     }
 
-    let cached = await this.options.cache.get<{|assets: Array<AssetValue>|}>(
-      cacheKey,
-    );
+    let cached = await this.options.cache.get<{
+      assets: Array<AssetValue>;
+    }>(cacheKey);
     if (!cached) {
       return null;
     }
@@ -577,7 +577,7 @@ export default class Transformation {
   async loadPipeline(
     filePath: ProjectPath,
     isSource: boolean,
-    pipeline: ?string,
+    pipeline?: string | null,
   ): Promise<Pipeline> {
     let transformers = await this.parcelConfig.getTransformers(
       filePath,
@@ -622,13 +622,13 @@ export default class Transformation {
     newType,
     newPipeline,
     currentPipeline,
-  }: {|
-    filePath: ProjectPath,
-    isSource: boolean,
-    newType: string,
-    newPipeline: ?string,
-    currentPipeline: Pipeline,
-  |}): Promise<?Pipeline> {
+  }: {
+    filePath: ProjectPath;
+    isSource: boolean;
+    newType: string;
+    newPipeline: string | undefined | null;
+    currentPipeline: Pipeline;
+  }): Promise<Pipeline | undefined | null> {
     let filePathRelative = fromProjectPathRelative(filePath);
     let nextFilePath = toProjectPathUnsafe(
       filePathRelative.slice(0, -path.extname(filePathRelative).length) +
@@ -650,9 +650,9 @@ export default class Transformation {
 
   async loadTransformerConfig(
     filePath: ProjectPath,
-    transformer: LoadedPlugin<Transformer<mixed>>,
+    transformer: LoadedPlugin<Transformer<unknown>>,
     isSource: boolean,
-  ): Promise<?Config> {
+  ): Promise<Config | undefined | null> {
     let loadConfig = transformer.plugin.loadConfig;
     if (!loadConfig) {
       return;
@@ -677,10 +677,10 @@ export default class Transformation {
   async runTransformer(
     pipeline: Pipeline,
     asset: UncommittedAsset,
-    transformer: Transformer<mixed>,
+    transformer: Transformer<unknown>,
     transformerName: string,
-    preloadedConfig: ?Config,
-  ): Promise<$ReadOnlyArray<TransformerResult | UncommittedAsset>> {
+    preloadedConfig?: Config | null,
+  ): Promise<ReadonlyArray<TransformerResult | UncommittedAsset>> {
     const logger = new PluginLogger({origin: transformerName});
 
     const resolve = async (from: FilePath, to: string): Promise<FilePath> => {
@@ -794,24 +794,24 @@ export default class Transformation {
   }
 }
 
-type Pipeline = {|
-  id: string,
-  transformers: Array<TransformerWithNameAndConfig>,
-  options: ParcelOptions,
-  pluginOptions: PluginOptions,
-  resolverRunner: ResolverRunner,
-  workerApi: WorkerApi,
-  generate?: GenerateFunc,
-|};
+type Pipeline = {
+  id: string;
+  transformers: Array<TransformerWithNameAndConfig>;
+  options: ParcelOptions;
+  pluginOptions: PluginOptions;
+  resolverRunner: ResolverRunner;
+  workerApi: WorkerApi;
+  generate?: GenerateFunc;
+};
 
-type TransformerWithNameAndConfig = {|
-  name: PackageName,
-  plugin: Transformer<mixed>,
-  config: ?Config,
-  configKeyPath?: string,
-  resolveFrom: ProjectPath,
-  range?: ?SemverRange,
-|};
+type TransformerWithNameAndConfig = {
+  name: PackageName;
+  plugin: Transformer<unknown>;
+  config: Config | undefined | null;
+  configKeyPath?: string;
+  resolveFrom: ProjectPath;
+  range?: SemverRange | null;
+};
 
 function normalizeAssets(
   options,

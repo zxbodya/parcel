@@ -1,9 +1,7 @@
-// @flow
-
 import {Transformer} from '@parcel/plugin';
 import toml from '@iarna/toml';
 
-export default (new Transformer({
+export default new Transformer({
   async transform({asset}) {
     asset.type = 'js';
     asset.setCode(
@@ -15,4 +13,4 @@ export default (new Transformer({
     );
     return [asset];
   },
-}): Transformer);
+}) as Transformer;

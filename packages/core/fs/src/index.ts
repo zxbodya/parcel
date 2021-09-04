@@ -1,9 +1,8 @@
-// @flow strict-local
 import type {FileSystem} from './types';
 import type {FilePath} from '@parcel/types';
 import path from 'path';
 
-export type * from './types';
+export * from './types';
 export * from './NodeFS';
 export * from './MemoryFS';
 export * from './OverlayFS';

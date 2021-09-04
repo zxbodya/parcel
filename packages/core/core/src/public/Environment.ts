@@ -1,4 +1,3 @@
-// @flow strict-local
 import type {
   Environment as IEnvironment,
   EnvironmentContext,
@@ -112,11 +111,11 @@ const supportData = {
 
 const internalEnvironmentToEnvironment: WeakMap<
   InternalEnvironment,
-  Environment,
+  Environment
 > = new WeakMap();
 const _environmentToInternalEnvironment: WeakMap<
   IEnvironment,
-  InternalEnvironment,
+  InternalEnvironment
 > = new WeakMap();
 export function environmentToInternalEnvironment(
   environment: IEnvironment,
@@ -128,7 +127,7 @@ export default class Environment implements IEnvironment {
   #environment /*: InternalEnvironment */;
   #options /*: ParcelOptions */;
 
-  constructor(env: InternalEnvironment, options: ParcelOptions): Environment {
+  constructor(env: InternalEnvironment, options: ParcelOptions) {
     let existing = internalEnvironmentToEnvironment.get(env);
     if (existing != null) {
       return existing;
@@ -156,7 +155,9 @@ export default class Environment implements IEnvironment {
   get includeNodeModules():
     | boolean
     | Array<PackageName>
-    | {[PackageName]: boolean, ...} {
+    | {
+        [k in PackageName]: boolean;
+      } {
     return this.#environment.includeNodeModules;
   }
 
@@ -180,11 +181,11 @@ export default class Environment implements IEnvironment {
     return this.#environment.shouldScopeHoist;
   }
 
-  get sourceMap(): ?TargetSourceMapOptions {
+  get sourceMap(): TargetSourceMapOptions | undefined | null {
     return this.#environment.sourceMap;
   }
 
-  get loc(): ?SourceLocation {
+  get loc(): SourceLocation | undefined | null {
     return fromInternalSourceLocation(
       this.#options.projectRoot,
       this.#environment.loc,
@@ -217,7 +218,7 @@ export default class Environment implements IEnvironment {
 
   matchesEngines(
     minVersions: VersionMap,
-    defaultValue?: boolean = false,
+    defaultValue: boolean = false,
   ): boolean {
     // Determine if the environment matches some minimum version requirements.
     // For browsers, we run a browserslist query with and without the minimum

@@ -1,5 +1,3 @@
-// @flow
-
 import type {BuildSuccessEvent, PluginOptions} from '@parcel/types';
 import type {Diagnostic} from '@parcel/diagnostic';
 import type {AnsiDiagnosticResult} from '@parcel/utils';
@@ -9,26 +7,30 @@ import WebSocket from 'ws';
 import invariant from 'assert';
 import {ansiHtml, prettyDiagnostic, PromiseQueue} from '@parcel/utils';
 
-export type HMRAsset = {|
-  id: string,
-  type: string,
-  output: string,
-  envHash: string,
-  depsByBundle: {[string]: {[string]: string, ...}, ...},
-|};
+export type HMRAsset = {
+  id: string;
+  type: string;
+  output: string;
+  envHash: string;
+  depsByBundle: {
+    [x: string]: {
+      [x: string]: string;
+    };
+  };
+};
 
 export type HMRMessage =
-  | {|
-      type: 'update',
-      assets: Array<HMRAsset>,
-    |}
-  | {|
-      type: 'error',
-      diagnostics: {|
-        ansi: Array<AnsiDiagnosticResult>,
-        html: Array<AnsiDiagnosticResult>,
-      |},
-    |};
+  | {
+      type: 'update';
+      assets: Array<HMRAsset>;
+    }
+  | {
+      type: 'error';
+      diagnostics: {
+        ansi: Array<AnsiDiagnosticResult>;
+        html: Array<AnsiDiagnosticResult>;
+      };
+    };
 
 const FS_CONCURRENCY = 64;
 
@@ -108,9 +110,8 @@ export default class HMRServer {
           for (let dep of dependencies) {
             let resolved = event.bundleGraph.getResolvedAsset(dep, bundle);
             if (resolved) {
-              deps[dep.specifier] = event.bundleGraph.getAssetPublicId(
-                resolved,
-              );
+              deps[dep.specifier] =
+                event.bundleGraph.getAssetPublicId(resolved);
             }
           }
           depsByBundle[bundle.id] = deps;

@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import {Transformer} from '@parcel/plugin';
 import commandExists from 'command-exists';
 import spawn from 'cross-spawn';
@@ -20,7 +18,7 @@ try {
   isWorker = false;
 }
 
-export default (new Transformer({
+export default new Transformer({
   async loadConfig({config}) {
     const elmConfig = await config.getConfig(['elm.json']);
     if (!elmConfig) {
@@ -67,7 +65,7 @@ export default (new Transformer({
     asset.setCode(code);
     return [asset];
   },
-}): Transformer);
+}) as Transformer;
 
 function elmBinaryPath() {
   let elmBinary = resolveLocalElmBinary();

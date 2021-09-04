@@ -1,11 +1,10 @@
-// @flow strict-local
-export type * from './config';
-export type * from './Deferred';
-export type * from './generateBuildMetrics';
-export type * from './http-server';
-export type * from './path';
-export type * from './prettyDiagnostic';
-export type * from './schema';
+export * from './config';
+export * from './Deferred';
+export * from './generateBuildMetrics';
+export * from './http-server';
+export * from './path';
+export * from './prettyDiagnostic';
+export * from './schema';
 
 export {default as countLines} from './countLines';
 export {default as generateBuildMetrics} from './generateBuildMetrics';
