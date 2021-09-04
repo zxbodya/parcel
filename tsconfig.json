@@ -76,6 +76,7 @@
       "@parcel/types": ["packages/core/types/src"],
       "@parcel/utils": ["packages/core/utils/src"],
       "@parcel/workers": ["packages/core/workers/src"],
+      "@parcel/graph": ["packages/core/graph/src"],
       "@parcel/namer-default": ["packages/namers/default/src"],
       "@parcel/eslint-example": ["packages/examples/eslint-example/src"],
       "@parcel/kitchen-sink-example": ["packages/examples/kitchen-sink/src"],
