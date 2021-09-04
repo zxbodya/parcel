@@ -98,7 +98,7 @@ export default new Transformer({
     asset.setCode(css);
     return [asset];
   },
-}) as Transformer;
+});
 
 function resolvePathImporter({asset, resolve, includePaths, options}) {
   // This is a reimplementation of the Sass resolution algorithm that uses Parcel's

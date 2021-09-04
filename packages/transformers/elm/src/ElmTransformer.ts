@@ -65,7 +65,7 @@ export default new Transformer({
     asset.setCode(code);
     return [asset];
   },
-}) as Transformer;
+});
 
 function elmBinaryPath() {
   let elmBinary = resolveLocalElmBinary();

@@ -143,7 +143,7 @@ export default script;`,
       },
     ];
   },
-}) as Transformer;
+});
 
 function createDiagnostic(err, filePath) {
   if (typeof err === 'string') {

@@ -74,7 +74,7 @@ export default new Transformer({
     asset.meta.hasDependencies = false;
     return [asset];
   },
-}) as Transformer;
+});
 
 function attemptResolve(importedPath, filepath, asset, resolve, deps) {
   if (deps.has(importedPath)) {

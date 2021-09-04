@@ -16,4 +16,4 @@ ${compiled}
 
     return [asset];
   },
-}) as Transformer;
+});

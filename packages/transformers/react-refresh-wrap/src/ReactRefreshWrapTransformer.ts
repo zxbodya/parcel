@@ -57,4 +57,4 @@ ${code}
 
     return [asset];
   },
-}) as Transformer;
+});

@@ -179,7 +179,7 @@ export default new Transformer({
       content: code,
     };
   },
-}) as Transformer;
+});
 
 function createLoader(
   asset: MutableAsset,

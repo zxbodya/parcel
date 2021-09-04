@@ -153,4 +153,4 @@ export default new Transformer({
     asset.setMap(sourceMap);
     return [asset];
   },
-}) as Transformer;
+});

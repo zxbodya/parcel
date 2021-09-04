@@ -6,4 +6,4 @@ export default new Transformer({
     asset.meta.inlineType = 'string';
     return [asset];
   },
-}) as Transformer;
+});

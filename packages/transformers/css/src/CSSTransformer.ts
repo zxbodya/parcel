@@ -201,4 +201,4 @@ export default new Transformer({
       map,
     };
   },
-}) as Transformer;
+});

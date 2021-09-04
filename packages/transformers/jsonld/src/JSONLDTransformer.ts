@@ -32,7 +32,7 @@ export default new Transformer({
     asset.setCode(JSON.stringify(jsonCode));
     return [asset];
   },
-}) as Transformer;
+});
 
 function extractUrlsFrom(data, asset) {
   if (!data) return null;
