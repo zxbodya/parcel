@@ -244,7 +244,7 @@ export default new Runtime({
 
     return assets;
   },
-}) as Runtime;
+});
 
 function getDependencies(bundle: NamedBundle): {
   asyncDependencies: Array<Dependency>;

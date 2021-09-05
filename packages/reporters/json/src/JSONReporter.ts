@@ -67,7 +67,7 @@ export default new Reporter({
         writeLogEvent(event, logLevelFilter);
     }
   },
-}) as Reporter;
+});
 
 function makeWriter(
   write: (a: string) => unknown,
