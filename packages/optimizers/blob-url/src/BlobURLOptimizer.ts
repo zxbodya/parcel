@@ -16,4 +16,4 @@ export default new Optimizer({
       )}]))`,
     };
   },
-}) as Optimizer;
+});

@@ -27,4 +27,4 @@ export default new Optimizer({
       contents: `data:${mimeType}${encoding},${content}`,
     };
   },
-}) as Optimizer;
+});

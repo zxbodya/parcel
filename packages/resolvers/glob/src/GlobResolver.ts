@@ -188,7 +188,7 @@ export default new Resolver({
       priority: 'sync',
     };
   },
-}) as Resolver;
+});
 
 function set(obj, path, value) {
   for (let i = 0; i < path.length - 1; i++) {

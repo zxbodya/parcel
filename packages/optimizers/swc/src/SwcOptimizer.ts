@@ -72,4 +72,4 @@ export default new Optimizer({
 
     return {contents: minifiedContents, map: sourceMap};
   },
-}) as Optimizer;
+});

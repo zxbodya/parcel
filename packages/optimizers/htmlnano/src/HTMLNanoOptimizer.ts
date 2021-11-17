@@ -107,7 +107,7 @@ export default new Optimizer({
       ).html,
     };
   },
-}) as Optimizer;
+});
 
 // HTML tags and attributes are case insensitive. The HTML transformer normalizes them so it can
 // more easily process any case. But SVGO requires case sensitive tags and attributes to work correctly.

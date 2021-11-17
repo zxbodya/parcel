@@ -63,4 +63,4 @@ export default new Validator({
 
     return validatorResult;
   },
-}) as Validator;
+});

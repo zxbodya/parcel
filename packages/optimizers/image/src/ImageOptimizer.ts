@@ -34,7 +34,7 @@ export default new Optimizer({
 
     return {contents: buffer};
   },
-}) as Optimizer;
+});
 
 // On linux with older versions of glibc (e.g. CentOS 7), we encounter a segmentation fault
 // when worker threads exit due to thread local variables in Rust. A workaround is to

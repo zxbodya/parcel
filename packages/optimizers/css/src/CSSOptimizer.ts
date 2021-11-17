@@ -186,7 +186,7 @@ Parcel\'s default CSS minifer changed from cssnano to @parcel/css, but a "cssnan
       map,
     };
   },
-}) as Optimizer;
+});
 
 let cache = new Map();
 

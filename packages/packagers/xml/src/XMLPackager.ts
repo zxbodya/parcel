@@ -81,7 +81,7 @@ export default new Packager({
       map,
     });
   },
-}) as Packager;
+});
 
 async function getAssetContent(
   bundleGraph: BundleGraph<NamedBundle>,

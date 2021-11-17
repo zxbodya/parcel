@@ -114,4 +114,4 @@ export default new Reporter({
         break;
     }
   },
-}) as Reporter;
+});

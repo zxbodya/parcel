@@ -4,4 +4,4 @@ export default new Compressor({
   compress({stream}) {
     return {stream};
   },
-}) as Compressor;
+});

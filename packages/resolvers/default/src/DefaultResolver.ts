@@ -38,4 +38,4 @@ export default new Resolver({
       loc: dependency.loc,
     });
   },
-}) as Resolver;
+});

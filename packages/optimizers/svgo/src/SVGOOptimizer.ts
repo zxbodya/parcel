@@ -56,4 +56,4 @@ export default new Optimizer({
 
     return {contents: result.data};
   },
-}) as Optimizer;
+});

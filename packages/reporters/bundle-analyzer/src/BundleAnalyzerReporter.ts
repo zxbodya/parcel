@@ -86,7 +86,7 @@ export default new Reporter({
       }),
     );
   },
-}) as Reporter;
+});
 
 type BundleData = {
   groups: Array<Group>;

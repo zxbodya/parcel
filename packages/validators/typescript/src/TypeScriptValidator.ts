@@ -74,7 +74,7 @@ export default new Validator({
 
     return validatorResults;
   },
-}) as Validator;
+});
 
 async function getConfig(
   asset,

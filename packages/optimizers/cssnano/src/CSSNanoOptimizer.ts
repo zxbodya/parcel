@@ -77,4 +77,4 @@ export default new Optimizer({
       map,
     };
   },
-}) as Optimizer;
+});

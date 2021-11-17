@@ -255,4 +255,4 @@ export default new Reporter({
   report({event, options}) {
     return _report(event, options);
   },
-}) as Reporter;
+});

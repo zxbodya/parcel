@@ -51,4 +51,4 @@ export default new Reporter({
       });
     }
   },
-}) as Reporter;
+});

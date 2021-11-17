@@ -51,4 +51,4 @@ export default new Optimizer({
       map: sourcemap || map,
     };
   },
-}) as Optimizer;
+});

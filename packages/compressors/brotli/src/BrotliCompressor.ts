@@ -12,4 +12,4 @@ export default new Compressor({
       type: 'br',
     };
   },
-}) as Compressor;
+});

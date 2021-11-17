@@ -98,7 +98,7 @@ export default new Namer({
 
     return name + '.' + bundle.type;
   },
-}) as Namer;
+});
 
 function nameFromContent(
   bundle: Bundle,
