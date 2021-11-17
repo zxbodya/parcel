@@ -248,7 +248,7 @@ async function runCompressor(
     });
 
     if (res != null) {
-      await new Promise((resolve, reject) =>
+      await new Promise<void>((resolve, reject) =>
         pipeline(
           res.stream,
           outputFS.createWriteStream(

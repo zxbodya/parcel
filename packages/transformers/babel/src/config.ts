@@ -247,7 +247,7 @@ function hasRequire(options) {
 
 function definePluginDependencies(
   config,
-  babelConfig?: BabelConfig | null,
+  babelConfig: BabelConfig | null | undefined,
   options,
 ) {
   if (babelConfig == null) {
