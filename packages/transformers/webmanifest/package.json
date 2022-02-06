@@ -14,7 +14,7 @@
     "url": "https://github.com/parcel-bundler/parcel.git"
   },
   "main": "lib/WebManifestTransformer.js",
-  "source": "src/WebManifestTransformer.js",
+  "source": "src/WebManifestTransformer.ts",
   "engines": {
     "parcel": "^2.7.0"
   },

@@ -3,7 +3,7 @@
   "version": "2.7.0",
   "license": "MIT",
   "main": "lib/ImageOptimizer.js",
-  "source": "src/ImageOptimizer.js",
+  "source": "src/ImageOptimizer.ts",
   "publishConfig": {
     "access": "public"
   },
