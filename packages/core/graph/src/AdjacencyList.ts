@@ -73,7 +73,7 @@ export default class AdjacencyList<TEdgeType extends number = 1> {
   /**
    * Create a new `AdjacencyList` from the given options.
    */
-  static deserialize(
+  static deserialize<TEdgeType extends number=any>(
     opts: SerializedAdjacencyList<TEdgeType>,
   ): AdjacencyList<TEdgeType> {
     return new AdjacencyList(opts);

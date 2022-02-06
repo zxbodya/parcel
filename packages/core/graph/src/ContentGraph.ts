@@ -32,7 +32,7 @@ export default class ContentGraph<
   }
 
   // $FlowFixMe[prop-missing]
-  static deserialize(
+  static deserialize<TNode=any, TEdgeType extends number=any>(
     opts: ContentGraphOpts<TNode, TEdgeType>,
   ): ContentGraph<TNode, TEdgeType> {
     return new ContentGraph(opts);

@@ -41,7 +41,7 @@ export default class Graph<TNode, TEdgeType extends number = 1> {
     this.rootNodeId = id;
   }
 
-  static deserialize(
+  static deserialize<TNode=any, TEdgeType extends number=any>(
     opts: GraphOpts<TNode, TEdgeType>,
   ): Graph<TNode, TEdgeType> {
     return new this({
