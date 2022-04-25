@@ -28,8 +28,6 @@ const inspect = Symbol.for('nodejs.util.inspect.custom');
 
 let valueToSymbols: WeakMap<Asset, AssetSymbols> = new WeakMap();
 export class AssetSymbols implements IAssetSymbols {
-  @@iterator(): Iterator<[ISymbol, {|local: ISymbol, loc: ?SourceLocation, meta?: ?Meta|}]> { return ({}: any); }
-  
   #value: Asset;
   #options: ParcelOptions;
 
@@ -75,6 +73,7 @@ export class AssetSymbols implements IAssetSymbols {
   exportSymbols(): Iterable<ISymbol> {
     return this.#value.symbols?.keys() ?? [];
   }
+  // @@iterator(): Iterator<[ISymbol, {|local: ISymbol, loc: ?SourceLocation, meta?: ?Meta|}]> { return ({}: any); }
   // $FlowFixMe
   [Symbol.iterator]() {
     return this.#value.symbols
@@ -97,8 +96,7 @@ export class AssetSymbols implements IAssetSymbols {
 let valueToMutableAssetSymbols: WeakMap<Asset, MutableAssetSymbols> =
   new WeakMap();
 export class MutableAssetSymbols implements IMutableAssetSymbols {
-  @@iterator(): Iterator<[ISymbol, {|local: ISymbol, loc: ?SourceLocation, meta?: ?Meta|}]> { return ({}: any); }
-  
+
   #value: Asset;
   #options: ParcelOptions;
 
@@ -145,6 +143,7 @@ export class MutableAssetSymbols implements IMutableAssetSymbols {
     // $FlowFixMe
     return this.#value.symbols.keys();
   }
+  // @@iterator(): Iterator<[ISymbol, {|local: ISymbol, loc: ?SourceLocation, meta?: ?Meta|}]> { return ({}: any); }
   // $FlowFixMe
   [Symbol.iterator]() {
     return this.#value.symbols
@@ -194,8 +193,7 @@ let valueToMutableDependencySymbols: WeakMap<
   MutableDependencySymbols,
 > = new WeakMap();
 export class MutableDependencySymbols implements IMutableDependencySymbols {
-  @@iterator(): Iterator<[ISymbol, {|local: ISymbol, loc: ?SourceLocation, isWeak: boolean, meta?: ?Meta|}]> { return ({}: any); }
-  
+
   #value: Dependency;
   #options: ParcelOptions;
 
@@ -245,6 +243,7 @@ export class MutableDependencySymbols implements IMutableDependencySymbols {
     return this.#value.symbols ? this.#value.symbols.keys() : EMPTY_ITERABLE;
   }
 
+  // @@iterator(): Iterator<[ISymbol, {|local: ISymbol, loc: ?SourceLocation, isWeak: boolean, meta?: ?Meta|}]> { return ({}: any); }
   // $FlowFixMe
   [Symbol.iterator]() {
     return this.#value.symbols
