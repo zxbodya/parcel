@@ -48,20 +48,20 @@ export const INTERNAL_TRANSFORM: symbol = Symbol('internal_transform');
 export const INTERNAL_RESOLVE: symbol = Symbol('internal_resolve');
 
 export default class Parcel {
-  #requestTracker /*: RequestTracker*/;
-  #config /*: ParcelConfig*/;
-  #farm /*: WorkerFarm*/;
-  #initialized /*: boolean*/ = false;
-  #disposable /*: Disposable */;
-  #initialOptions /*: InitialParcelOptions*/;
-  #reporterRunner /*: ReporterRunner*/;
-  #resolvedOptions /*: ?ParcelOptions*/ = null;
-  #optionsRef /*: SharedReference */;
-  #watchAbortController /*: AbortController*/;
-  #watchQueue /*: PromiseQueue<?BuildEvent>*/ = new PromiseQueue<?BuildEvent>({
+  #requestTracker :RequestTracker;
+  #config :ParcelConfig;
+  #farm :WorkerFarm;
+  #initialized :boolean = false;
+  #disposable :Disposable ;
+  #initialOptions :InitialParcelOptions;
+  #reporterRunner :ReporterRunner;
+  #resolvedOptions :?ParcelOptions = null;
+  #optionsRef :SharedReference ;
+  #watchAbortController :AbortController;
+  #watchQueue :PromiseQueue<?BuildEvent> = new PromiseQueue<?BuildEvent>({
     maxConcurrent: 1,
   });
-  #watchEvents /*: ValueEmitter<
+  #watchEvents :ValueEmitter<
     | {|
         +error: Error,
         +buildEvent?: void,
@@ -70,12 +70,12 @@ export default class Parcel {
         +buildEvent: BuildEvent,
         +error?: void,
       |},
-  > */;
-  #watcherSubscription /*: ?AsyncSubscription*/;
-  #watcherCount /*: number*/ = 0;
-  #requestedAssetIds /*: Set<string>*/ = new Set();
+  > ;
+  #watcherSubscription :?AsyncSubscription;
+  #watcherCount :number = 0;
+  #requestedAssetIds :Set<string> = new Set();
 
-  isProfiling /*: boolean */;
+  isProfiling :boolean ;
 
   constructor(options: InitialParcelOptions) {
     this.#initialOptions = options;

@@ -21,8 +21,8 @@ export function targetToInternalTarget(target: ITarget): TargetValue {
 }
 
 export default class Target implements ITarget {
-  #target /*: TargetValue */;
-  #options /*: ParcelOptions */;
+  #target :TargetValue ;
+  #options :ParcelOptions ;
 
   constructor(target: TargetValue, options: ParcelOptions): Target {
     let existing = internalTargetToTarget.get(target);

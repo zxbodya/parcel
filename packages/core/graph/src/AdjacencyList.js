@@ -38,8 +38,8 @@ const MIN_GROW_FACTOR = 2;
 const SHRINK_FACTOR = 0.5;
 
 export default class AdjacencyList<TEdgeType: number = 1> {
-  #nodes /*: NodeTypeMap<TEdgeType | NullEdgeType> */;
-  #edges /*: EdgeTypeMap<TEdgeType | NullEdgeType> */;
+  #nodes :NodeTypeMap<TEdgeType | NullEdgeType> ;
+  #edges :EdgeTypeMap<TEdgeType | NullEdgeType> ;
 
   constructor(
     opts?:
@@ -766,7 +766,7 @@ export class SharedTypeMap<TItemType, THash, TAddress: number>
 
   // Trick Flow into believing in `Symbol.iterator`.
   // See https://github.com/facebook/flow/issues/1163#issuecomment-353523840
-  /*:: @@iterator(): Iterator<TAddress> { return ({}: any); } */
+  @@iterator(): Iterator<TAddress> { return ({}: any); } 
   // $FlowFixMe[unsupported-syntax]
   *[Symbol.iterator](): Iterator<TAddress> {
     let max = this.count;

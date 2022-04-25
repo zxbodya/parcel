@@ -62,9 +62,9 @@ export function bundleToInternalBundleGraph(bundle: IBundle): BundleGraph {
 let _private = {};
 
 export class Bundle implements IBundle {
-  #bundle /*: InternalBundle */;
-  #bundleGraph /*: BundleGraph */;
-  #options /*: ParcelOptions */;
+  #bundle :InternalBundle ;
+  #bundleGraph :BundleGraph ;
+  #options :ParcelOptions ;
 
   constructor(
     sentinel: mixed,
@@ -199,9 +199,9 @@ export class Bundle implements IBundle {
 }
 
 export class NamedBundle extends Bundle implements INamedBundle {
-  #bundle /*: InternalBundle */;
-  #bundleGraph /*: BundleGraph */;
-  #options /*: ParcelOptions */;
+  #bundle :InternalBundle ;
+  #bundleGraph :BundleGraph ;
+  #options :ParcelOptions ;
 
   constructor(
     sentinel: mixed,
@@ -253,10 +253,10 @@ export class NamedBundle extends Bundle implements INamedBundle {
 }
 
 export class PackagedBundle extends NamedBundle implements IPackagedBundle {
-  #bundle /*: InternalBundle */;
-  #bundleGraph /*: BundleGraph */;
-  #options /*: ParcelOptions */;
-  #bundleInfo /*: ?PackagedBundleInfo */;
+  #bundle :InternalBundle ;
+  #bundleGraph :BundleGraph ;
+  #options :ParcelOptions ;
+  #bundleInfo :?PackagedBundleInfo ;
 
   constructor(
     sentinel: mixed,

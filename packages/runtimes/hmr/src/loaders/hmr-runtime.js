@@ -1,7 +1,6 @@
 // @flow
 /* global HMR_HOST, HMR_PORT, HMR_ENV_HASH, HMR_SECURE, chrome, browser, globalThis, __parcel__import__, __parcel__importScripts__, ServiceWorkerGlobalScope */
 
-/*::
 import type {
   HMRAsset,
   HMRMessage,
@@ -45,8 +44,7 @@ declare var browser: ExtensionContext;
 declare var __parcel__import__: (string) => Promise<void>;
 declare var __parcel__importScripts__: (string) => Promise<void>;
 declare var globalThis: typeof self;
-declare var ServiceWorkerGlobalScope: Object;
-*/
+declare var ServiceWorkerGlobalScope: any;
 
 var OVERLAY_ID = '__parcel__error__overlay__';
 
@@ -69,9 +67,9 @@ function Module(moduleName) {
 }
 module.bundle.Module = Module;
 
-var checkedAssets /*: {|[string]: boolean|} */,
-  acceptedAssets /*: {|[string]: boolean|} */,
-  assetsToAccept /*: Array<[ParcelRequire, string]> */;
+var checkedAssets :{|[string]: boolean|} ,
+  acceptedAssets :{|[string]: boolean|} ,
+  assetsToAccept :Array<[ParcelRequire, string]> ;
 
 function getHostname() {
   return (
@@ -117,12 +115,12 @@ if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   }
 
   // $FlowFixMe
-  ws.onmessage = async function (event /*: {data: string, ...} */) {
-    checkedAssets = ({} /*: {|[string]: boolean|} */);
-    acceptedAssets = ({} /*: {|[string]: boolean|} */);
+  ws.onmessage = async function (event :{data: string, ...} ) {
+    checkedAssets = ({} :{|[string]: boolean|} );
+    acceptedAssets = ({} :{|[string]: boolean|} );
     assetsToAccept = [];
 
-    var data /*: HMRMessage */ = JSON.parse(event.data);
+    var data :HMRMessage  = JSON.parse(event.data);
 
     if (data.type === 'update') {
       // Remove error overlay if there is one
@@ -260,7 +258,7 @@ function fullReload() {
   }
 }
 
-function getParents(bundle, id) /*: Array<[ParcelRequire, string]> */ {
+function getParents(bundle, id) :Array<[ParcelRequire, string]>  {
   var modules = bundle.modules;
   if (!modules) {
     return [];
@@ -313,7 +311,7 @@ function reloadCSS() {
     var links = document.querySelectorAll('link[rel="stylesheet"]');
     for (var i = 0; i < links.length; i++) {
       // $FlowFixMe[incompatible-type]
-      var href /*: string */ = links[i].getAttribute('href');
+      var href :string  = links[i].getAttribute('href');
       var hostname = getHostname();
       var servedFromHMRServer =
         hostname === 'localhost'
@@ -422,7 +420,7 @@ async function hmrApplyUpdates(assets) {
   }
 }
 
-function hmrApply(bundle /*: ParcelRequire */, asset /*:  HMRAsset */) {
+function hmrApply(bundle: ParcelRequire, asset: HMRAsset) {
   var modules = bundle.modules;
   if (!modules) {
     return;
@@ -494,9 +492,9 @@ function hmrDelete(bundle, id) {
 }
 
 function hmrAcceptCheck(
-  bundle /*: ParcelRequire */,
-  id /*: string */,
-  depsByBundle /*: ?{ [string]: { [string]: string } }*/,
+  bundle :ParcelRequire ,
+  id :string ,
+  depsByBundle :?{ [string]: { [string]: string } },
 ) {
   if (hmrAcceptCheckOne(bundle, id, depsByBundle)) {
     return true;
@@ -527,9 +525,9 @@ function hmrAcceptCheck(
 }
 
 function hmrAcceptCheckOne(
-  bundle /*: ParcelRequire */,
-  id /*: string */,
-  depsByBundle /*: ?{ [string]: { [string]: string } }*/,
+  bundle :ParcelRequire ,
+  id :string ,
+  depsByBundle :?{ [string]: { [string]: string } },
 ) {
   var modules = bundle.modules;
   if (!modules) {
@@ -561,7 +559,7 @@ function hmrAcceptCheckOne(
   }
 }
 
-function hmrAcceptRun(bundle /*: ParcelRequire */, id /*: string */) {
+function hmrAcceptRun(bundle :ParcelRequire , id :string ) {
   var cached = bundle.cache[id];
   bundle.hotData = {};
   if (cached && cached.hot) {

@@ -119,7 +119,7 @@ export default class BundleGraph {
   _bundleContentHashes: Map<string, string>;
   _targetEntryRoots: Map<ProjectPath, FilePath> = new Map();
   _graph: ContentGraph<BundleGraphNode, BundleGraphEdgeType>;
-  _symbolPropagationRan /*: boolean*/;
+  _symbolPropagationRan :boolean;
 
   constructor({
     graph,

@@ -7,7 +7,6 @@ const {default: generate} = require('@babel/generator');
 // $FlowFixMe
 const {nanoid} = require('nanoid');
 
-/*::
 import type {Template} from '@babel/template';
 import type {
   Identifier,
@@ -68,9 +67,9 @@ type Fixture = {|
   files: {|[string]: string|},
   entries: Array<string>,
 |};
-*/
 
-const TEMPLATES /*: {|mjs: Templates|}*/ = {
+
+const TEMPLATES :{|mjs: Templates|} = {
   mjs: {
     IMPORT_NAMED: template.statement(`
   import { %%name%% as %%local%% } from %%source%%;
@@ -122,9 +121,9 @@ function getRandomModuleIndex(state) {
 }
 
 function appendToModule(
-  state /*: State*/,
-  n /*: number*/,
-  data /*: $Shape<Module> */,
+  state :State,
+  n :number,
+  data :$Shape<Module> ,
 ) {
   let {imported = [], exported = []} = data;
 
@@ -143,7 +142,7 @@ function appendToModule(
 }
 
 let getNewExportNameNext = 'a';
-function getNewExportName() /*: string*/ {
+function getNewExportName() :string {
   for (let i = getNewExportNameNext.length - 1; i >= 0; i--) {
     if (getNewExportNameNext[i] !== 'z') {
       getNewExportNameNext =
@@ -165,11 +164,11 @@ function getNewExportName() /*: string*/ {
   return getNewExportNameNext;
 }
 
-function getNewModuleIndex(state /*: State*/) /*: number*/ {
+function getNewModuleIndex(state :State) :number {
   return Object.keys(state.modules).length;
 }
 
-const ACTIONS /*: Array<[number, (State) => State]> */ = [
+const ACTIONS :Array<[number, (State) => State]>  = [
   [
     0.2,
     function addUnusedNamedExport(oldState) {
@@ -307,7 +306,7 @@ invariant.deepEqual(
   'invalid weights for actions',
 );
 
-function mutate(state /*: State */) /*: State*/ {
+function mutate(state :State ) :State {
   let action;
 
   if (process.env.ACTION != null) {
@@ -328,13 +327,13 @@ function mutate(state /*: State */) /*: State*/ {
   return action(state);
 }
 
-function numberToFilename(n /*: number */, type /*: string*/) {
+function numberToFilename(n :number , type :string) {
   return `${n}.${type}`;
 }
 
-function linearizeState(state /*: State */) /* : Fixture */ {
+function linearizeState(state :State ) :Fixture  {
   // $FlowFixMe
-  let modules /*: Array<[string, Module]> */ = Object.entries(state.modules);
+  let modules :Array<[string, Module]>  = Object.entries(state.modules);
   return {
     files: Object.fromEntries(
       modules
@@ -456,10 +455,10 @@ function linearizeState(state /*: State */) /* : Fixture */ {
   };
 }
 
-function* generateExamples() /*: Iterable<Fixture> */ {
+function* generateExamples() :Iterable<Fixture>  {
   getNewExportNameNext = 'a';
 
-  let state /*: State */ = {
+  let state :State  = {
     modules: {
       [0]: {
         type: 'mjs',

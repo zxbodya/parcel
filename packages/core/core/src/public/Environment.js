@@ -141,8 +141,8 @@ export function environmentToInternalEnvironment(
 }
 
 export default class Environment implements IEnvironment {
-  #environment /*: InternalEnvironment */;
-  #options /*: ParcelOptions */;
+  #environment :InternalEnvironment ;
+  #options :ParcelOptions ;
 
   constructor(env: InternalEnvironment, options: ParcelOptions): Environment {
     let existing = internalEnvironmentToEnvironment.get(env);

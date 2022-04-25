@@ -16,7 +16,7 @@ import {inspect} from 'util';
 import {errorToDiagnostic, anyToDiagnostic} from '@parcel/diagnostic';
 
 class Logger {
-  #logEmitter /*: ValueEmitter<LogEvent> */ = new ValueEmitter();
+  #logEmitter :ValueEmitter<LogEvent>  = new ValueEmitter();
 
   onLog(cb: (event: LogEvent) => mixed): IDisposable {
     return this.#logEmitter.addListener(cb);

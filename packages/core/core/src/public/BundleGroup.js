@@ -23,8 +23,8 @@ export function bundleGroupToInternalBundleGroup(
 }
 
 export default class BundleGroup implements IBundleGroup {
-  #bundleGroup /*: InternalBundleGroup */;
-  #options /*: ParcelOptions */;
+  #bundleGroup :InternalBundleGroup ;
+  #options :ParcelOptions ;
 
   constructor(
     bundleGroup: InternalBundleGroup,
