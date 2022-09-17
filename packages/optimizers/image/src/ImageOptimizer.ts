@@ -1,4 +1,3 @@
-// @flow
 import path from 'path';
 import process from 'process';
 import {Optimizer} from '@parcel/plugin';
@@ -7,7 +6,7 @@ import {md} from '@parcel/diagnostic';
 import {optimize} from '../native';
 import WorkerFarm from '@parcel/workers';
 
-export default (new Optimizer({
+export default new Optimizer({
   async optimize({bundle, contents, logger}) {
     if (!bundle.env.shouldOptimize) {
       return {contents};
@@ -35,7 +34,7 @@ export default (new Optimizer({
 
     return {contents: buffer};
   },
-}): Optimizer);
+}) as Optimizer;
 
 // On linux with older versions of glibc (e.g. CentOS 7), we encounter a segmentation fault
 // when worker threads exit due to thread local variables in Rust. A workaround is to

@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {
   Blob,
   FilePath,
@@ -18,7 +16,8 @@ import type {
   ReportFn,
   RequestInvalidation,
 } from './types';
-import type ParcelConfig, {LoadedPlugin} from './ParcelConfig';
+import type ParcelConfig from './ParcelConfig';
+import type {LoadedPlugin} from './ParcelConfig';
 import type InternalBundleGraph from './BundleGraph';
 import type {ConfigRequest} from './requests/ConfigRequest';
 import type {DevDepSpecifier} from './requests/DevDepRequest';
@@ -62,36 +61,36 @@ import {getInvalidationId, getInvalidationHash} from './assetUtils';
 import {optionsProxy} from './utils';
 import {invalidateDevDeps} from './requests/DevDepRequest';
 
-type Opts = {|
-  config: ParcelConfig,
-  options: ParcelOptions,
-  report: ReportFn,
-  previousDevDeps: Map<string, string>,
-  previousInvalidations: Array<RequestInvalidation>,
-|};
+type Opts = {
+  config: ParcelConfig;
+  options: ParcelOptions;
+  report: ReportFn;
+  previousDevDeps: Map<string, string>;
+  previousInvalidations: Array<RequestInvalidation>;
+};
 
-export type PackageRequestResult = {|
-  bundleInfo: BundleInfo,
-  configRequests: Array<ConfigRequest>,
-  devDepRequests: Array<DevDepRequest>,
-  invalidations: Array<RequestInvalidation>,
-|};
+export type PackageRequestResult = {
+  bundleInfo: BundleInfo;
+  configRequests: Array<ConfigRequest>;
+  devDepRequests: Array<DevDepRequest>;
+  invalidations: Array<RequestInvalidation>;
+};
 
-export type BundleInfo = {|
-  +type: string,
-  +size: number,
-  +hash: string,
-  +hashReferences: Array<string>,
-  +time?: number,
-  +cacheKeys: CacheKeyMap,
-  +isLargeBlob: boolean,
-|};
+export type BundleInfo = {
+  readonly type: string;
+  readonly size: number;
+  readonly hash: string;
+  readonly hashReferences: Array<string>;
+  readonly time?: number;
+  readonly cacheKeys: CacheKeyMap;
+  readonly isLargeBlob: boolean;
+};
 
-type CacheKeyMap = {|
-  content: string,
-  map: string,
-  info: string,
-|};
+type CacheKeyMap = {
+  content: string;
+  map: string;
+  info: string;
+};
 
 const BOUNDARY_LENGTH = HASH_REF_PREFIX.length + 32 - 1;
 
@@ -173,10 +172,10 @@ export default class PackagerRunner {
   async loadConfigs(
     bundleGraph: InternalBundleGraph,
     bundle: InternalBundle,
-  ): Promise<{|
-    configs: Map<string, Config>,
-    bundleConfigs: Map<string, Config>,
-  |}> {
+  ): Promise<{
+    configs: Map<string, Config>;
+    bundleConfigs: Map<string, Config>;
+  }> {
     let configs = new Map();
     let bundleConfigs = new Map();
 
@@ -216,7 +215,7 @@ export default class PackagerRunner {
     }
   }
 
-  async loadPluginConfig<T: PluginWithBundleConfig>(
+  async loadPluginConfig<T extends PluginWithBundleConfig>(
     bundleGraph: InternalBundleGraph,
     bundle: InternalBundle,
     plugin: LoadedPlugin<T>,
@@ -285,7 +284,7 @@ export default class PackagerRunner {
     bundle: InternalBundle,
     configs: Map<string, Config>,
     bundleConfigs: Map<string, Config>,
-  ): Async<?BundleInfo> {
+  ): Async<BundleInfo | undefined | null> {
     if (this.options.shouldDisableCache) {
       return;
     }
@@ -336,11 +335,11 @@ export default class PackagerRunner {
     bundleGraph: InternalBundleGraph,
     configs: Map<string, Config>,
     bundleConfigs: Map<string, Config>,
-  ): Promise<{|
-    type: string,
-    contents: Blob,
-    map: ?string,
-  |}> {
+  ): Promise<{
+    type: string;
+    contents: Blob;
+    map: string | undefined | null;
+  }> {
     let packaged = await this.package(
       bundle,
       bundleGraph,
@@ -367,7 +366,10 @@ export default class PackagerRunner {
     };
   }
 
-  getSourceMapReference(bundle: NamedBundle, map: ?SourceMap): Async<?string> {
+  getSourceMapReference(
+    bundle: NamedBundle,
+    map?: SourceMap | null,
+  ): Async<string | undefined | null> {
     if (map && bundle.env.sourceMap && bundle.bundleBehavior !== 'inline') {
       if (bundle.env.sourceMap && bundle.env.sourceMap.inline) {
         return this.generateSourceMap(bundleToInternalBundle(bundle), map);
@@ -460,7 +462,7 @@ export default class PackagerRunner {
     internalBundleGraph: InternalBundleGraph,
     type: string,
     contents: Blob,
-    map?: ?SourceMap,
+    map: SourceMap | undefined | null,
     configs: Map<string, Config>,
     bundleConfigs: Map<string, Config>,
   ): Promise<BundleResult> {
@@ -671,10 +673,14 @@ export default class PackagerRunner {
     return devDepHashes;
   }
 
-  async readFromCache(cacheKey: string): Promise<?{|
-    contents: Readable,
-    map: ?Readable,
-  |}> {
+  async readFromCache(cacheKey: string): Promise<
+    | {
+        contents: Readable;
+        map: Readable | undefined | null;
+      }
+    | undefined
+    | null
+  > {
     let contentKey = PackagerRunner.getContentKey(cacheKey);
     let mapKey = PackagerRunner.getMapKey(cacheKey);
 
@@ -701,7 +707,7 @@ export default class PackagerRunner {
     cacheKeys: CacheKeyMap,
     type: string,
     contents: Blob,
-    map: ?string,
+    map?: string | null,
   ): Promise<BundleInfo> {
     let size = 0;
     let hash;

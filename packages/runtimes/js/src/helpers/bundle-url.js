@@ -27,12 +27,10 @@ function getBundleURL() {
 }
 
 function getBaseURL(url) {
-  return (
-    ('' + url).replace(
+  return ('' + url).replace(
       /^((?:https?|file|ftp|(chrome|moz|safari-web)-extension):\/\/.+)\/[^/]+$/,
       '$1',
-    ) + '/'
-  );
+    ) + '/';
 }
 
 // TODO: Replace uses with `new URL(url).origin` when ie11 is no longer supported.

@@ -1,5 +1,3 @@
-// @flow
-
 import {Transformer} from '@parcel/plugin';
 import type {AST} from '@parcel/types';
 import {parser as parse} from 'posthtml-parser';
@@ -12,7 +10,7 @@ import collectDependencies from './dependencies';
 import extractInlineAssets from './inline';
 import ThrowableDiagnostic from '@parcel/diagnostic';
 
-export default (new Transformer({
+export default new Transformer({
   canReuseAST({ast}) {
     return ast.type === 'posthtml' && semver.satisfies(ast.version, '^0.4.0');
   },
@@ -106,12 +104,12 @@ export default (new Transformer({
       }),
     };
   },
-}): Transformer);
+}) as Transformer;
 
 function findFirstMatch(
   ast: AST,
   expressions: PostHTMLExpression[],
-): ?PostHTMLNode {
+): PostHTMLNode | undefined | null {
   let found;
 
   for (const expression of expressions) {

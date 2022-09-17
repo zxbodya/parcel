@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {FileSystem} from '@parcel/fs';
 import type {EnvMap, FilePath} from '@parcel/types';
 

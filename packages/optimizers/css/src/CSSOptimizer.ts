@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import SourceMap from '@parcel/source-map';
 import {Optimizer} from '@parcel/plugin';
 import {
@@ -13,7 +11,7 @@ import nullthrows from 'nullthrows';
 import path from 'path';
 import {md, generateJSONCodeHighlights} from '@parcel/diagnostic';
 
-export default (new Optimizer({
+export default new Optimizer({
   async loadConfig({config, logger, options}) {
     const configFile = await config.getConfig(
       [
@@ -188,7 +186,7 @@ Parcel\'s default CSS minifer changed from cssnano to @parcel/css, but a "cssnan
       map,
     };
   },
-}): Optimizer);
+}) as Optimizer;
 
 let cache = new Map();
 

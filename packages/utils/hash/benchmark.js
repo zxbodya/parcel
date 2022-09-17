@@ -1,7 +1,7 @@
 const Benchmark = require('tiny-benchy');
 const crypto = require('crypto');
 const rust = require('./index.js');
-const wasm = require('./browser.js');
+const wasm = require("./browser");
 
 const suite = new Benchmark(10000);
 

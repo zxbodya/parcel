@@ -1,5 +1,3 @@
-// @flow
-
 import _isURL from 'is-url';
 
 // Matches anchor (ie: #raptors)

@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {
   Asset,
   Bundle,
@@ -18,12 +16,12 @@ import {hashString} from '@parcel/hash';
 import nullthrows from 'nullthrows';
 import {encodeJSONKeyComponent} from '@parcel/diagnostic';
 
-type BundlerConfig = {|
-  http?: number,
-  minBundles?: number,
-  minBundleSize?: number,
-  maxParallelRequests?: number,
-|};
+type BundlerConfig = {
+  http?: number;
+  minBundles?: number;
+  minBundleSize?: number;
+  maxParallelRequests?: number;
+};
 
 // Default options by http version.
 const HTTP_OPTIONS = {
@@ -41,7 +39,7 @@ const HTTP_OPTIONS = {
 
 let skipOptimize = false;
 
-export default (new Bundler({
+export default new Bundler({
   // RULES:
   // 1. If dep.isAsync or dep.isEntry, start a new bundle group.
   // 2. If an asset is a different type than the current bundle, make a parallel bundle in the same bundle group.
@@ -57,7 +55,7 @@ export default (new Bundler({
     let bundlesByEntryAsset: Map<Asset, Bundle> = new Map();
     let assetsToAddOnExit: DefaultMap<
       Dependency,
-      Array<[Bundle, Asset]>,
+      Array<[Bundle, Asset]>
     > = new DefaultMap(() => []);
 
     // Step 1: create bundles for each of the explicit code split points.
@@ -296,11 +294,11 @@ export default (new Bundler({
     // If the sub-graph from an asset is >= 30kb, and the number of parallel requests in the bundle group is < 5, create a new bundle containing the sub-graph.
     let candidateBundles: Map<
       string,
-      {|
-        assets: Array<Asset>,
-        sourceBundles: Set<Bundle>,
-        size: number,
-      |},
+      {
+        assets: Array<Asset>;
+        sourceBundles: Set<Bundle>;
+        size: number;
+      }
     > = new Map();
 
     bundleGraph.traverse((node, ctx, actions) => {
@@ -353,11 +351,11 @@ export default (new Bundler({
     });
 
     // Sort candidates by size (consider larger bundles first), and ensure they meet the size threshold
-    let sortedCandidates: Array<{|
-      assets: Array<Asset>,
-      sourceBundles: Set<Bundle>,
-      size: number,
-    |}> = Array.from(candidateBundles.values())
+    let sortedCandidates: Array<{
+      assets: Array<Asset>;
+      sourceBundles: Set<Bundle>;
+      size: number;
+    }> = Array.from(candidateBundles.values())
       .filter(bundle => bundle.size >= config.minBundleSize)
       .sort((a, b) => b.size - a.size);
 
@@ -415,7 +413,7 @@ export default (new Bundler({
     deduplicate(bundleGraph);
     internalizeReachableAsyncDependencies(bundleGraph);
   },
-}): Bundler);
+}) as Bundler;
 
 function deduplicate(bundleGraph: MutableBundleGraph) {
   bundleGraph.traverse(node => {

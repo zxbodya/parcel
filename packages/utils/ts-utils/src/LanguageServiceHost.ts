@@ -1,7 +1,6 @@
-// @flow
 import type {FileSystem} from '@parcel/fs';
 import type {FilePath} from '@parcel/types';
-import typeof TypeScriptModule from 'typescript'; // eslint-disable-line import/no-extraneous-dependencies
+type TypeScriptModule = typeof import('typescript').default;
 import type {
   CompilerOptions,
   LanguageServiceHost as ILanguageServiceHost,
@@ -19,7 +18,11 @@ export class LanguageServiceHost
   implements ILanguageServiceHost
 {
   config: ParsedCommandLine;
-  files: {|[key: FilePath]: {|version: number|}|};
+  files: {
+    [key in FilePath]: {
+      version: number;
+    };
+  };
 
   constructor(fs: FileSystem, ts: TypeScriptModule, config: ParsedCommandLine) {
     super(fs, ts);

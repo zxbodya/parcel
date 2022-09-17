@@ -1,4 +1,3 @@
-// @flow strict-local
 import type {BuildProgressEvent, LogEvent} from '@parcel/types';
 import type {BuildMetrics} from '@parcel/utils';
 
@@ -20,7 +19,7 @@ const LOG_LEVELS = {
   verbose: 4,
 };
 
-export default (new Reporter({
+export default new Reporter({
   async report({event, options}) {
     let logLevelFilter = options.logLevel || 'info';
 
@@ -68,14 +67,14 @@ export default (new Reporter({
         writeLogEvent(event, logLevelFilter);
     }
   },
-}): Reporter);
+}) as Reporter;
 
 function makeWriter(
-  write: string => mixed,
-): (JSONReportEvent, $Keys<typeof LOG_LEVELS>) => void {
+  write: (a: string) => unknown,
+): (b: JSONReportEvent, a: keyof typeof LOG_LEVELS) => void {
   return (
     event: JSONReportEvent,
-    logLevelFilter: $Keys<typeof LOG_LEVELS>,
+    logLevelFilter: keyof typeof LOG_LEVELS,
   ): void => {
     let stringified;
     try {
@@ -107,7 +106,7 @@ function makeWriter(
 
 function writeLogEvent(
   event: LogEvent,
-  logLevelFilter: $Keys<typeof LOG_LEVELS>,
+  logLevelFilter: keyof typeof LOG_LEVELS,
 ): void {
   if (LOG_LEVELS[logLevelFilter] < LOG_LEVELS[event.level]) {
     return;
@@ -128,7 +127,7 @@ function writeLogEvent(
 
 function progressEventToJSONEvent(
   progressEvent: BuildProgressEvent,
-): ?JSONProgressEvent {
+): JSONProgressEvent | undefined | null {
   switch (progressEvent.phase) {
     case 'transforming':
       return {
@@ -153,24 +152,32 @@ function progressEventToJSONEvent(
 
 type JSONReportEvent =
   | LogEvent
-  | {|+type: 'buildStart'|}
-  | {|+type: 'buildFailure', message: string|}
-  | {|
-      +type: 'buildSuccess',
-      buildTime: number,
-      bundles?: $PropertyType<BuildMetrics, 'bundles'>,
-    |}
+  | {
+      readonly type: 'buildStart';
+    }
+  | {
+      readonly type: 'buildFailure';
+      message: string;
+    }
+  | {
+      readonly type: 'buildSuccess';
+      buildTime: number;
+      bundles?: BuildMetrics['bundles'];
+    }
   | JSONProgressEvent;
 
 type JSONProgressEvent =
-  | {|
-      +type: 'buildProgress',
-      phase: 'transforming',
-      filePath: string,
-    |}
-  | {|+type: 'buildProgress', phase: 'bundling'|}
-  | {|
-      +type: 'buildProgress',
-      +phase: 'packaging' | 'optimizing',
-      bundleName?: string,
-    |};
+  | {
+      readonly type: 'buildProgress';
+      phase: 'transforming';
+      filePath: string;
+    }
+  | {
+      readonly type: 'buildProgress';
+      phase: 'bundling';
+    }
+  | {
+      readonly type: 'buildProgress';
+      readonly phase: 'packaging' | 'optimizing';
+      bundleName?: string;
+    };

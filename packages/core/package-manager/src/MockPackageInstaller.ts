@@ -1,5 +1,3 @@
-// @flow
-
 import type {ModuleRequest, PackageInstaller, InstallerOptions} from './types';
 import type {FileSystem} from '@parcel/fs';
 import type {FilePath} from '@parcel/types';
@@ -10,10 +8,10 @@ import {registerSerializableClass} from '@parcel/core';
 import pkg from '../package.json';
 import {moduleRequestsFromDependencyMap} from './utils';
 
-type Package = {|
-  fs: FileSystem,
-  packagePath: FilePath,
-|};
+type Package = {
+  fs: FileSystem;
+  packagePath: FilePath;
+};
 
 // This PackageInstaller implementation simply copies files from one filesystem to another.
 // Mostly useful for testing purposes.

@@ -1,48 +1,65 @@
-// @flow
 /* global HMR_HOST, HMR_PORT, HMR_ENV_HASH, HMR_SECURE, chrome, browser, globalThis, __parcel__import__, __parcel__importScripts__, ServiceWorkerGlobalScope */
 
 import type {
   HMRAsset,
   HMRMessage,
 } from '@parcel/reporter-dev-server/src/HMRServer.js';
+
 interface ParcelRequire {
-  (string): mixed;
-  cache: {|[string]: ParcelModule|};
-  hotData: mixed;
+  cache: {
+    [x: string]: ParcelModule;
+  };
+  hotData: unknown;
   Module: any;
-  parent: ?ParcelRequire;
+  parent: ParcelRequire | undefined | null;
   isParcelRequire: true;
-  modules: {|[string]: [Function, {|[string]: string|}]|};
+  modules: {
+    [x: string]: [
+      Function,
+      {
+        [x: string]: string;
+      },
+    ];
+  };
   HMR_BUNDLE_ID: string;
   root: ParcelRequire;
+  (a: string): unknown;
 }
+
 interface ParcelModule {
-  hot: {|
-    data: mixed,
-    accept(cb: (Function) => void): void,
-    dispose(cb: (mixed) => void): void,
+  hot: {
+    data: unknown;
+    accept(cb: (a: Function) => void): void;
+    dispose(cb: (a: unknown) => void): void;
     // accept(deps: Array<string> | string, cb: (Function) => void): void,
     // decline(): void,
-    _acceptCallbacks: Array<(Function) => void>,
-    _disposeCallbacks: Array<(mixed) => void>,
-  |};
+    _acceptCallbacks: Array<(a: Function) => void>;
+    _disposeCallbacks: Array<(a: unknown) => void>;
+  };
 }
+
 interface ExtensionContext {
-  runtime: {|
-    reload(): void,
+  runtime: {
+    reload(): void;
     getURL(url: string): string;
-    getManifest(): {manifest_version: number, ...};
-  |};
+    getManifest(): {
+      manifest_version: number;
+    };
+  };
 }
-declare var module: {bundle: ParcelRequire, ...};
+
+declare var module: {
+  bundle: ParcelRequire;
+};
+
 declare var HMR_HOST: string;
 declare var HMR_PORT: string;
 declare var HMR_ENV_HASH: string;
 declare var HMR_SECURE: boolean;
 declare var chrome: ExtensionContext;
 declare var browser: ExtensionContext;
-declare var __parcel__import__: (string) => Promise<void>;
-declare var __parcel__importScripts__: (string) => Promise<void>;
+declare var __parcel__import__: (a: string) => Promise<void>;
+declare var __parcel__importScripts__: (a: string) => Promise<void>;
 declare var globalThis: typeof self;
 declare var ServiceWorkerGlobalScope: any;
 
@@ -67,9 +84,13 @@ function Module(moduleName) {
 }
 module.bundle.Module = Module;
 
-var checkedAssets :{|[string]: boolean|} ,
-  acceptedAssets :{|[string]: boolean|} ,
-  assetsToAccept :Array<[ParcelRequire, string]> ;
+var checkedAssets: {
+    [x: string]: boolean;
+  },
+  acceptedAssets: {
+    [x: string]: boolean;
+  },
+  assetsToAccept: Array<[ParcelRequire, string]>;
 
 function getHostname() {
   return (
@@ -115,12 +136,16 @@ if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   }
 
   // $FlowFixMe
-  ws.onmessage = async function (event :{data: string, ...} ) {
-    checkedAssets = ({} :{|[string]: boolean|} );
-    acceptedAssets = ({} :{|[string]: boolean|} );
+  ws.onmessage = async function (event: {data: string}) {
+    checkedAssets = {} as {
+      [x: string]: boolean;
+    };
+    acceptedAssets = {} as {
+      [x: string]: boolean;
+    };
     assetsToAccept = [];
 
-    var data :HMRMessage  = JSON.parse(event.data);
+    var data: HMRMessage = JSON.parse(event.data);
 
     if (data.type === 'update') {
       // Remove error overlay if there is one
@@ -258,7 +283,7 @@ function fullReload() {
   }
 }
 
-function getParents(bundle, id) :Array<[ParcelRequire, string]>  {
+function getParents(bundle, id): Array<[ParcelRequire, string]> {
   var modules = bundle.modules;
   if (!modules) {
     return [];
@@ -311,7 +336,7 @@ function reloadCSS() {
     var links = document.querySelectorAll('link[rel="stylesheet"]');
     for (var i = 0; i < links.length; i++) {
       // $FlowFixMe[incompatible-type]
-      var href :string  = links[i].getAttribute('href');
+      var href: string = links[i].getAttribute('href');
       var hostname = getHostname();
       var servedFromHMRServer =
         hostname === 'localhost'
@@ -492,9 +517,13 @@ function hmrDelete(bundle, id) {
 }
 
 function hmrAcceptCheck(
-  bundle :ParcelRequire ,
-  id :string ,
-  depsByBundle :?{ [string]: { [string]: string } },
+  bundle: ParcelRequire,
+  id: string,
+  depsByBundle?: {
+    [x: string]: {
+      [x: string]: string;
+    };
+  } | null,
 ) {
   if (hmrAcceptCheckOne(bundle, id, depsByBundle)) {
     return true;
@@ -525,9 +554,13 @@ function hmrAcceptCheck(
 }
 
 function hmrAcceptCheckOne(
-  bundle :ParcelRequire ,
-  id :string ,
-  depsByBundle :?{ [string]: { [string]: string } },
+  bundle: ParcelRequire,
+  id: string,
+  depsByBundle?: {
+    [x: string]: {
+      [x: string]: string;
+    };
+  } | null,
 ) {
   var modules = bundle.modules;
   if (!modules) {
@@ -559,7 +592,7 @@ function hmrAcceptCheckOne(
   }
 }
 
-function hmrAcceptRun(bundle :ParcelRequire , id :string ) {
+function hmrAcceptRun(bundle: ParcelRequire, id: string) {
   var cached = bundle.cache[id];
   bundle.hotData = {};
   if (cached && cached.hot) {

@@ -1,5 +1,3 @@
-// @flow
-
 import type {FilePath, PackageJSON} from '@parcel/types';
 import type {
   ModuleRequest,
@@ -24,7 +22,7 @@ import WorkerFarm from '@parcel/workers';
 
 import {Npm} from './Npm';
 import {Yarn} from './Yarn';
-import {Pnpm} from './Pnpm.js';
+import {Pnpm} from './Pnpm';
 import {getConflictingLocalDependencies} from './utils';
 import validateModuleSpecifier from './validateModuleSpecifier';
 
@@ -195,7 +193,7 @@ export function _addToInstallQueue(
   filePath: FilePath,
   projectRoot: FilePath,
   options?: InstallOptions,
-): Promise<mixed> {
+): Promise<unknown> {
   modules = modules.map(request => ({
     name: validateModuleSpecifier(request.name),
     range: request.range,
@@ -243,7 +241,7 @@ export function installPackage(
   filePath: FilePath,
   projectRoot: FilePath,
   options?: InstallOptions,
-): Promise<mixed> {
+): Promise<unknown> {
   if (WorkerFarm.isWorker()) {
     let workerApi = WorkerFarm.getWorkerApi();
     // TODO this should really be `__filename` but without the rewriting.

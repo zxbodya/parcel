@@ -1,4 +1,3 @@
-// @flow strict-local
 import type {BundleGraph, PluginOptions, NamedBundle} from '@parcel/types';
 
 import {
@@ -36,7 +35,10 @@ export class DevPackager {
     this.parcelRequireName = parcelRequireName;
   }
 
-  async package(): Promise<{|contents: string, map: ?SourceMap|}> {
+  async package(): Promise<{
+    contents: string;
+    map: SourceMap | undefined | null;
+  }> {
     // Load assets
     let queue = new PromiseQueue({maxConcurrent: 32});
     this.bundle.traverse(node => {
@@ -60,7 +62,13 @@ export class DevPackager {
 
     let prefix = this.getPrefix();
     let lineOffset = countLines(prefix);
-    let script: ?{|code: string, mapBuffer: ?Buffer|} = null;
+    let script:
+      | {
+          code: string;
+          mapBuffer: Buffer | undefined | null;
+        }
+      | undefined
+      | null = null;
 
     this.bundle.traverse(node => {
       let wrapped = first ? '' : ',';
@@ -214,7 +222,7 @@ export class DevPackager {
   }
 
   getPrefix(): string {
-    let interpreter: ?string;
+    let interpreter: string | undefined | null;
     let mainEntry = this.bundle.getMainEntry();
     if (mainEntry && this.isEntry() && !this.bundle.target.env.isBrowser()) {
       let _interpreter = mainEntry.meta.interpreter;

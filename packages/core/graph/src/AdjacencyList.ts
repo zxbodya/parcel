@@ -1,4 +1,3 @@
-// @flow
 import assert from 'assert';
 import nullthrows from 'nullthrows';
 import {SharedBuffer} from '@parcel/utils';
@@ -7,24 +6,24 @@ import {ALL_EDGE_TYPES, type NullEdgeType, type AllEdgeTypes} from './Graph';
 import type {NodeId} from './types';
 
 /** The address of the node in the nodes map. */
-opaque type NodeAddress = number;
+type NodeAddress = number;
 
-opaque type EdgeHash = number;
+type EdgeHash = number;
 
 /** The address of the edge in the edges map. */
-opaque type EdgeAddress = number;
+type EdgeAddress = number;
 
 // eslint-disable-next-line no-unused-vars
-export type SerializedAdjacencyList<TEdgeType> = {|
-  nodes: Uint32Array,
-  edges: Uint32Array,
-|};
+export type SerializedAdjacencyList<TEdgeType> = {
+  nodes: Uint32Array;
+  edges: Uint32Array;
+};
 
 // eslint-disable-next-line no-unused-vars
-export type AdjacencyListOptions<TEdgeType> = {|
-  edgeCapacity?: number,
-  nodeCapacity?: number,
-|};
+export type AdjacencyListOptions<TEdgeType> = {
+  edgeCapacity?: number;
+  nodeCapacity?: number;
+};
 
 /** The upper bound above which capacity should be increased. */
 const LOAD_FACTOR = 0.7;
@@ -37,9 +36,9 @@ const MIN_GROW_FACTOR = 2;
 /** The amount by which to shrink the capacity. */
 const SHRINK_FACTOR = 0.5;
 
-export default class AdjacencyList<TEdgeType: number = 1> {
-  #nodes :NodeTypeMap<TEdgeType | NullEdgeType> ;
-  #edges :EdgeTypeMap<TEdgeType | NullEdgeType> ;
+export default class AdjacencyList<TEdgeType extends number = 1> {
+  #nodes: NodeTypeMap<TEdgeType | NullEdgeType>;
+  #edges: EdgeTypeMap<TEdgeType | NullEdgeType>;
 
   constructor(
     opts?:
@@ -90,38 +89,38 @@ export default class AdjacencyList<TEdgeType: number = 1> {
     };
   }
 
-  get stats(): {|
+  get stats(): {
     /** The number of nodes in the graph. */
-    nodes: number,
+    nodes: number;
     /** The number of edge types associated with nodes in the graph. */
-    nodeEdgeTypes: number,
+    nodeEdgeTypes: number;
     /** The maximum number of nodes the graph can contain. */
-    nodeCapacity: number,
+    nodeCapacity: number;
     /** The size of the raw nodes buffer, in mb. */
-    nodeBufferSize: string,
+    nodeBufferSize: string;
     /** The current load on the nodes array. */
-    nodeLoad: string,
+    nodeLoad: string;
     /** The number of edges in the graph. */
-    edges: number,
+    edges: number;
     /** The number of edges deleted from the graph. */
-    deleted: number,
+    deleted: number;
     /** The maximum number of edges the graph can contain. */
-    edgeCapacity: number,
+    edgeCapacity: number;
     /** The size of the raw edges buffer, in mb. */
-    edgeBufferSize: string,
+    edgeBufferSize: string;
     /** The current load on the edges array, including deletes. */
-    edgeLoadWithDeletes: string,
+    edgeLoadWithDeletes: string;
     /** The current load on the edges array. */
-    edgeLoad: string,
+    edgeLoad: string;
     /** The total number of edge hash collisions. */
-    collisions: number,
+    collisions: number;
     /** The number of collisions for the most common hash. */
-    maxCollisions: number,
+    maxCollisions: number;
     /** The average number of collisions per hash. */
-    avgCollisions: number,
+    avgCollisions: number;
     /** The likelihood of uniform distribution. ~1.0 indicates certainty. */
-    uniformity: number,
-  |} {
+    uniformity: number;
+  } {
     let buckets = new Map();
     for (let {from, to, type} of this.getAllEdges()) {
       let hash = this.#edges.hash(from, to, type);
@@ -309,11 +308,11 @@ export default class AdjacencyList<TEdgeType: number = 1> {
     return true;
   }
 
-  *getAllEdges(): Iterator<{|
-    type: TEdgeType | NullEdgeType,
-    from: NodeId,
-    to: NodeId,
-  |}> {
+  *getAllEdges(): Iterator<{
+    type: TEdgeType | NullEdgeType;
+    from: NodeId;
+    to: NodeId;
+  }> {
     for (let edge of this.#edges) {
       yield {
         from: this.#edges.from(edge),
@@ -387,9 +386,10 @@ export default class AdjacencyList<TEdgeType: number = 1> {
     return false;
   }
 
-  getInboundEdgesByType(
-    to: NodeId,
-  ): {|type: TEdgeType | NullEdgeType, from: NodeId|}[] {
+  getInboundEdgesByType(to: NodeId): {
+    type: TEdgeType | NullEdgeType;
+    from: NodeId;
+  }[] {
     let edges = [];
     let node = this.#nodes.head(to);
     while (node !== null) {
@@ -405,9 +405,10 @@ export default class AdjacencyList<TEdgeType: number = 1> {
     return edges;
   }
 
-  getOutboundEdgesByType(
-    from: NodeId,
-  ): {|type: TEdgeType | NullEdgeType, to: NodeId|}[] {
+  getOutboundEdgesByType(from: NodeId): {
+    type: TEdgeType | NullEdgeType;
+    to: NodeId;
+  }[] {
     let edges = [];
     let node = this.#nodes.head(from);
     while (node !== null) {
@@ -543,7 +544,7 @@ export default class AdjacencyList<TEdgeType: number = 1> {
  *        └────┼─────────┴─────────────────┘                 │
  *             └─────────────────────────────────────────────┘
  */
-export class SharedTypeMap<TItemType, THash, TAddress: number>
+export class SharedTypeMap<TItemType, THash, TAddress extends number>
   implements Iterable<TAddress>
 {
   /**
@@ -673,23 +674,23 @@ export class SharedTypeMap<TItemType, THash, TAddress: number>
   /** Get the next available address in the map. */
   getNextAddress(): TAddress {
     let {HEADER_SIZE, ITEM_SIZE} = this.constructor;
-    return (HEADER_SIZE + this.capacity + this.count * ITEM_SIZE: any);
+    return (HEADER_SIZE + this.capacity + this.count * ITEM_SIZE) as any;
   }
 
   /** Get the address of the first item with the given hash. */
   head(hash: THash): TAddress | null {
     let {HEADER_SIZE} = this.constructor;
-    return (this.data[HEADER_SIZE + (hash: any)]: any) || null;
+    return (this.data[HEADER_SIZE + (hash as any)] as any) || null;
   }
 
   /** Get the address of the next item with the same hash as the given item. */
   next(item: TAddress): TAddress | null {
     let NEXT = SharedTypeMap.#NEXT;
-    return (this.data[(item: any) + NEXT]: any) || null;
+    return (this.data[(item as any) + NEXT] as any) || null;
   }
 
   typeOf(item: TAddress): TItemType {
-    return (this.data[item + SharedTypeMap.#TYPE]: any);
+    return this.data[item + SharedTypeMap.#TYPE] as any;
   }
 
   link(hash: THash, item: TAddress, type: TItemType): void {
@@ -698,7 +699,7 @@ export class SharedTypeMap<TItemType, THash, TAddress: number>
     let TYPE = SharedTypeMap.#TYPE;
     let {HEADER_SIZE} = this.constructor;
 
-    this.data[item + TYPE] = (type: any);
+    this.data[item + TYPE] = type as any;
 
     let prev = this.head(hash);
     if (prev !== null) {
@@ -710,7 +711,7 @@ export class SharedTypeMap<TItemType, THash, TAddress: number>
       this.data[prev + NEXT] = item;
     } else {
       // This is the first item in the bucket!
-      this.data[HEADER_SIZE + (hash: any)] = item;
+      this.data[HEADER_SIZE + (hash as any)] = item;
     }
     this.data[COUNT]++;
   }
@@ -739,9 +740,9 @@ export class SharedTypeMap<TItemType, THash, TAddress: number>
     } else if (prev !== null) {
       this.data[prev + NEXT] = 0;
     } else if (next !== null) {
-      this.data[HEADER_SIZE + (hash: any)] = next;
+      this.data[HEADER_SIZE + (hash as any)] = next;
     } else {
-      this.data[HEADER_SIZE + (hash: any)] = 0;
+      this.data[HEADER_SIZE + (hash as any)] = 0;
     }
     this.data[item + NEXT] = 0;
     this.data[COUNT]--;
@@ -757,8 +758,8 @@ export class SharedTypeMap<TItemType, THash, TAddress: number>
       i += ITEM_SIZE
     ) {
       // Skip items that don't have a type.
-      if (this.typeOf((i: any))) {
-        cb((i: any));
+      if (this.typeOf(i as any)) {
+        cb(i as any);
         count++;
       }
     }
@@ -778,17 +779,17 @@ export class SharedTypeMap<TItemType, THash, TAddress: number>
       i += ITEM_SIZE
     ) {
       if (this.data.subarray(i, i + ITEM_SIZE).some(Boolean)) {
-        yield (i: any);
+        yield i as any;
         count++;
       }
     }
   }
 
-  inspect(): {|
-    header: Uint32Array,
-    table: Uint32Array,
-    data: Uint32Array,
-  |} {
+  inspect(): {
+    header: Uint32Array;
+    table: Uint32Array;
+    data: Uint32Array;
+  } {
     const {HEADER_SIZE, ITEM_SIZE, BUCKET_SIZE} = this.constructor;
     let min = HEADER_SIZE + this.capacity;
     let max = min + this.capacity * BUCKET_SIZE * ITEM_SIZE;
@@ -808,7 +809,7 @@ export class SharedTypeMap<TItemType, THash, TAddress: number>
 export class NodeTypeMap<TEdgeType> extends SharedTypeMap<
   TEdgeType,
   NodeId,
-  NodeAddress,
+  NodeAddress
 > {
   /**
    * In addition to the header defined by `SharedTypeMap`, the header for
@@ -978,7 +979,7 @@ export class NodeTypeMap<TEdgeType> extends SharedTypeMap<
 export class EdgeTypeMap<TEdgeType> extends SharedTypeMap<
   TEdgeType,
   EdgeHash,
-  EdgeAddress,
+  EdgeAddress
 > {
   /**
    * In addition to the header defined by `SharedTypeMap`, the header for
@@ -1163,9 +1164,9 @@ export class EdgeTypeMap<TEdgeType> extends SharedTypeMap<
     // the output widely. Then we do a series of prime multiplications and
     // additions to combine the hashes into one value.
     let hash = 17;
-    hash = hash * 37 + hash32shift((from: any));
-    hash = hash * 37 + hash32shift((to: any));
-    hash = hash * 37 + hash32shift((type: any));
+    hash = hash * 37 + hash32shift(from as any);
+    hash = hash * 37 + hash32shift(to as any);
+    hash = hash * 37 + hash32shift(type as any);
     // Finally, we map the hash to a value modulo the edge capacity.
     hash %= this.capacity;
     return hash;

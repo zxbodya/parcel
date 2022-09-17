@@ -1,4 +1,3 @@
-// @flow strict-local
 import type {FilePath} from '@parcel/types';
 import type {Cache} from './types';
 import type {Readable, Writable} from 'stream';
@@ -13,7 +12,7 @@ import packageJson from '../package.json';
 // $FlowFixMe
 import lmdb from 'lmdb';
 
-const pipeline: (Readable, Writable) => Promise<void> = promisify(
+const pipeline: (b: Readable, a: Writable) => Promise<void> = promisify(
   stream.pipeline,
 );
 
@@ -38,13 +37,15 @@ export class LMDBCache implements Cache {
     return Promise.resolve();
   }
 
-  serialize(): {|dir: FilePath|} {
+  serialize(): {
+    dir: FilePath;
+  } {
     return {
       dir: this.dir,
     };
   }
 
-  static deserialize(opts: {|dir: FilePath|}): LMDBCache {
+  static deserialize(opts: {dir: FilePath}): LMDBCache {
     return new LMDBCache(opts.dir);
   }
 
@@ -52,7 +53,7 @@ export class LMDBCache implements Cache {
     return Promise.resolve(this.store.get(key) != null);
   }
 
-  get<T>(key: string): Promise<?T> {
+  get<T>(key: string): Promise<T | undefined | null> {
     let data = this.store.get(key);
     if (data == null) {
       return Promise.resolve(null);
@@ -61,7 +62,7 @@ export class LMDBCache implements Cache {
     return Promise.resolve(deserialize(data));
   }
 
-  async set(key: string, value: mixed): Promise<void> {
+  async set(key: string, value: unknown): Promise<void> {
     await this.setBlob(key, serialize(value));
   }
 
@@ -87,7 +88,7 @@ export class LMDBCache implements Cache {
     await this.store.put(key, contents);
   }
 
-  getBuffer(key: string): Promise<?Buffer> {
+  getBuffer(key: string): Promise<Buffer | undefined | null> {
     return Promise.resolve(this.store.get(key));
   }
 

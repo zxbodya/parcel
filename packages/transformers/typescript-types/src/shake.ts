@@ -1,4 +1,3 @@
-// @flow
 import {TSModule} from './TSModule';
 import type {TSModuleGraph} from './TSModuleGraph';
 
@@ -21,11 +20,11 @@ export function shake(
 
   // When module definitions are nested inside each other (e.g with module augmentation),
   // we want to keep track of the hierarchy so we can associated nodes with the right module.
-  const moduleStack: Array<?TSModule> = [];
+  const moduleStack: Array<TSModule | undefined | null> = [];
 
   let addedGeneratedImports = false;
 
-  let _currentModule: ?TSModule;
+  let _currentModule: TSModule | undefined | null;
   let visit = (node: any): any => {
     if (ts.isBundle(node)) {
       return ts.updateBundle(node, ts.visitNodes(node.sourceFiles, visit));

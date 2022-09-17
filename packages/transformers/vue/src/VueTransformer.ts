@@ -1,4 +1,3 @@
-// @flow strict-local
 import type {TransformerResult} from '@parcel/types';
 
 import {Transformer} from '@parcel/plugin';
@@ -20,7 +19,7 @@ import consolidate from 'consolidate';
 const MODULE_BY_NAME_RE = /\.module\./;
 
 // TODO: Use language-specific config files during preprocessing
-export default (new Transformer({
+export default new Transformer({
   async loadConfig({config}) {
     let conf = await config.getConfig(
       [
@@ -168,7 +167,7 @@ export default script;`,
       },
     ];
   },
-}): Transformer);
+}) as Transformer;
 
 function createDiagnostic(err, filePath) {
   if (typeof err === 'string') {

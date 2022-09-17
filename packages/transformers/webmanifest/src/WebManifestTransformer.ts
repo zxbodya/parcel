@@ -1,4 +1,3 @@
-// @flow
 // https://developer.mozilla.org/en-US/docs/Web/Manifest
 import type {SchemaEntity} from '@parcel/utils';
 
@@ -33,7 +32,7 @@ const MANIFEST_SCHEMA: SchemaEntity = {
   },
 };
 
-export default (new Transformer({
+export default new Transformer({
   async transform({asset}) {
     const source = await asset.getCode();
     const {data, pointers} = parse(source);
@@ -65,4 +64,4 @@ export default (new Transformer({
     asset.setCode(JSON.stringify(data));
     return [asset];
   },
-}): Transformer);
+}) as Transformer;

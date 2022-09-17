@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type SourceMap from '@parcel/source-map';
 import type {Readable} from 'stream';
 import type {FileSystem} from '@parcel/fs';
@@ -46,12 +44,12 @@ const assetValueToMutableAsset: WeakMap<AssetValue, MutableAsset> =
 
 const _assetToAssetValue: WeakMap<
   IAsset | IMutableAsset | BaseAsset,
-  AssetValue,
+  AssetValue
 > = new WeakMap();
 
 const _mutableAssetToUncommittedAsset: WeakMap<
   IMutableAsset,
-  UncommittedAsset,
+  UncommittedAsset
 > = new WeakMap();
 
 export function assetToAssetValue(asset: IAsset | IMutableAsset): AssetValue {
@@ -80,7 +78,7 @@ export function assetFromValue(
 
 class BaseAsset {
   #asset: CommittedAsset | UncommittedAsset;
-  #query :?URLSearchParams ;
+  #query: URLSearchParams | undefined | null;
 
   constructor(asset: CommittedAsset | UncommittedAsset) {
     this.#asset = asset;
@@ -126,7 +124,7 @@ class BaseAsset {
     return this.#asset.value.meta;
   }
 
-  get bundleBehavior(): ?BundleBehavior {
+  get bundleBehavior(): BundleBehavior | undefined | null {
     let bundleBehavior = this.#asset.value.bundleBehavior;
     return bundleBehavior == null ? null : BundleBehaviorNames[bundleBehavior];
   }
@@ -147,19 +145,19 @@ class BaseAsset {
     return new AssetSymbols(this.#asset.options, this.#asset.value);
   }
 
-  get uniqueKey(): ?string {
+  get uniqueKey(): string | undefined | null {
     return this.#asset.value.uniqueKey;
   }
 
-  get astGenerator(): ?ASTGenerator {
+  get astGenerator(): ASTGenerator | undefined | null {
     return this.#asset.value.astGenerator;
   }
 
-  get pipeline(): ?string {
+  get pipeline(): string | undefined | null {
     return this.#asset.value.pipeline;
   }
 
-  getDependencies(): $ReadOnlyArray<IDependency> {
+  getDependencies(): ReadonlyArray<IDependency> {
     return this.#asset
       .getDependencies()
       .map(dep => new Dependency(dep, this.#asset.options));
@@ -177,23 +175,23 @@ class BaseAsset {
     return this.#asset.getStream();
   }
 
-  getMap(): Promise<?SourceMap> {
+  getMap(): Promise<SourceMap | undefined | null> {
     return this.#asset.getMap();
   }
 
-  getAST(): Promise<?AST> {
+  getAST(): Promise<AST | undefined | null> {
     return this.#asset.getAST();
   }
 
-  getMapBuffer(): Promise<?Buffer> {
+  getMapBuffer(): Promise<Buffer | undefined | null> {
     return this.#asset.getMapBuffer();
   }
 }
 
 export class Asset extends BaseAsset implements IAsset {
-  #asset :CommittedAsset | UncommittedAsset ;
+  #asset: CommittedAsset | UncommittedAsset;
 
-  constructor(asset: CommittedAsset | UncommittedAsset): Asset {
+  constructor(asset: CommittedAsset | UncommittedAsset) {
     let assetValueToAsset = asset.value.committed
       ? committedAssetValueToAsset
       : uncommittedAssetValueToAsset;
@@ -214,9 +212,9 @@ export class Asset extends BaseAsset implements IAsset {
 }
 
 export class MutableAsset extends BaseAsset implements IMutableAsset {
-  #asset :UncommittedAsset ;
+  #asset: UncommittedAsset;
 
-  constructor(asset: UncommittedAsset): MutableAsset {
+  constructor(asset: UncommittedAsset) {
     let existing = assetValueToMutableAsset.get(asset.value);
     if (existing != null) {
       return existing;
@@ -229,7 +227,7 @@ export class MutableAsset extends BaseAsset implements IMutableAsset {
     return this;
   }
 
-  setMap(map: ?SourceMap): void {
+  setMap(map?: SourceMap | null): void {
     this.#asset.setMap(map);
   }
 
@@ -237,19 +235,19 @@ export class MutableAsset extends BaseAsset implements IMutableAsset {
     return this.#asset.value.type;
   }
 
-  set type(type: string): void {
+  set type(type: string) {
     if (type !== this.#asset.value.type) {
       this.#asset.value.type = type;
       this.#asset.updateId();
     }
   }
 
-  get bundleBehavior(): ?BundleBehavior {
+  get bundleBehavior(): BundleBehavior | undefined | null {
     let bundleBehavior = this.#asset.value.bundleBehavior;
     return bundleBehavior == null ? null : BundleBehaviorNames[bundleBehavior];
   }
 
-  set bundleBehavior(bundleBehavior: ?BundleBehavior): void {
+  set bundleBehavior(bundleBehavior: BundleBehavior | undefined | null) {
     this.#asset.value.bundleBehavior = bundleBehavior
       ? BundleBehaviorMap[bundleBehavior]
       : null;
@@ -259,7 +257,7 @@ export class MutableAsset extends BaseAsset implements IMutableAsset {
     return this.#asset.value.isBundleSplittable;
   }
 
-  set isBundleSplittable(isBundleSplittable: boolean): void {
+  set isBundleSplittable(isBundleSplittable: boolean) {
     this.#asset.value.isBundleSplittable = isBundleSplittable;
   }
 
@@ -267,7 +265,7 @@ export class MutableAsset extends BaseAsset implements IMutableAsset {
     return this.#asset.value.sideEffects;
   }
 
-  set sideEffects(sideEffects: boolean): void {
+  set sideEffects(sideEffects: boolean) {
     this.#asset.value.sideEffects = sideEffects;
   }
 
@@ -313,7 +311,7 @@ export class MutableAsset extends BaseAsset implements IMutableAsset {
     return this.#asset.setAST(ast);
   }
 
-  addURLDependency(url: string, opts: $Shape<DependencyOptions>): string {
+  addURLDependency(url: string, opts: Partial<DependencyOptions>): string {
     return this.addDependency({
       specifier: url,
       specifierType: 'url',

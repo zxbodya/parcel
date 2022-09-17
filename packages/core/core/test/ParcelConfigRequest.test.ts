@@ -1,4 +1,3 @@
-// @flow
 import assert from 'assert';
 import nullthrows from 'nullthrows';
 import path from 'path';

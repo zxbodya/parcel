@@ -1,4 +1,3 @@
-// @flow strict-local
 import type {Blob, FilePath} from '@parcel/types';
 import type {FileSystem} from '@parcel/fs';
 
@@ -12,8 +11,16 @@ const BUFFER_LIMIT = 5000000; // 5mb
 
 export default async function summarizeRequest(
   fs: FileSystem,
-  req: {|filePath: FilePath, code?: string|},
-): Promise<{|content: Blob, hash: string, size: number, isSource: boolean|}> {
+  req: {
+    filePath: FilePath;
+    code?: string;
+  },
+): Promise<{
+  content: Blob;
+  hash: string;
+  size: number;
+  isSource: boolean;
+}> {
   let {content, hash, size} = await summarizeDiskRequest(fs, req);
   let isSource = isFilePathSource(fs, req.filePath);
   return {content, hash, size, isSource};
@@ -25,8 +32,15 @@ function isFilePathSource(fs: FileSystem, filePath: FilePath) {
 
 async function summarizeDiskRequest(
   fs: FileSystem,
-  req: {|filePath: FilePath, code?: string|},
-): Promise<{|content: Blob, hash: string, size: number|}> {
+  req: {
+    filePath: FilePath;
+    code?: string;
+  },
+): Promise<{
+  content: Blob;
+  hash: string;
+  size: number;
+}> {
   let code = req.code;
   let content: Blob;
   let hash: string;

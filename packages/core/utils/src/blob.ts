@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {Blob} from '@parcel/types';
 
 import {Buffer} from 'buffer';

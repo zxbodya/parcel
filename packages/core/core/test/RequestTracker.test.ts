@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import assert from 'assert';
 import nullthrows from 'nullthrows';
 import RequestTracker from '../src/RequestTracker';

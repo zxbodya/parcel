@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {PackageInstaller, InstallerOptions} from './types';
 
 import commandExists from 'command-exists';
@@ -20,25 +18,33 @@ const YARN_CMD = 'yarn';
 const exec = promisify(_exec);
 
 type YarnStdOutMessage =
-  | {|
-      +type: 'step',
-      data: {|
-        message: string,
-        current: number,
-        total: number,
-      |},
-    |}
-  | {|+type: 'success', data: string|}
-  | {|+type: 'info', data: string|}
-  | {|+type: 'tree' | 'progressStart' | 'progressTick'|};
+  | {
+      readonly type: 'step';
+      data: {
+        message: string;
+        current: number;
+        total: number;
+      };
+    }
+  | {
+      readonly type: 'success';
+      data: string;
+    }
+  | {
+      readonly type: 'info';
+      data: string;
+    }
+  | {
+      readonly type: 'tree' | 'progressStart' | 'progressTick';
+    };
 
-type YarnStdErrMessage = {|
-  +type: 'error' | 'warning',
-  data: string,
-|};
+type YarnStdErrMessage = {
+  readonly type: 'error' | 'warning';
+  data: string;
+};
 
-let hasYarn: ?boolean;
-let yarnVersion: ?number;
+let hasYarn: boolean | undefined | null;
+let yarnVersion: number | undefined | null;
 
 export class Yarn implements PackageInstaller {
   static async exists(): Promise<boolean> {

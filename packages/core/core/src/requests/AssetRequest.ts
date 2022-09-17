@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {ContentKey} from '@parcel/graph';
 import type {Async} from '@parcel/types';
 import type {StaticRunOpts} from '../RequestTracker';
@@ -21,17 +19,16 @@ import {runConfigRequest} from './ConfigRequest';
 import {fromProjectPath, fromProjectPathRelative} from '../projectPath';
 import {report} from '../ReporterRunner';
 
-type RunInput = {|
-  input: AssetRequestInput,
-  ...StaticRunOpts,
-|};
+type RunInput = {
+  input: AssetRequestInput;
+} & StaticRunOpts;
 
-export type AssetRequest = {|
-  id: ContentKey,
-  +type: 'asset_request',
-  run: RunInput => Async<AssetRequestResult>,
-  input: AssetRequestInput,
-|};
+export type AssetRequest = {
+  id: ContentKey;
+  readonly type: 'asset_request';
+  run: (a: RunInput) => Async<AssetRequestResult>;
+  input: AssetRequestInput;
+};
 
 export default function createAssetRequest(
   input: AssetRequestInput,
@@ -137,7 +134,7 @@ async function run({input, api, farm, invalidateReason, options}: RunInput) {
     configCachePath: cachePath,
     optionsRef,
     request,
-  }): TransformationResult);
+  })) as TransformationResult;
 
   let time = Date.now() - start;
   if (assets) {

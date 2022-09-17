@@ -1,4 +1,3 @@
-// @flow
 import type {FilePath} from '@parcel/types';
 import type {FileSystem} from './types';
 import path from 'path';
@@ -7,7 +6,7 @@ export function findNodeModule(
   fs: FileSystem,
   moduleName: string,
   dir: FilePath,
-): ?FilePath {
+): FilePath | undefined | null {
   let {root} = path.parse(dir);
   while (dir !== root) {
     // Skip node_modules directories
@@ -37,7 +36,7 @@ export function findAncestorFile(
   fileNames: Array<string>,
   dir: FilePath,
   root: FilePath,
-): ?FilePath {
+): FilePath | undefined | null {
   let {root: pathRoot} = path.parse(dir);
   // eslint-disable-next-line no-constant-condition
   while (true) {
@@ -69,7 +68,7 @@ export function findAncestorFile(
 export function findFirstFile(
   fs: FileSystem,
   filePaths: Array<FilePath>,
-): ?FilePath {
+): FilePath | undefined | null {
   for (let filePath of filePaths) {
     try {
       if (fs.statSync(filePath).isFile()) {

@@ -1,5 +1,3 @@
-// @flow
-
 import type {Bundle, BundleGraph, NamedBundle} from '@parcel/types';
 import assert from 'assert';
 import {Packager} from '@parcel/plugin';
@@ -12,7 +10,7 @@ import {
   setDifference,
 } from '@parcel/utils';
 
-export default (new Packager({
+export default new Packager({
   async package({bundle, bundleGraph, getInlineBundleContents}) {
     const assets = [];
     bundle.traverseAssets(asset => {
@@ -73,7 +71,7 @@ export default (new Packager({
       map,
     });
   },
-}): Packager);
+}) as Packager;
 
 async function replaceInlineAssetContent(
   bundleGraph: BundleGraph<NamedBundle>,
@@ -121,7 +119,7 @@ async function getAssetContent(
   getInlineBundleContents,
   assetId,
 ) {
-  let inlineBundle: ?Bundle;
+  let inlineBundle: Bundle | undefined | null;
   bundleGraph.traverseBundles((bundle, context, {stop}) => {
     const entryAssets = bundle.getEntryAssets();
     if (entryAssets.some(a => a.uniqueKey === assetId)) {

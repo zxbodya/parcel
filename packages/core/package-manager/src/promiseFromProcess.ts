@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {ChildProcess} from 'child_process';
 
 export default function promiseFromProcess(

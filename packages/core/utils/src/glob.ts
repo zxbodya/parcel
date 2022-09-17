@@ -1,5 +1,3 @@
-// @flow
-
 import type {FilePath, Glob} from '@parcel/types';
 import type {FileSystem} from '@parcel/fs';
 

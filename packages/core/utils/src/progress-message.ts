@@ -1,9 +1,10 @@
-// @flow strict-local
 import type {BuildProgressEvent} from '@parcel/types';
 
 import path from 'path';
 
-export function getProgressMessage(event: BuildProgressEvent): ?string {
+export function getProgressMessage(
+  event: BuildProgressEvent,
+): string | undefined | null {
   switch (event.phase) {
     case 'transforming':
       return `Building ${path.basename(event.filePath)}...`;

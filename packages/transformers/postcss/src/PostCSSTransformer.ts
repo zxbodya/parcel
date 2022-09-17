@@ -1,5 +1,3 @@
-// @flow
-
 import type {FilePath, Asset, MutableAsset, PluginOptions} from '@parcel/types';
 
 import {hashString} from '@parcel/hash';
@@ -9,7 +7,7 @@ import nullthrows from 'nullthrows';
 import path from 'path';
 import semver from 'semver';
 import valueParser from 'postcss-value-parser';
-import typeof * as Postcss from 'postcss';
+type Postcss = typeof import('postcss');
 
 import {load} from './loadConfig';
 import {POSTCSS_RANGE} from './constants';
@@ -20,7 +18,7 @@ const FROM_IMPORT_RE = /.+from\s*(?:"|')(.*)(?:"|')\s*;?/;
 const LEGACY_MODULE_RE = /@value|:export|(:global|:local|:import)(?!\s*\()/i;
 const MODULE_BY_NAME_RE = /\.module\./;
 
-export default (new Transformer({
+export default new Transformer({
   loadConfig({config, options, logger}) {
     return load({config, options, logger});
   },
@@ -77,7 +75,12 @@ export default (new Transformer({
     let program = postcss.fromJSON(ast.program);
 
     let plugins = [...config.hydrated.plugins];
-    let cssModules: ?{|[string]: string|} = null;
+    let cssModules:
+      | {
+          [x: string]: string;
+        }
+      | undefined
+      | null = null;
     if (config.hydrated.modules) {
       asset.meta.cssModulesCompiled = 'postcss';
 
@@ -230,9 +233,9 @@ export default (new Transformer({
     let assets = [asset];
     if (cssModules) {
       // $FlowFixMe
-      let cssModulesList = (Object.entries(cssModules): Array<
-        [string, string],
-      >);
+      let cssModulesList = Object.entries(cssModules) as Array<
+        [string, string]
+      >;
       let deps = asset.getDependencies().filter(dep => dep.priority === 'sync');
       let code: string;
       if (deps.length > 0) {
@@ -279,7 +282,7 @@ export default (new Transformer({
       content: code,
     };
   },
-}): Transformer);
+}) as Transformer;
 
 async function createLoader(
   asset: MutableAsset,

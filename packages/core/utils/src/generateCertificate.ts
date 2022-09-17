@@ -1,4 +1,3 @@
-// @flow
 import type {FileSystem} from '@parcel/fs';
 import forge from 'node-forge';
 import path from 'path';
@@ -7,8 +6,11 @@ import logger from '@parcel/logger';
 export default async function generateCertificate(
   fs: FileSystem,
   cacheDir: string,
-  host: ?string,
-): Promise<{|cert: Buffer, key: Buffer|}> {
+  host?: string | null,
+): Promise<{
+  cert: Buffer;
+  key: Buffer;
+}> {
   let certDirectory = cacheDir;
 
   const privateKeyPath = path.join(certDirectory, 'private.pem');

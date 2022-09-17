@@ -1,4 +1,3 @@
-// @flow
 import {Transformer} from '@parcel/plugin';
 import {DOMParser, XMLSerializer} from '@xmldom/xmldom';
 import * as atom from './atom';
@@ -12,7 +11,7 @@ const NON_NAMESPACED_HANDLERS = {
   rss,
 };
 
-export default (new Transformer({
+export default new Transformer({
   async transform({asset}) {
     let code = await asset.getCode();
     let parser = new DOMParser();
@@ -42,7 +41,7 @@ export default (new Transformer({
 
     return [asset, ...parts];
   },
-}): Transformer);
+}) as Transformer;
 
 function walk(element, visit) {
   visit(element);

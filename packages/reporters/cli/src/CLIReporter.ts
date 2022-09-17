@@ -1,4 +1,3 @@
-// @flow
 import type {ReporterEvent, PluginOptions} from '@parcel/types';
 import type {Diagnostic} from '@parcel/diagnostic';
 import type {Color} from 'chalk';
@@ -251,8 +250,8 @@ function indentString(string, indent = 0, initialIndent = indent) {
   );
 }
 
-export default (new Reporter({
+export default new Reporter({
   report({event, options}) {
     return _report(event, options);
   },
-}): Reporter);
+}) as Reporter;

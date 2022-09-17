@@ -1,5 +1,3 @@
-// @flow
-
 import {Transformer} from '@parcel/plugin';
 
 import path from 'path';
@@ -16,7 +14,7 @@ function getComponentName(filePath) {
   });
 }
 
-export default (new Transformer({
+export default new Transformer({
   async loadConfig({config}) {
     let conf = await config.getConfig(['.svgrrc.json', '.svgrrc']);
     return conf?.contents;
@@ -43,4 +41,4 @@ export default (new Transformer({
 
     return [asset];
   },
-}): Transformer);
+}) as Transformer;

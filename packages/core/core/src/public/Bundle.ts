@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {
   Bundle as InternalBundle,
   ParcelOptions,
@@ -34,15 +32,15 @@ import {fromProjectPath} from '../projectPath';
 
 const internalBundleToBundle: DefaultWeakMap<
   ParcelOptions,
-  DefaultWeakMap<BundleGraph, WeakMap<InternalBundle, Bundle>>,
+  DefaultWeakMap<BundleGraph, WeakMap<InternalBundle, Bundle>>
 > = new DefaultWeakMap(() => new DefaultWeakMap(() => new WeakMap()));
 const internalBundleToNamedBundle: DefaultWeakMap<
   ParcelOptions,
-  DefaultWeakMap<BundleGraph, WeakMap<InternalBundle, NamedBundle>>,
+  DefaultWeakMap<BundleGraph, WeakMap<InternalBundle, NamedBundle>>
 > = new DefaultWeakMap(() => new DefaultWeakMap(() => new WeakMap()));
 const internalBundleToPackagedBundle: DefaultWeakMap<
   ParcelOptions,
-  DefaultWeakMap<BundleGraph, WeakMap<InternalBundle, PackagedBundle>>,
+  DefaultWeakMap<BundleGraph, WeakMap<InternalBundle, PackagedBundle>>
 > = new DefaultWeakMap(() => new DefaultWeakMap(() => new WeakMap()));
 
 // Friendly access for other modules within this package that need access
@@ -62,12 +60,12 @@ export function bundleToInternalBundleGraph(bundle: IBundle): BundleGraph {
 let _private = {};
 
 export class Bundle implements IBundle {
-  #bundle :InternalBundle ;
-  #bundleGraph :BundleGraph ;
-  #options :ParcelOptions ;
+  #bundle: InternalBundle;
+  #bundleGraph: BundleGraph;
+  #options: ParcelOptions;
 
   constructor(
-    sentinel: mixed,
+    sentinel: unknown,
     bundle: InternalBundle,
     bundleGraph: BundleGraph,
     options: ParcelOptions,
@@ -116,16 +114,16 @@ export class Bundle implements IBundle {
     return new Environment(this.#bundle.env, this.#options);
   }
 
-  get needsStableName(): ?boolean {
+  get needsStableName(): boolean | undefined | null {
     return this.#bundle.needsStableName;
   }
 
-  get bundleBehavior(): ?BundleBehavior {
+  get bundleBehavior(): BundleBehavior | undefined | null {
     let bundleBehavior = this.#bundle.bundleBehavior;
     return bundleBehavior != null ? BundleBehaviorNames[bundleBehavior] : null;
   }
 
-  get isSplittable(): ?boolean {
+  get isSplittable(): boolean | undefined | null {
     return this.#bundle.isSplittable;
   }
 
@@ -155,7 +153,7 @@ export class Bundle implements IBundle {
     });
   }
 
-  getMainEntry(): ?IAsset {
+  getMainEntry(): IAsset | undefined | null {
     if (this.#bundle.mainEntryId != null) {
       let assetNode = this.#bundleGraph._graph.getNodeByContentKey(
         this.#bundle.mainEntryId,
@@ -167,7 +165,7 @@ export class Bundle implements IBundle {
 
   traverse<TContext>(
     visit: GraphVisitor<BundleTraversable, TContext>,
-  ): ?TContext {
+  ): TContext | undefined | null {
     return this.#bundleGraph.traverseBundle(
       this.#bundle,
       mapVisitor(node => {
@@ -189,7 +187,7 @@ export class Bundle implements IBundle {
   traverseAssets<TContext>(
     visit: GraphVisitor<IAsset, TContext>,
     startAsset?: IAsset,
-  ): ?TContext {
+  ): TContext | undefined | null {
     return this.#bundleGraph.traverseAssets(
       this.#bundle,
       mapVisitor(asset => assetFromValue(asset, this.#options), visit),
@@ -199,12 +197,12 @@ export class Bundle implements IBundle {
 }
 
 export class NamedBundle extends Bundle implements INamedBundle {
-  #bundle :InternalBundle ;
-  #bundleGraph :BundleGraph ;
-  #options :ParcelOptions ;
+  #bundle: InternalBundle;
+  #bundleGraph: BundleGraph;
+  #options: ParcelOptions;
 
   constructor(
-    sentinel: mixed,
+    sentinel: unknown,
     bundle: InternalBundle,
     bundleGraph: BundleGraph,
     options: ParcelOptions,
@@ -253,13 +251,13 @@ export class NamedBundle extends Bundle implements INamedBundle {
 }
 
 export class PackagedBundle extends NamedBundle implements IPackagedBundle {
-  #bundle :InternalBundle ;
-  #bundleGraph :BundleGraph ;
-  #options :ParcelOptions ;
-  #bundleInfo :?PackagedBundleInfo ;
+  #bundle: InternalBundle;
+  #bundleGraph: BundleGraph;
+  #options: ParcelOptions;
+  #bundleInfo: PackagedBundleInfo | undefined | null;
 
   constructor(
-    sentinel: mixed,
+    sentinel: unknown,
     bundle: InternalBundle,
     bundleGraph: BundleGraph,
     options: ParcelOptions,
@@ -300,7 +298,7 @@ export class PackagedBundle extends NamedBundle implements IPackagedBundle {
     internalBundle: InternalBundle,
     bundleGraph: BundleGraph,
     options: ParcelOptions,
-    bundleInfo: ?PackagedBundleInfo,
+    bundleInfo?: PackagedBundleInfo | null,
   ): PackagedBundle {
     let packagedBundle = PackagedBundle.get(
       internalBundle,

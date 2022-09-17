@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {
   IDisposable,
   LogEvent,
@@ -16,9 +14,9 @@ import {inspect} from 'util';
 import {errorToDiagnostic, anyToDiagnostic} from '@parcel/diagnostic';
 
 class Logger {
-  #logEmitter :ValueEmitter<LogEvent>  = new ValueEmitter();
+  #logEmitter: ValueEmitter<LogEvent> = new ValueEmitter();
 
-  onLog(cb: (event: LogEvent) => mixed): IDisposable {
+  onLog(cb: (event: LogEvent) => unknown): IDisposable {
     return this.#logEmitter.addListener(cb);
   }
 
@@ -83,9 +81,9 @@ const logger: Logger = new Logger();
 export default logger;
 
 /** @private */
-export type PluginLoggerOpts = {|
-  origin: string,
-|};
+export type PluginLoggerOpts = {
+  origin: string;
+};
 
 export class PluginLogger implements IPluginLogger {
   /** @private */
@@ -161,23 +159,23 @@ export function patchConsole() {
 
   /* eslint-disable no-console */
   // $FlowFixMe
-  console.log = console.info = (...messages: Array<mixed>) => {
+  console.log = console.info = (...messages: Array<unknown>) => {
     logger.info(messagesToDiagnostic(messages));
   };
 
   // $FlowFixMe
-  console.debug = (...messages: Array<mixed>) => {
+  console.debug = (...messages: Array<unknown>) => {
     // TODO: dedicated debug level?
     logger.verbose(messagesToDiagnostic(messages));
   };
 
   // $FlowFixMe
-  console.warn = (...messages: Array<mixed>) => {
+  console.warn = (...messages: Array<unknown>) => {
     logger.warn(messagesToDiagnostic(messages));
   };
 
   // $FlowFixMe
-  console.error = (...messages: Array<mixed>) => {
+  console.error = (...messages: Array<unknown>) => {
     logger.error(messagesToDiagnostic(messages));
   };
 
@@ -211,7 +209,7 @@ export function unpatchConsole() {
 }
 
 function messagesToDiagnostic(
-  messages: Array<mixed>,
+  messages: Array<unknown>,
 ): Diagnostic | Array<Diagnostic> {
   if (messages.length === 1 && messages[0] instanceof Error) {
     let error: Error = messages[0];
@@ -239,6 +237,6 @@ function messagesToDiagnostic(
   }
 }
 
-function joinLogMessages(messages: Array<mixed>): string {
+function joinLogMessages(messages: Array<unknown>): string {
   return messages.map(m => (typeof m === 'string' ? m : inspect(m))).join(' ');
 }

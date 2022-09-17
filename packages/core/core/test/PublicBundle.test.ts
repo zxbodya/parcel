@@ -1,4 +1,3 @@
-// @flow strict-local
 import type {Bundle as InternalBundle} from '../src/types';
 
 import assert from 'assert';

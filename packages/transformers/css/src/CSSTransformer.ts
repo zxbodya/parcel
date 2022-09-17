@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import path from 'path';
 import SourceMap from '@parcel/source-map';
 import {Transformer} from '@parcel/plugin';
@@ -13,7 +11,7 @@ import browserslist from 'browserslist';
 import nullthrows from 'nullthrows';
 import ThrowableDiagnostic, {errorToDiagnostic} from '@parcel/diagnostic';
 
-export default (new Transformer({
+export default new Transformer({
   async loadConfig({config, options}) {
     let conf = await config.getConfigFrom(options.projectRoot + '/index', [], {
       packageKey: '@parcel/transformer-css',
@@ -281,7 +279,7 @@ export default (new Transformer({
 
     return assets;
   },
-}): Transformer);
+}) as Transformer;
 
 let cache = new Map();
 

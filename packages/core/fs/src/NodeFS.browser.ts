@@ -1,4 +1,3 @@
-// @flow
 import type {FileSystem} from './types';
 
 // $FlowFixMe[prop-missing] handled by the throwing constructor

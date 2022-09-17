@@ -1,9 +1,7 @@
-// @flow strict-local
-
 import crypto from 'crypto';
 
 // $FlowFixMe
-type Hashable = Object;
+type Hashable = any;
 
 export default function objectHash(object: Hashable): string {
   let hash = crypto.createHash('md5');

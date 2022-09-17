@@ -1,5 +1,3 @@
-// @flow
-
 import type {Environment} from '@parcel/types';
 import type {Targets as BabelTargets} from '@babel/preset-env';
 

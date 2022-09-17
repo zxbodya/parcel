@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {AbortSignal} from 'abortcontroller-polyfill/dist/cjs-ponyfill';
 import type {
   FilePath,
@@ -38,7 +36,7 @@ export function getBundleGroupId(bundleGroup: BundleGroup): string {
   return 'bundle_group:' + bundleGroup.entryAssetId;
 }
 
-export function assertSignalNotAborted(signal: ?AbortSignal): void {
+export function assertSignalNotAborted(signal?: AbortSignal | null): void {
   if (signal && signal.aborted) {
     throw new BuildAbortError();
   }
@@ -54,13 +52,13 @@ export function registerCoreWithSerializer() {
     return;
   }
 
-  const packageVersion: mixed = packageJson.version;
+  const packageVersion: unknown = packageJson.version;
   if (typeof packageVersion !== 'string') {
     throw new Error('Expected package version to be a string');
   }
 
   // $FlowFixMe[incompatible-cast]
-  for (let [name, ctor] of (Object.entries({
+  for (let [name, ctor] of Object.entries({
     AssetGraph,
     Config,
     BundleGraph,
@@ -68,7 +66,14 @@ export function registerCoreWithSerializer() {
     ParcelConfig,
     RequestGraph,
     // $FlowFixMe[unclear-type]
-  }): Array<[string, Class<any>]>)) {
+  }) as Array<
+    [
+      string,
+      {
+        new (...args: any): any;
+      },
+    ]
+  >) {
     registerSerializableClass(packageVersion + ':' + name, ctor);
   }
 
@@ -77,7 +82,7 @@ export function registerCoreWithSerializer() {
 
 export function getPublicId(
   id: string,
-  alreadyExists: string => boolean,
+  alreadyExists: (a: string) => boolean,
 ): string {
   let encoded = base62.encode(Buffer.from(id, 'hex'));
   for (let end = 5; end <= encoded.length; end++) {
@@ -110,7 +115,7 @@ const ignoreOptions = new Set([
 
 export function optionsProxy(
   options: ParcelOptions,
-  invalidateOnOptionChange: string => void,
+  invalidateOnOptionChange: (a: string) => void,
   addDevDependency?: (devDep: InternalDevDepOptions) => void,
 ): ParcelOptions {
   let packageManager = addDevDependency
@@ -161,7 +166,7 @@ function proxyPackageManager(
   });
 }
 
-export function hashFromOption(value: mixed): string {
+export function hashFromOption(value: unknown): string {
   if (typeof value === 'object' && value != null) {
     return hashObject(value);
   }
@@ -192,8 +197,8 @@ export function invalidateOnFileCreateToInternal(
 
 export function fromInternalSourceLocation(
   projectRoot: FilePath,
-  loc: ?InternalSourceLocation,
-): ?SourceLocation {
+  loc?: InternalSourceLocation | null,
+): SourceLocation | undefined | null {
   if (!loc) return loc;
 
   return {
@@ -205,8 +210,8 @@ export function fromInternalSourceLocation(
 
 export function toInternalSourceLocation(
   projectRoot: FilePath,
-  loc: ?SourceLocation,
-): ?InternalSourceLocation {
+  loc?: SourceLocation | null,
+): InternalSourceLocation | undefined | null {
   if (!loc) return loc;
 
   return {
@@ -215,13 +220,22 @@ export function toInternalSourceLocation(
     end: loc.end,
   };
 }
-export function toInternalSymbols<T: {|loc: ?SourceLocation|}>(
+export function toInternalSymbols<
+  T extends {
+    loc: SourceLocation | undefined | null;
+  },
+>(
   projectRoot: FilePath,
-  symbols: ?Map<Symbol, T>,
-): ?Map<
-  Symbol,
-  {|loc: ?InternalSourceLocation, ...$Rest<T, {|loc: ?SourceLocation|}>|},
-> {
+  symbols?: Map<Symbol, T> | null,
+):
+  | Map<
+      Symbol,
+      {
+        loc: InternalSourceLocation | undefined | null;
+      } & Omit<T, 'loc'>
+    >
+  | undefined
+  | null {
   if (!symbols) return symbols;
 
   return new Map(

@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import {MemoryFS, NodeFS, OverlayFS} from '@parcel/fs';
 import assert from 'assert';
 import invariant from 'assert';

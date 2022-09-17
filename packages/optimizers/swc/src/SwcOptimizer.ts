@@ -1,5 +1,3 @@
-// @flow
-
 import nullthrows from 'nullthrows';
 import {minify} from '@swc/core';
 import {Optimizer} from '@parcel/plugin';
@@ -8,7 +6,7 @@ import SourceMap from '@parcel/source-map';
 
 import path from 'path';
 
-export default (new Optimizer({
+export default new Optimizer({
   async loadConfig({config, options}) {
     let userConfig = await config.getConfigFrom(
       path.join(options.projectRoot, 'index'),
@@ -74,4 +72,4 @@ export default (new Optimizer({
 
     return {contents: minifiedContents, map: sourceMap};
   },
-}): Optimizer);
+}) as Optimizer;

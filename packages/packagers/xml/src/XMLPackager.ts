@@ -1,5 +1,3 @@
-// @flow
-
 import type {Bundle, BundleGraph, NamedBundle} from '@parcel/types';
 import assert from 'assert';
 import {Packager} from '@parcel/plugin';
@@ -10,7 +8,7 @@ import {
 } from '@parcel/utils';
 import {DOMParser, XMLSerializer} from '@xmldom/xmldom';
 
-export default (new Packager({
+export default new Packager({
   async package({bundle, bundleGraph, getInlineBundleContents}) {
     const assets = [];
     bundle.traverseAssets(asset => {
@@ -83,14 +81,14 @@ export default (new Packager({
       map,
     });
   },
-}): Packager);
+}) as Packager;
 
 async function getAssetContent(
   bundleGraph: BundleGraph<NamedBundle>,
   getInlineBundleContents,
   assetId,
 ) {
-  let inlineBundle: ?Bundle;
+  let inlineBundle: Bundle | undefined | null;
   bundleGraph.traverseBundles((bundle, context, {stop}) => {
     const entryAssets = bundle.getEntryAssets();
     if (entryAssets.some(a => a.uniqueKey === assetId)) {

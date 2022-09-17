@@ -1,10 +1,8 @@
-// @flow
-
 import path from 'path';
 import {Transformer} from '@parcel/plugin';
 import pug from 'pug';
 
-export default (new Transformer({
+export default new Transformer({
   async loadConfig({config}) {
     let configFile = await config.getConfig([
       '.pugrc',
@@ -44,4 +42,4 @@ export default (new Transformer({
 
     return [asset];
   },
-}): Transformer);
+}) as Transformer;

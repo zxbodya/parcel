@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {ContentKey} from '@parcel/graph';
 import type {Async} from '@parcel/types';
 import type {SharedReference} from '@parcel/workers';
@@ -16,30 +14,29 @@ import {assertSignalNotAborted} from '../utils';
 import dumpGraphToGraphViz from '../dumpGraphToGraphViz';
 import {bundleGraphEdgeTypes} from '../BundleGraph';
 
-type ParcelBuildRequestInput = {|
-  optionsRef: SharedReference,
-  requestedAssetIds: Set<string>,
-  signal?: AbortSignal,
-|};
+type ParcelBuildRequestInput = {
+  optionsRef: SharedReference;
+  requestedAssetIds: Set<string>;
+  signal?: AbortSignal;
+};
 
-type ParcelBuildRequestResult = {|
-  bundleGraph: BundleGraph,
-  bundleInfo: Map<string, PackagedBundleInfo>,
-  changedAssets: Map<string, Asset>,
-  assetRequests: Array<AssetGroup>,
-|};
+type ParcelBuildRequestResult = {
+  bundleGraph: BundleGraph;
+  bundleInfo: Map<string, PackagedBundleInfo>;
+  changedAssets: Map<string, Asset>;
+  assetRequests: Array<AssetGroup>;
+};
 
-type RunInput = {|
-  input: ParcelBuildRequestInput,
-  ...StaticRunOpts,
-|};
+type RunInput = {
+  input: ParcelBuildRequestInput;
+} & StaticRunOpts;
 
-export type ParcelBuildRequest = {|
-  id: ContentKey,
-  +type: 'parcel_build_request',
-  run: RunInput => Async<ParcelBuildRequestResult>,
-  input: ParcelBuildRequestInput,
-|};
+export type ParcelBuildRequest = {
+  id: ContentKey;
+  readonly type: 'parcel_build_request';
+  run: (a: RunInput) => Async<ParcelBuildRequestResult>;
+  input: ParcelBuildRequestInput;
+};
 
 export default function createParcelBuildRequest(
   input: ParcelBuildRequestInput,

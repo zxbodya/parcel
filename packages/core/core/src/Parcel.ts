@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {
   AsyncSubscription,
   BuildEvent,
@@ -48,34 +46,36 @@ export const INTERNAL_TRANSFORM: symbol = Symbol('internal_transform');
 export const INTERNAL_RESOLVE: symbol = Symbol('internal_resolve');
 
 export default class Parcel {
-  #requestTracker :RequestTracker;
-  #config :ParcelConfig;
-  #farm :WorkerFarm;
-  #initialized :boolean = false;
-  #disposable :Disposable ;
-  #initialOptions :InitialParcelOptions;
-  #reporterRunner :ReporterRunner;
-  #resolvedOptions :?ParcelOptions = null;
-  #optionsRef :SharedReference ;
-  #watchAbortController :AbortController;
-  #watchQueue :PromiseQueue<?BuildEvent> = new PromiseQueue<?BuildEvent>({
+  #requestTracker: RequestTracker;
+  #config: ParcelConfig;
+  #farm: WorkerFarm;
+  #initialized: boolean = false;
+  #disposable: Disposable;
+  #initialOptions: InitialParcelOptions;
+  #reporterRunner: ReporterRunner;
+  #resolvedOptions: ParcelOptions | undefined | null = null;
+  #optionsRef: SharedReference;
+  #watchAbortController: AbortController;
+  #watchQueue: PromiseQueue<BuildEvent | undefined | null> = new PromiseQueue<
+    BuildEvent | undefined | null
+  >({
     maxConcurrent: 1,
   });
-  #watchEvents :ValueEmitter<
-    | {|
-        +error: Error,
-        +buildEvent?: void,
-      |}
-    | {|
-        +buildEvent: BuildEvent,
-        +error?: void,
-      |},
-  > ;
-  #watcherSubscription :?AsyncSubscription;
-  #watcherCount :number = 0;
-  #requestedAssetIds :Set<string> = new Set();
+  #watchEvents: ValueEmitter<
+    | {
+        readonly error: Error;
+        readonly buildEvent?: void;
+      }
+    | {
+        readonly buildEvent: BuildEvent;
+        readonly error?: void;
+      }
+  >;
+  #watcherSubscription: AsyncSubscription | undefined | null;
+  #watcherCount: number = 0;
+  #requestedAssetIds: Set<string> = new Set();
 
-  isProfiling :boolean ;
+  isProfiling: boolean;
 
   constructor(options: InitialParcelOptions) {
     this.#initialOptions = options;
@@ -166,7 +166,7 @@ export default class Parcel {
     ]);
   }
 
-  async _startNextBuild(): Promise<?BuildEvent> {
+  async _startNextBuild(): Promise<BuildEvent | undefined | null> {
     this.#watchAbortController = new AbortController();
     await this.#farm.callAllWorkers('clearConfigCache', []);
 
@@ -189,7 +189,7 @@ export default class Parcel {
   }
 
   async watch(
-    cb?: (err: ?Error, buildEvent?: BuildEvent) => mixed,
+    cb?: (err: Error | undefined | null, buildEvent?: BuildEvent) => unknown,
   ): Promise<AsyncSubscription> {
     if (!this.#initialized) {
       await this._init();
@@ -245,10 +245,10 @@ export default class Parcel {
   async _build({
     signal,
     startTime = Date.now(),
-  }: {|
-    signal?: AbortSignal,
-    startTime?: number,
-  |} = {
+  }: {
+    signal?: AbortSignal;
+    startTime?: number;
+  } = {
     /*::...null*/
   }): Promise<BuildEvent> {
     this.#requestTracker.setSignal(signal);
@@ -442,7 +442,7 @@ export class BuildError extends ThrowableDiagnostic {
 }
 
 export function createWorkerFarm(
-  options: $Shape<FarmOptions> = {},
+  options: Partial<FarmOptions> = {},
 ): WorkerFarm {
   return new WorkerFarm({
     ...options,

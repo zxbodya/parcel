@@ -1,4 +1,3 @@
-// @flow
 import type {FilePath} from '@parcel/types';
 import type {Readable, Writable} from 'stream';
 import type {
@@ -7,10 +6,16 @@ import type {
   AsyncSubscription,
 } from '@parcel/watcher';
 
-export type FileOptions = {mode?: number, ...};
+export type FileOptions = {
+  mode?: number;
+};
 export type ReaddirOptions =
-  | {withFileTypes?: false, ...}
-  | {withFileTypes: true, ...};
+  | {
+      withFileTypes?: false;
+    }
+  | {
+      withFileTypes: true;
+    };
 
 export interface Stats {
   dev: number;
@@ -31,7 +36,6 @@ export interface Stats {
   mtime: Date;
   ctime: Date;
   birthtime: Date;
-
   isFile(): boolean;
   isDirectory(): boolean;
   isBlockDevice(): boolean;
@@ -61,7 +65,7 @@ export interface FileSystem {
   writeFile(
     filePath: FilePath,
     contents: Buffer | string,
-    options: ?FileOptions,
+    options?: FileOptions | null,
   ): Promise<void>;
   copyFile(
     source: FilePath,
@@ -72,11 +76,28 @@ export interface FileSystem {
   statSync(filePath: FilePath): Stats;
   readdir(
     path: FilePath,
-    opts?: {withFileTypes?: false, ...},
+    opts?: {
+      withFileTypes?: false;
+    },
   ): Promise<FilePath[]>;
-  readdir(path: FilePath, opts: {withFileTypes: true, ...}): Promise<Dirent[]>;
-  readdirSync(path: FilePath, opts?: {withFileTypes?: false, ...}): FilePath[];
-  readdirSync(path: FilePath, opts: {withFileTypes: true, ...}): Dirent[];
+  readdir(
+    path: FilePath,
+    opts: {
+      withFileTypes: true;
+    },
+  ): Promise<Dirent[]>;
+  readdirSync(
+    path: FilePath,
+    opts?: {
+      withFileTypes?: false;
+    },
+  ): FilePath[];
+  readdirSync(
+    path: FilePath,
+    opts: {
+      withFileTypes: true;
+    },
+  ): Dirent[];
   unlink(path: FilePath): Promise<void>;
   realpath(path: FilePath): Promise<FilePath>;
   realpathSync(path: FilePath): FilePath;
@@ -85,13 +106,13 @@ export interface FileSystem {
   mkdirp(path: FilePath): Promise<void>;
   rimraf(path: FilePath): Promise<void>;
   ncp(source: FilePath, destination: FilePath): Promise<void>;
-  createReadStream(path: FilePath, options?: ?FileOptions): Readable;
-  createWriteStream(path: FilePath, options?: ?FileOptions): Writable;
+  createReadStream(path: FilePath, options?: FileOptions | null): Readable;
+  createWriteStream(path: FilePath, options?: FileOptions | null): Writable;
   cwd(): FilePath;
   chdir(dir: FilePath): void;
   watch(
     dir: FilePath,
-    fn: (err: ?Error, events: Array<Event>) => mixed,
+    fn: (err: Error | undefined | null, events: Array<Event>) => unknown,
     opts: WatcherOptions,
   ): Promise<AsyncSubscription>;
   getEventsSince(
@@ -108,14 +129,17 @@ export interface FileSystem {
     fileNames: Array<string>,
     fromDir: FilePath,
     root: FilePath,
-  ): ?FilePath;
-  findNodeModule(moduleName: string, fromDir: FilePath): ?FilePath;
-  findFirstFile(filePaths: Array<FilePath>): ?FilePath;
+  ): FilePath | undefined | null;
+  findNodeModule(
+    moduleName: string,
+    fromDir: FilePath,
+  ): FilePath | undefined | null;
+  findFirstFile(filePaths: Array<FilePath>): FilePath | undefined | null;
 }
 
 // https://nodejs.org/api/fs.html#fs_class_fs_dirent
 export interface Dirent {
-  +name: string;
+  readonly name: string;
   isBlockDevice(): boolean;
   isCharacterDevice(): boolean;
   isDirectory(): boolean;

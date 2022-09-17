@@ -1,5 +1,3 @@
-// @flow
-
 import {Optimizer} from '@parcel/plugin';
 import ThrowableDiagnostic from '@parcel/diagnostic';
 import {blobToString} from '@parcel/utils';
@@ -7,7 +5,7 @@ import {blobToString} from '@parcel/utils';
 import * as svgo from 'svgo';
 import path from 'path';
 
-export default (new Optimizer({
+export default new Optimizer({
   async loadConfig({config}) {
     let configFile = await config.getConfig([
       'svgo.config.js',
@@ -58,4 +56,4 @@ export default (new Optimizer({
 
     return {contents: result.data};
   },
-}): Optimizer);
+}) as Optimizer;

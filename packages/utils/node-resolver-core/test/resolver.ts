@@ -1,4 +1,3 @@
-// @flow strict-local
 import NodeResolver from '../src/NodeResolver';
 import path from 'path';
 import assert from 'assert';

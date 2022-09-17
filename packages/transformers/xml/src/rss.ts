@@ -1,4 +1,3 @@
-// @flow
 import type {MutableAsset, TransformerResult} from '@parcel/types';
 import {urlHandler} from './utils';
 

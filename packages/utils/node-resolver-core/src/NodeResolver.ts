@@ -1,4 +1,3 @@
-// @flow
 import type {
   FilePath,
   FileCreateInvalidation,
@@ -39,43 +38,59 @@ import semver from 'semver';
 
 const EMPTY_SHIM = require.resolve('./_empty');
 
-type InternalPackageJSON = PackageJSON & {pkgdir: string, pkgfile: string, ...};
-type Options = {|
-  fs: FileSystem,
-  projectRoot: FilePath,
-  extensions: Array<string>,
-  mainFields: Array<string>,
-  packageManager?: PackageManager,
-  logger?: PluginLogger,
-  shouldAutoInstall?: boolean,
-|};
-type ResolvedFile = {|
-  path: string,
-  pkg: InternalPackageJSON | null,
-|};
+type InternalPackageJSON = PackageJSON & {
+  pkgdir: string;
+  pkgfile: string;
+};
 
-type Aliases = string | {+[string]: string | boolean | {|global: string|}, ...};
-type ResolvedAlias = {|
-  type: 'file' | 'global',
-  sourcePath: FilePath,
-  resolved: string,
-|};
-type Module = {|
-  moduleName?: string,
-  subPath?: ?string,
-  moduleDir?: FilePath,
-  filePath?: FilePath,
-  code?: string,
-  query?: URLSearchParams,
-|};
+type Options = {
+  fs: FileSystem;
+  projectRoot: FilePath;
+  extensions: Array<string>;
+  mainFields: Array<string>;
+  packageManager?: PackageManager;
+  logger?: PluginLogger;
+  shouldAutoInstall?: boolean;
+};
 
-type ResolverContext = {|
-  invalidateOnFileCreate: Array<FileCreateInvalidation>,
-  invalidateOnFileChange: Set<FilePath>,
-  specifierType: SpecifierType,
-  range: ?SemverRange,
-  loc: ?SourceLocation,
-|};
+type ResolvedFile = {
+  path: string;
+  pkg: InternalPackageJSON | null;
+};
+
+type Aliases =
+  | string
+  | {
+      readonly [x: string]:
+        | string
+        | boolean
+        | {
+            global: string;
+          };
+    };
+
+type ResolvedAlias = {
+  type: 'file' | 'global';
+  sourcePath: FilePath;
+  resolved: string;
+};
+
+type Module = {
+  moduleName?: string;
+  subPath?: string | null;
+  moduleDir?: FilePath;
+  filePath?: FilePath;
+  code?: string;
+  query?: URLSearchParams;
+};
+
+type ResolverContext = {
+  invalidateOnFileCreate: Array<FileCreateInvalidation>;
+  invalidateOnFileChange: Set<FilePath>;
+  specifierType: SpecifierType;
+  range: SemverRange | undefined | null;
+  loc: SourceLocation | undefined | null;
+};
 
 /**
  * This resolver implements a modified version of the node_modules resolution algorithm:
@@ -97,9 +112,9 @@ export default class NodeResolver {
   mainFields: Array<string>;
   packageCache: Map<string, InternalPackageJSON>;
   rootPackage: InternalPackageJSON | null;
-  packageManager: ?PackageManager;
+  packageManager: PackageManager | undefined | null;
   shouldAutoInstall: boolean;
-  logger: ?PluginLogger;
+  logger: PluginLogger | undefined | null;
 
   constructor(opts: Options) {
     this.extensions = opts.extensions.map(ext =>
@@ -123,15 +138,15 @@ export default class NodeResolver {
     env,
     sourcePath,
     loc,
-  }: {|
-    filename: FilePath,
-    parent: ?FilePath,
-    specifierType: SpecifierType,
-    range?: ?SemverRange,
-    env: Environment,
-    sourcePath?: ?FilePath,
-    loc?: ?SourceLocation,
-  |}): Promise<?ResolveResult> {
+  }: {
+    filename: FilePath;
+    parent: FilePath | undefined | null;
+    specifierType: SpecifierType;
+    range?: SemverRange | null;
+    env: Environment;
+    sourcePath?: FilePath | null;
+    loc?: SourceLocation | null;
+  }): Promise<ResolveResult | undefined | null> {
     let ctx = {
       invalidateOnFileCreate: [],
       invalidateOnFileChange: new Set(),
@@ -224,13 +239,13 @@ export default class NodeResolver {
     env,
     ctx,
     sourcePath,
-  }: {|
-    filename: string,
-    parent: ?FilePath,
-    env: Environment,
-    ctx: ResolverContext,
-    sourcePath: ?FilePath,
-  |}): Promise<?Module> {
+  }: {
+    filename: string;
+    parent: FilePath | undefined | null;
+    env: Environment;
+    ctx: ResolverContext;
+    sourcePath: FilePath | undefined | null;
+  }): Promise<Module | undefined | null> {
     let specifier = filename;
     let sourceFile = parent || path.join(this.projectRoot, 'index');
     let query;
@@ -289,7 +304,7 @@ export default class NodeResolver {
     }
 
     // Resolve the module in node_modules
-    let resolved: ?Module;
+    let resolved: Module | undefined | null;
     try {
       resolved = this.findNodeModulePath(
         filename,
@@ -426,10 +441,10 @@ export default class NodeResolver {
     // If we couldn't resolve the node_modules path, just return the module name info
     if (resolved === undefined) {
       let [moduleName, subPath] = getModuleParts(filename);
-      resolved = ({
+      resolved = {
         moduleName,
         subPath,
-      }: Module);
+      } as Module;
 
       let alternativeModules = await findAlternativeNodeModules(
         this.fs,
@@ -459,7 +474,7 @@ export default class NodeResolver {
   shouldIncludeNodeModule(
     {includeNodeModules}: Environment,
     name: string,
-  ): ?boolean {
+  ): boolean | undefined | null {
     if (includeNodeModules === false) {
       return false;
     }
@@ -568,7 +583,14 @@ export default class NodeResolver {
     filename: string,
     dir: string,
     specifierType: SpecifierType,
-  ): Promise<?{|filePath: string, query?: URLSearchParams|}> {
+  ): Promise<
+    | {
+        filePath: string;
+        query?: URLSearchParams;
+      }
+    | undefined
+    | null
+  > {
     let url;
     switch (filename[0]) {
       case '/': {
@@ -690,7 +712,7 @@ export default class NodeResolver {
     env: Environment,
     parentdir: string,
     ctx: ResolverContext,
-  ): Promise<?ResolvedFile> {
+  ): Promise<ResolvedFile | undefined | null> {
     // Find a package.json file in the current package.
     let pkg = await this.findPackage(filename, ctx);
 
@@ -746,7 +768,13 @@ export default class NodeResolver {
   findBuiltin(
     filename: string,
     env: Environment,
-  ): ?{|name: string, range: ?string|} {
+  ):
+    | {
+        name: string;
+        range: string | undefined | null;
+      }
+    | undefined
+    | null {
     const isExplicitNode = filename.startsWith('node:');
     if (isExplicitNode || builtins[filename]) {
       if (env.isNode()) {
@@ -777,7 +805,7 @@ export default class NodeResolver {
     filename: string,
     sourceFile: FilePath,
     ctx: ResolverContext,
-  ): ?Module {
+  ): Module | undefined | null {
     let [moduleName, subPath] = getModuleParts(filename);
 
     ctx.invalidateOnFileCreate.push({
@@ -804,7 +832,7 @@ export default class NodeResolver {
     extensions: Array<string>,
     env: Environment,
     ctx: ResolverContext,
-  ): Promise<?ResolvedFile> {
+  ): Promise<ResolvedFile | undefined | null> {
     // If a module was specified as a module sub-path (e.g. some-module/some/path),
     // it is likely a file. Try loading it as a file first.
     if (module.subPath && module.moduleDir) {
@@ -836,13 +864,13 @@ export default class NodeResolver {
     env,
     ctx,
     pkg,
-  }: {|
-    dir: string,
-    extensions: Array<string>,
-    env: Environment,
-    ctx: ResolverContext,
-    pkg?: InternalPackageJSON | null,
-  |}): Promise<?ResolvedFile> {
+  }: {
+    dir: string;
+    extensions: Array<string>;
+    env: Environment;
+    ctx: ResolverContext;
+    pkg?: InternalPackageJSON | null;
+  }): Promise<ResolvedFile | undefined | null> {
     let failedEntry;
     try {
       pkg = await this.readPackage(dir, ctx);
@@ -1002,10 +1030,10 @@ export default class NodeResolver {
   getPackageEntries(
     pkg: InternalPackageJSON,
     env: Environment,
-  ): Array<{|
-    filename: string,
-    field: string,
-  |}> {
+  ): Array<{
+    filename: string;
+    field: string;
+  }> {
     return this.mainFields
       .map(field => {
         if (field === 'browser' && pkg.browser != null) {
@@ -1050,13 +1078,13 @@ export default class NodeResolver {
     env,
     pkg,
     ctx,
-  }: {|
-    file: string,
-    extensions: Array<string>,
-    env: Environment,
-    pkg: InternalPackageJSON | null,
-    ctx: ResolverContext,
-  |}): Promise<?ResolvedFile> {
+  }: {
+    file: string;
+    extensions: Array<string>;
+    env: Environment;
+    pkg: InternalPackageJSON | null;
+    ctx: ResolverContext;
+  }): Promise<ResolvedFile | undefined | null> {
     // Try all supported extensions
     let files = await this.expandFile(file, extensions, env, pkg);
     let found = this.fs.findFirstFile(files);
@@ -1093,7 +1121,7 @@ export default class NodeResolver {
     extensions: Array<string>,
     env: Environment,
     pkg: InternalPackageJSON | null,
-    expandAliases?: boolean = true,
+    expandAliases: boolean = true,
   ): Promise<Array<string>> {
     // Expand extensions and aliases
     let res = [];
@@ -1125,7 +1153,7 @@ export default class NodeResolver {
     filename: string,
     env: Environment,
     pkg: InternalPackageJSON | null,
-  ): Promise<?ResolvedAlias> {
+  ): Promise<ResolvedAlias | undefined | null> {
     let localAliases = await this.resolvePackageAliases(filename, env, pkg);
     if (localAliases) {
       return localAliases;
@@ -1139,7 +1167,7 @@ export default class NodeResolver {
     filename: string,
     env: Environment,
     pkg: InternalPackageJSON | null,
-  ): Promise<?ResolvedAlias> {
+  ): Promise<ResolvedAlias | undefined | null> {
     if (!pkg) {
       return null;
     }
@@ -1171,8 +1199,8 @@ export default class NodeResolver {
   async getAlias(
     filename: FilePath,
     pkg: InternalPackageJSON,
-    aliases: ?Aliases,
-  ): Promise<?ResolvedAlias> {
+    aliases?: Aliases | null,
+  ): Promise<ResolvedAlias | undefined | null> {
     if (!filename || !aliases || typeof aliases !== 'object') {
       return null;
     }
@@ -1194,7 +1222,7 @@ export default class NodeResolver {
         if (typeof alias === 'string' && subPath) {
           let isRelative = alias.startsWith('./');
           // Append the filename back onto the aliased module.
-          alias = (path.posix.join(alias, subPath): string);
+          alias = path.posix.join(alias, subPath) as string;
           // because of path.join('./nested', 'sub') === 'nested/sub'
           if (isRelative) alias = './' + alias;
         }
@@ -1249,7 +1277,13 @@ export default class NodeResolver {
   lookupAlias(
     aliases: Aliases,
     filename: FilePath,
-  ): null | boolean | string | {|global: string|} {
+  ):
+    | null
+    | boolean
+    | string
+    | {
+        global: string;
+      } {
     if (typeof aliases !== 'object') {
       return null;
     }
@@ -1313,7 +1347,7 @@ export default class NodeResolver {
     sourceFile: FilePath,
     env: Environment,
     ctx: ResolverContext,
-  ): Promise<?ResolvedAlias> {
+  ): Promise<ResolvedAlias | undefined | null> {
     // Load the root project's package.json file if we haven't already
     if (!this.rootPackage) {
       this.rootPackage = await this.findPackage(

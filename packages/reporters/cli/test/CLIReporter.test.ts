@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import assert from 'assert';
 import {PassThrough} from 'stream';
 import {_report} from '../src/CLIReporter';

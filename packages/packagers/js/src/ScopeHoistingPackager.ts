@@ -1,5 +1,3 @@
-// @flow
-
 import type {
   Asset,
   BundleGraph,
@@ -74,16 +72,22 @@ export class ScopeHoistingPackager {
   parcelRequireName: string;
   outputFormat: OutputFormat;
   isAsyncBundle: boolean;
-  globalNames: $ReadOnlySet<string>;
-  assetOutputs: Map<string, {|code: string, map: ?Buffer|}>;
+  globalNames: ReadonlySet<string>;
+  assetOutputs: Map<
+    string,
+    {
+      code: string;
+      map: Buffer | undefined | null;
+    }
+  >;
   exportedSymbols: Map<
     string,
-    {|
-      asset: Asset,
-      exportSymbol: string,
-      local: string,
-      exportAs: Array<string>,
-    |},
+    {
+      asset: Asset;
+      exportSymbol: string;
+      local: string;
+      exportAs: Array<string>;
+    }
   > = new Map();
   externals: Map<string, Map<string, string>> = new Map();
   topLevelNames: Map<string, number> = new Map();
@@ -115,7 +119,10 @@ export class ScopeHoistingPackager {
     this.globalNames = GLOBALS_BY_CONTEXT[bundle.env.context];
   }
 
-  async package(): Promise<{|contents: string, map: ?SourceMap|}> {
+  async package(): Promise<{
+    contents: string;
+    map: SourceMap | undefined | null;
+  }> {
     let wrappedAssets = await this.loadAssets();
     this.buildExportedSymbols();
 
@@ -373,7 +380,7 @@ export class ScopeHoistingPackager {
     return `${obj}[${JSON.stringify(property)}]`;
   }
 
-  visitAsset(asset: Asset): [string, ?SourceMap, number] {
+  visitAsset(asset: Asset): [string, SourceMap | undefined | null, number] {
     invariant(!this.seenAssets.has(asset.id), 'Already visited asset');
     this.seenAssets.add(asset.id);
 
@@ -384,8 +391,8 @@ export class ScopeHoistingPackager {
   buildAsset(
     asset: Asset,
     code: string,
-    map: ?Buffer,
-  ): [string, ?SourceMap, number] {
+    map?: Buffer | null,
+  ): [string, SourceMap | undefined | null, number] {
     let shouldWrap = this.wrappedAssets.has(asset.id);
     let deps = this.bundleGraph.getDependencies(asset);
 

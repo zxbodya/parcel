@@ -1,4 +1,3 @@
-// @flow
 import type {Profile} from './Profiler';
 import type {Writable} from 'stream';
 import {Tracer} from 'chrome-trace-event';
@@ -115,7 +114,7 @@ export default class Trace {
     });
   }
 
-  pipe(writable: Writable): stream$Writable {
+  pipe(writable: Writable): Writable {
     return this.tracer.pipe(writable);
   }
 

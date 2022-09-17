@@ -1,4 +1,3 @@
-// @flow strict-local
 import type {FilePath} from '@parcel/types';
 import path from 'path';
 import {relativePath, normalizeSeparators} from '@parcel/utils';
@@ -6,7 +5,7 @@ import {relativePath, normalizeSeparators} from '@parcel/utils';
 /**
  * A path that's relative to the project root.
  */
-export opaque type ProjectPath = string;
+export type ProjectPath = string;
 
 function toProjectPath_(projectRoot: FilePath, p: FilePath): ProjectPath {
   if (p == null) {
@@ -28,12 +27,17 @@ function toProjectPath_(projectRoot: FilePath, p: FilePath): ProjectPath {
 export const toProjectPath: ((
   projectRoot: FilePath,
   p: FilePath,
-) => ProjectPath) &
+) => ProjectPath) & // $FlowFixMe Not sure how to type properly
   ((projectRoot: FilePath, p: FilePath | void) => ProjectPath | void) &
-  // $FlowFixMe Not sure how to type properly
-  ((projectRoot: FilePath, p: ?FilePath) => ?ProjectPath) = toProjectPath_;
+  ((
+    projectRoot: FilePath,
+    p?: FilePath | null,
+  ) => ProjectPath | undefined | null) = toProjectPath_;
 
-function fromProjectPath_(projectRoot: FilePath, p: ?ProjectPath): ?FilePath {
+function fromProjectPath_(
+  projectRoot: FilePath,
+  p?: ProjectPath | null,
+): FilePath | undefined | null {
   if (p == null) {
     return null;
   }
@@ -55,12 +59,12 @@ function fromProjectPath_(projectRoot: FilePath, p: ?ProjectPath): ?FilePath {
   return projectRoot + projectPath;
 }
 
-export const fromProjectPath: ((
-  projectRoot: FilePath,
-  p: ProjectPath,
-) => FilePath) &
-  // $FlowFixMe Not sure how to type properly
-  ((projectRoot: FilePath, p: ?ProjectPath) => ?FilePath) = fromProjectPath_;
+export const fromProjectPath: // $FlowFixMe Not sure how to type properly
+((projectRoot: FilePath, p: ProjectPath) => FilePath) &
+  ((
+    projectRoot: FilePath,
+    p?: ProjectPath | null,
+  ) => FilePath | undefined | null) = fromProjectPath_;
 
 /**
  * Returns a path relative to the project root. This should be used when computing cache keys

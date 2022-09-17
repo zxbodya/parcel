@@ -1,5 +1,3 @@
-// @flow strict-local
-
 // From https://github.com/sindresorhus/is-unicode-supported/blob/8f123916d5c25a87c4f966dcc248b7ca5df2b4ca/index.js
 // This package is ESM-only so it has to be vendored
 function isUnicodeSupported() {

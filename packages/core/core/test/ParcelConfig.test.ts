@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import ParcelConfig from '../src/ParcelConfig';
 import assert from 'assert';
 import path from 'path';

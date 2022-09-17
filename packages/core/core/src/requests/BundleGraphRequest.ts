@@ -1,8 +1,7 @@
-// @flow strict-local
-
 import type {Async, Bundle as IBundle, Namer} from '@parcel/types';
 import type {SharedReference} from '@parcel/workers';
-import type ParcelConfig, {LoadedPlugin} from '../ParcelConfig';
+import type ParcelConfig from '../ParcelConfig';
+import type {LoadedPlugin} from '../ParcelConfig';
 import type {StaticRunOpts, RunAPI} from '../RequestTracker';
 import type {
   Asset,
@@ -54,27 +53,26 @@ import {
   toProjectPathUnsafe,
 } from '../projectPath';
 
-type BundleGraphRequestInput = {|
-  assetGraph: AssetGraph,
-  optionsRef: SharedReference,
-|};
+type BundleGraphRequestInput = {
+  assetGraph: AssetGraph;
+  optionsRef: SharedReference;
+};
 
-type RunInput = {|
-  input: BundleGraphRequestInput,
-  ...StaticRunOpts,
-|};
+type RunInput = {
+  input: BundleGraphRequestInput;
+} & StaticRunOpts;
 
-type BundleGraphResult = {|
-  bundleGraph: InternalBundleGraph,
-  changedAssets: Map<string, Asset>,
-|};
+type BundleGraphResult = {
+  bundleGraph: InternalBundleGraph;
+  changedAssets: Map<string, Asset>;
+};
 
-type BundleGraphRequest = {|
-  id: string,
-  +type: 'bundle_graph_request',
-  run: RunInput => Async<BundleGraphResult>,
-  input: BundleGraphRequestInput,
-|};
+type BundleGraphRequest = {
+  id: string;
+  readonly type: 'bundle_graph_request';
+  run: (a: RunInput) => Async<BundleGraphResult>;
+  input: BundleGraphRequestInput;
+};
 
 export default function createBundleGraphRequest(
   input: BundleGraphRequestInput,
@@ -143,7 +141,7 @@ class BundlerRunner {
     }
   }
 
-  async loadConfig<T: PluginWithLoadConfig>(plugin: LoadedPlugin<T>) {
+  async loadConfig<T extends PluginWithLoadConfig>(plugin: LoadedPlugin<T>) {
     let config = createConfig({
       plugin: plugin.name,
       searchPath: toProjectPathUnsafe('index'),
@@ -383,7 +381,7 @@ class BundlerRunner {
   }
 
   async nameBundle(
-    namers: Array<LoadedPlugin<Namer<mixed>>>,
+    namers: Array<LoadedPlugin<Namer<unknown>>>,
     internalBundle: InternalBundle,
     internalBundleGraph: InternalBundleGraph,
   ): Promise<void> {

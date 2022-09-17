@@ -1,4 +1,3 @@
-// @flow
 import type {DiagnosticCodeHighlight} from '@parcel/diagnostic';
 
 import chalk from 'chalk';
@@ -6,21 +5,21 @@ import emphasize from 'emphasize';
 import stringWidth from 'string-width';
 import sliceAnsi from 'slice-ansi';
 
-type CodeFramePadding = {|
-  before: number,
-  after: number,
-|};
+type CodeFramePadding = {
+  before: number;
+  after: number;
+};
 
-type CodeFrameOptionsInput = $Shape<CodeFrameOptions>;
+type CodeFrameOptionsInput = Partial<CodeFrameOptions>;
 
-type CodeFrameOptions = {|
-  useColor: boolean,
-  syntaxHighlighting: boolean,
-  maxLines: number,
-  padding: CodeFramePadding,
-  terminalWidth: number,
-  language?: string,
-|};
+type CodeFrameOptions = {
+  useColor: boolean;
+  syntaxHighlighting: boolean;
+  maxLines: number;
+  padding: CodeFramePadding;
+  terminalWidth: number;
+  language?: string;
+};
 
 const NEWLINE = /\r\n|[\n\r\u2028\u2029]/;
 const TAB_REPLACE_REGEX = /\t/g;
@@ -69,11 +68,11 @@ export default function codeFrame(
   };
 
   // Prefix lines with the line number
-  const lineNumberPrefixer = (params: {|
-    lineNumber?: string,
-    lineNumberLength: number,
-    isHighlighted: boolean,
-  |}) => {
+  const lineNumberPrefixer = (params: {
+    lineNumber?: string;
+    lineNumberLength: number;
+    isHighlighted: boolean;
+  }) => {
     let {lineNumber, lineNumberLength, isHighlighted} = params;
 
     return `${isHighlighted ? highlighter('>') : ' '} ${

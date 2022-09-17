@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {
   FilePath,
   InitialParcelOptions,
@@ -186,7 +184,7 @@ export default async function resolveOptions(
 function getRelativeConfigSpecifier(
   fs: FileSystem,
   projectRoot: FilePath,
-  specifier: ?DependencySpecifier,
+  specifier?: DependencySpecifier | null,
 ) {
   if (specifier == null) {
     return undefined;

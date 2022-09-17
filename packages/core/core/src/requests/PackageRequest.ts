@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {ContentKey} from '@parcel/graph';
 import type {Async} from '@parcel/types';
 import type {SharedReference} from '@parcel/workers';
@@ -15,24 +13,23 @@ import {runConfigRequest} from './ConfigRequest';
 import {getDevDepRequests, runDevDepRequest} from './DevDepRequest';
 import createParcelConfigRequest from './ParcelConfigRequest';
 
-type PackageRequestInput = {|
-  bundleGraph: BundleGraph,
-  bundle: Bundle,
-  bundleGraphReference: SharedReference,
-  optionsRef: SharedReference,
-|};
+type PackageRequestInput = {
+  bundleGraph: BundleGraph;
+  bundle: Bundle;
+  bundleGraphReference: SharedReference;
+  optionsRef: SharedReference;
+};
 
-type RunInput = {|
-  input: PackageRequestInput,
-  ...StaticRunOpts,
-|};
+type RunInput = {
+  input: PackageRequestInput;
+} & StaticRunOpts;
 
-export type PackageRequest = {|
-  id: ContentKey,
-  +type: 'package_request',
-  run: RunInput => Async<BundleInfo>,
-  input: PackageRequestInput,
-|};
+export type PackageRequest = {
+  id: ContentKey;
+  readonly type: 'package_request';
+  run: (a: RunInput) => Async<BundleInfo>;
+  input: PackageRequestInput;
+};
 
 export function createPackageRequest(
   input: PackageRequestInput,
@@ -63,7 +60,7 @@ async function run({input, api, farm}: RunInput) {
       previousDevDeps: devDeps,
       invalidDevDeps,
       previousInvalidations: api.getInvalidations(),
-    }): PackageRequestResult);
+    })) as PackageRequestResult;
 
   for (let devDepRequest of devDepRequests) {
     await runDevDepRequest(api, devDepRequest);

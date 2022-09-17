@@ -1,4 +1,3 @@
-// @flow
 // Based on _.escape https://github.com/lodash/lodash/blob/master/escape.js
 const reUnescapedHtml = /[&<>"']/g;
 const reHasUnescapedHtml = RegExp(reUnescapedHtml.source);

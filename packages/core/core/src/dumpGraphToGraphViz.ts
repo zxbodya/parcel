@@ -1,5 +1,3 @@
-// @flow
-
 import type {Asset, BundleBehavior} from '@parcel/types';
 import type {Graph} from '@parcel/graph';
 import type {AssetGraphNode, BundleGraphNode, Environment} from './types';
@@ -38,11 +36,11 @@ const TYPE_COLORS = {
 export default async function dumpGraphToGraphViz(
   graph:
     | Graph<AssetGraphNode>
-    | Graph<{|
-        assets: Set<Asset>,
-        sourceBundles: Set<number>,
-        bundleBehavior?: ?BundleBehavior,
-      |}>
+    | Graph<{
+        assets: Set<Asset>;
+        sourceBundles: Set<number>;
+        bundleBehavior?: BundleBehavior | null;
+      }>
     | Graph<BundleGraphNode>,
   name: string,
   edgeTypes?: typeof bundleGraphEdgeTypes | typeof requestGraphEdgeTypes,

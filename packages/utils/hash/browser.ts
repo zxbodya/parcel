@@ -1,32 +1,31 @@
-// @flow
 import xxhash from 'xxhash-wasm';
 
 let h64, h64Raw;
-module.exports.init = (xxhash().then(xxh => {
+module.exports.init = xxhash().then(xxh => {
   ({h64, h64Raw} = xxh);
-}) :Promise<void> );
+}) as Promise<void>;
 
 const encoder = new TextEncoder();
-function hashString(s :string ) :string  {
+function hashString(s: string): string {
   return h64(s).padStart(16, '0');
 }
 module.exports.hashString = hashString;
-function hashBuffer(b :Uint8Array ) :string  {
+function hashBuffer(b: Uint8Array): string {
   return toHex(h64Raw(b));
 }
 module.exports.hashBuffer = hashBuffer;
 class Hash {
-  data: Array<Uint8Array>; 
+  data: Array<Uint8Array>;
   constructor() {
     this.data = [];
   }
-  writeString(s :string ) {
+  writeString(s: string) {
     this.data.push(encoder.encode(s));
   }
-  writeBuffer(b :Uint8Array ) {
+  writeBuffer(b: Uint8Array) {
     this.data.push(b);
   }
-  finish() :string  {
+  finish(): string {
     return hashBuffer(concatUint8Arrays(this.data));
   }
 }

@@ -1,7 +1,12 @@
-// @flow
 /* global MessageChannel:readonly */
 
-export let SharedBuffer: Class<ArrayBuffer> | Class<SharedArrayBuffer>;
+export let SharedBuffer:
+  | {
+      new (...args: any): ArrayBuffer;
+    }
+  | {
+      new (...args: any): SharedArrayBuffer;
+    };
 
 // $FlowFixMe[prop-missing]
 if (process.browser) {

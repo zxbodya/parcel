@@ -1,10 +1,9 @@
-// @flow
 import path from 'path';
 import nullthrows from 'nullthrows';
 import {Reporter} from '@parcel/plugin';
 import {relativePath} from '@parcel/utils';
 
-export default (new Reporter({
+export default new Reporter({
   async report({event, options, logger}) {
     if (event.type === 'buildSuccess') {
       let bundles = [];
@@ -66,4 +65,4 @@ export default (new Reporter({
       });
     }
   },
-}): Reporter);
+}) as Reporter;

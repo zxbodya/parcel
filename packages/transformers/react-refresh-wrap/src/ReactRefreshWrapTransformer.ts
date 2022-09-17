@@ -1,5 +1,3 @@
-// @flow
-
 import path from 'path';
 import {Transformer} from '@parcel/plugin';
 
@@ -26,7 +24,7 @@ function shouldExclude(asset, options) {
   );
 }
 
-export default (new Transformer({
+export default new Transformer({
   async transform({asset, options}) {
     if (shouldExclude(asset, options)) {
       return [asset];
@@ -68,4 +66,4 @@ ${code}
 
     return [asset];
   },
-}): Transformer);
+}) as Transformer;

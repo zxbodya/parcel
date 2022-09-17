@@ -1,15 +1,12 @@
-// @flow
 import type {BaseAsset} from '@parcel/types';
 
 export type BabelError = Error & {
   loc?: {
-    line: number,
-    column: number,
-    ...
-  },
-  source?: string,
-  filePath?: string,
-  ...
+    line: number;
+    column: number;
+  };
+  source?: string;
+  filePath?: string;
 };
 
 export async function babelErrorEnhancer(

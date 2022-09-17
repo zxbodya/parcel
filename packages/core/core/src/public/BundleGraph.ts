@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {
   Asset as IAsset,
   Bundle as IBundle,
@@ -32,7 +30,7 @@ import BundleGroup, {bundleGroupToInternalBundleGroup} from './BundleGroup';
 // to the internal bundle.
 const _bundleGraphToInternalBundleGraph: WeakMap<
   IBundleGraph<IBundle>,
-  InternalBundleGraph,
+  InternalBundleGraph
 > = new WeakMap();
 export function bundleGraphToInternalBundleGraph(
   bundleGraph: IBundleGraph<IBundle>,
@@ -40,13 +38,13 @@ export function bundleGraphToInternalBundleGraph(
   return nullthrows(_bundleGraphToInternalBundleGraph.get(bundleGraph));
 }
 
-type BundleFactory<TBundle: IBundle> = (
-  InternalBundle,
-  InternalBundleGraph,
-  ParcelOptions,
+type BundleFactory<TBundle extends IBundle> = (
+  c: InternalBundle,
+  b: InternalBundleGraph,
+  a: ParcelOptions,
 ) => TBundle;
 
-export default class BundleGraph<TBundle: IBundle>
+export default class BundleGraph<TBundle extends IBundle>
   implements IBundleGraph<TBundle>
 {
   #graph: InternalBundleGraph;
@@ -77,7 +75,10 @@ export default class BundleGraph<TBundle: IBundle>
     return this.#graph.isDependencySkipped(dependencyToInternalDependency(dep));
   }
 
-  getResolvedAsset(dep: IDependency, bundle: ?IBundle): ?IAsset {
+  getResolvedAsset(
+    dep: IDependency,
+    bundle?: IBundle | null,
+  ): IAsset | undefined | null {
     let resolution = this.#graph.getResolvedAsset(
       dependencyToInternalDependency(dep),
       bundle && bundleToInternalBundle(bundle),
@@ -93,7 +94,7 @@ export default class BundleGraph<TBundle: IBundle>
       .map(dep => new Dependency(dep, this.#options));
   }
 
-  getAssetWithDependency(dep: IDependency): ?IAsset {
+  getAssetWithDependency(dep: IDependency): IAsset | undefined | null {
     let asset = this.#graph.getAssetWithDependency(
       dependencyToInternalDependency(dep),
     );
@@ -110,7 +111,10 @@ export default class BundleGraph<TBundle: IBundle>
 
   getReferencedBundles(
     bundle: IBundle,
-    opts?: {|recursive?: boolean, includeInline?: boolean|},
+    opts?: {
+      recursive?: boolean;
+      includeInline?: boolean;
+    },
   ): Array<TBundle> {
     return this.#graph
       .getReferencedBundles(bundleToInternalBundle(bundle), opts)
@@ -119,11 +123,18 @@ export default class BundleGraph<TBundle: IBundle>
 
   resolveAsyncDependency(
     dependency: IDependency,
-    bundle: ?IBundle,
-  ): ?(
-    | {|type: 'bundle_group', value: IBundleGroup|}
-    | {|type: 'asset', value: IAsset|}
-  ) {
+    bundle?: IBundle | null,
+  ):
+    | {
+        type: 'bundle_group';
+        value: IBundleGroup;
+      }
+    | {
+        type: 'asset';
+        value: IAsset;
+      }
+    | undefined
+    | null {
     let resolved = this.#graph.resolveAsyncDependency(
       dependencyToInternalDependency(dependency),
       bundle && bundleToInternalBundle(bundle),
@@ -144,7 +155,10 @@ export default class BundleGraph<TBundle: IBundle>
     };
   }
 
-  getReferencedBundle(dependency: IDependency, bundle: IBundle): ?TBundle {
+  getReferencedBundle(
+    dependency: IDependency,
+    bundle: IBundle,
+  ): TBundle | undefined | null {
     let result = this.#graph.getReferencedBundle(
       dependencyToInternalDependency(dependency),
       bundleToInternalBundle(bundle),
@@ -184,7 +198,9 @@ export default class BundleGraph<TBundle: IBundle>
 
   getBundlesInBundleGroup(
     bundleGroup: IBundleGroup,
-    opts?: {|includeInline: boolean|},
+    opts?: {
+      includeInline: boolean;
+    },
   ): Array<TBundle> {
     return this.#graph
       .getBundlesInBundleGroup(
@@ -194,7 +210,7 @@ export default class BundleGraph<TBundle: IBundle>
       .map(bundle => this.#createBundle(bundle, this.#graph, this.#options));
   }
 
-  getBundles(opts?: {|includeInline: boolean|}): Array<TBundle> {
+  getBundles(opts?: {includeInline: boolean}): Array<TBundle> {
     return this.#graph
       .getBundles(opts)
       .map(bundle => this.#createBundle(bundle, this.#graph, this.#options));
@@ -221,7 +237,7 @@ export default class BundleGraph<TBundle: IBundle>
   getSymbolResolution(
     asset: IAsset,
     symbol: Symbol,
-    boundary: ?IBundle,
+    boundary?: IBundle | null,
   ): SymbolResolution {
     let res = this.#graph.getSymbolResolution(
       assetToAssetValue(asset),
@@ -238,7 +254,7 @@ export default class BundleGraph<TBundle: IBundle>
 
   getExportedSymbols(
     asset: IAsset,
-    boundary: ?IBundle,
+    boundary?: IBundle | null,
   ): Array<ExportSymbolResolution> {
     let res = this.#graph.getExportedSymbols(
       assetToAssetValue(asset),
@@ -255,8 +271,8 @@ export default class BundleGraph<TBundle: IBundle>
 
   traverse<TContext>(
     visit: GraphVisitor<BundleGraphTraversable, TContext>,
-    start?: ?IAsset,
-  ): ?TContext {
+    start?: IAsset | null,
+  ): TContext | undefined | null {
     return this.#graph.traverse(
       mapVisitor(
         node =>
@@ -274,8 +290,8 @@ export default class BundleGraph<TBundle: IBundle>
 
   traverseBundles<TContext>(
     visit: GraphVisitor<TBundle, TContext>,
-    startBundle: ?IBundle,
-  ): ?TContext {
+    startBundle?: IBundle | null,
+  ): TContext | undefined | null {
     return this.#graph.traverseBundles(
       mapVisitor(
         bundle => this.#createBundle(bundle, this.#graph, this.#options),
@@ -297,7 +313,9 @@ export default class BundleGraph<TBundle: IBundle>
       .map(bundle => this.#createBundle(bundle, this.#graph, this.#options));
   }
 
-  getUsedSymbols(v: IAsset | IDependency): ?$ReadOnlySet<Symbol> {
+  getUsedSymbols(
+    v: IAsset | IDependency,
+  ): ReadonlySet<Symbol> | undefined | null {
     if (v instanceof Asset) {
       return this.#graph.getUsedSymbolsAsset(assetToAssetValue(v));
     } else {

@@ -1,4 +1,3 @@
-// @flow
 import type {MutableAsset, TransformerResult} from '@parcel/types';
 import {XMLSerializer} from '@xmldom/xmldom';
 import {urlHandler} from './utils';

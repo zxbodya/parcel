@@ -1,4 +1,3 @@
-// @flow
 import type {SourceLocation} from '@parcel/types';
 import type {FileSystem} from '@parcel/fs';
 import SourceMap from '@parcel/source-map';
@@ -29,7 +28,15 @@ export async function loadSourceMapUrl(
   fs: FileSystem,
   filename: string,
   contents: string,
-): Promise<?{|filename: string, map: any, url: string|}> {
+): Promise<
+  | {
+      filename: string;
+      map: any;
+      url: string;
+    }
+  | undefined
+  | null
+> {
   let match = matchSourceMappingURL(contents);
   if (match) {
     let url = match[1].trim();
@@ -60,8 +67,11 @@ export async function loadSourceMapUrl(
 export async function loadSourceMap(
   filename: string,
   contents: string,
-  options: {fs: FileSystem, projectRoot: string, ...},
-): Promise<?SourceMap> {
+  options: {
+    fs: FileSystem;
+    projectRoot: string;
+  },
+): Promise<SourceMap | undefined | null> {
   let foundMap = await loadSourceMapUrl(options.fs, filename, contents);
   if (foundMap) {
     let mapSourceRoot = path.dirname(filename);

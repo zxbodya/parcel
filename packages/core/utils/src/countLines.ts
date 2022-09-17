@@ -1,5 +1,3 @@
-// @flow strict-local
-
 export default function countLines(
   string: string,
   startIndex: number = 0,

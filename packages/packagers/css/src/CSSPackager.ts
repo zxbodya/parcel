@@ -1,8 +1,6 @@
-// @flow
-
 import type {Root} from 'postcss';
 import type {Asset, Dependency} from '@parcel/types';
-import typeof PostCSS from 'postcss';
+type PostCSS = typeof import('postcss').default;
 
 import path from 'path';
 import SourceMap from '@parcel/source-map';
@@ -16,7 +14,7 @@ import {
 
 import nullthrows from 'nullthrows';
 
-export default (new Packager({
+export default new Packager({
   async package({
     bundle,
     bundleGraph,
@@ -173,7 +171,7 @@ export default (new Packager({
       map,
     });
   },
-}): Packager);
+}) as Packager;
 
 export function getSpecifier(dep: Dependency): string {
   if (typeof dep.meta.placeholder === 'string') {
@@ -194,7 +192,7 @@ async function processCSSModule(
   bundle,
   asset,
   media,
-): Promise<[Asset, string, ?Buffer]> {
+): Promise<[Asset, string, Buffer | undefined | null]> {
   let postcss: PostCSS = await options.packageManager.require(
     'postcss',
     options.projectRoot + '/index',

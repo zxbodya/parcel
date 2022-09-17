@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import assert from 'assert';
 import {loadConfig} from '../src/config';
 import {inputFS as fs} from '@parcel/test-utils';

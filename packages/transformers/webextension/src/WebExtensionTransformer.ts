@@ -1,4 +1,3 @@
-// @flow
 import type {MutableAsset, HMROptions} from '@parcel/types';
 
 import {Transformer} from '@parcel/plugin';
@@ -37,8 +36,10 @@ const DEP_LOCS = [
 async function collectDependencies(
   asset: MutableAsset,
   program: any,
-  ptrs: {[key: string]: any, ...},
-  hmrOptions: ?HMROptions,
+  ptrs: {
+    [key: string]: any;
+  },
+  hmrOptions?: HMROptions | null,
 ) {
   const hot = Boolean(hmrOptions);
   const fs = asset.fs;
@@ -219,8 +220,11 @@ async function collectDependencies(
     program.web_accessible_resources = war;
   }
   if (program.declarative_net_request) {
-    const rrs: {|path: string, id: string, enabled: boolean|}[] =
-      program.declarative_net_request?.rule_resources ?? [];
+    const rrs: {
+      path: string;
+      id: string;
+      enabled: boolean;
+    }[] = program.declarative_net_request?.rule_resources ?? [];
     rrs.forEach((resources, i) => {
       resources.path = asset.addURLDependency(resources.path, {
         pipeline: 'raw',
@@ -355,7 +359,7 @@ async function collectDependencies(
   }
 }
 
-function cspPatchHMR(policy: ?string, insert?: string) {
+function cspPatchHMR(policy?: string | null, insert?: string) {
   let defaultSrc = "'self'";
   if (insert == null) {
     insert = "'unsafe-eval'";
@@ -382,7 +386,7 @@ function cspPatchHMR(policy: ?string, insert?: string) {
   }
 }
 
-export default (new Transformer({
+export default new Transformer({
   async transform({asset, options}) {
     // Set environment to browser, since web extensions are always used in
     // browsers, and because it avoids delegating extra config to the user
@@ -433,4 +437,4 @@ export default (new Transformer({
     asset.meta.webextEntry = true;
     return [asset];
   },
-}): Transformer);
+}) as Transformer;

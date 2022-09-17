@@ -1,4 +1,3 @@
-// @flow
 import type {
   Config,
   FilePath,
@@ -14,16 +13,16 @@ import {POSTCSS_RANGE} from './constants';
 
 import loadExternalPlugins from './loadPlugins';
 
-type ConfigResult = {|
-  raw: any,
-  filePath: string,
-  hydrated: {|
-    plugins: Array<any>,
-    from: FilePath,
-    to: FilePath,
-    modules: any,
-  |},
-|};
+type ConfigResult = {
+  raw: any;
+  filePath: string;
+  hydrated: {
+    plugins: Array<any>;
+    from: FilePath;
+    to: FilePath;
+    modules: any;
+  };
+};
 
 async function configHydrator(
   configFile: any,
@@ -31,7 +30,7 @@ async function configHydrator(
   resolveFrom: FilePath,
   options: PluginOptions,
   logger: PluginLogger,
-): Promise<?ConfigResult> {
+): Promise<ConfigResult | undefined | null> {
   if (configFile == null) {
     return;
   }
@@ -150,11 +149,11 @@ export async function load({
   config,
   options,
   logger,
-}: {|
-  config: Config,
-  options: PluginOptions,
-  logger: PluginLogger,
-|}): Promise<?ConfigResult> {
+}: {
+  config: Config;
+  options: PluginOptions;
+  logger: PluginLogger;
+}): Promise<ConfigResult | undefined | null> {
   if (!config.isSource) {
     return;
   }

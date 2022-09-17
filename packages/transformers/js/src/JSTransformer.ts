@@ -1,4 +1,3 @@
-// @flow
 import type {JSONObject, EnvMap} from '@parcel/types';
 import type {SchemaEntity} from '@parcel/utils';
 import type {Diagnostic} from '@parcel/diagnostic';
@@ -103,12 +102,12 @@ const CONFIG_SCHEMA: SchemaEntity = {
   additionalProperties: false,
 };
 
-type PackageJSONConfig = {|
-  '@parcel/transformer-js'?: {|
-    inlineFS?: boolean,
-    inlineEnvironment?: boolean | Array<string>,
-  |},
-|};
+type PackageJSONConfig = {
+  '@parcel/transformer-js'?: {
+    inlineFS?: boolean;
+    inlineEnvironment?: boolean | Array<string>;
+  };
+};
 
 const SCRIPT_ERRORS = {
   browser: {
@@ -130,23 +129,21 @@ const SCRIPT_ERRORS = {
 type TSConfig = {
   compilerOptions?: {
     // https://www.typescriptlang.org/tsconfig#jsx
-    jsx?: 'react' | 'react-jsx' | 'react-jsxdev' | 'preserve' | 'react-native',
+    jsx?: 'react' | 'react-jsx' | 'react-jsxdev' | 'preserve' | 'react-native';
     // https://www.typescriptlang.org/tsconfig#jsxFactory
-    jsxFactory?: string,
+    jsxFactory?: string;
     // https://www.typescriptlang.org/tsconfig#jsxFragmentFactory
-    jsxFragmentFactory?: string,
+    jsxFragmentFactory?: string;
     // https://www.typescriptlang.org/tsconfig#jsxImportSource
-    jsxImportSource?: string,
+    jsxImportSource?: string;
     // https://www.typescriptlang.org/tsconfig#experimentalDecorators
-    experimentalDecorators?: boolean,
+    experimentalDecorators?: boolean;
     // https://www.typescriptlang.org/tsconfig#useDefineForClassFields
-    useDefineForClassFields?: boolean,
-    ...
-  },
-  ...
+    useDefineForClassFields?: boolean;
+  };
 };
 
-export default (new Transformer({
+export default new Transformer({
   async loadConfig({config, options}) {
     let pkg = await config.getPackage();
     let isJSX,
@@ -461,7 +458,7 @@ export default (new Transformer({
       let convertDiagnostic = diagnostic => {
         let message = diagnostic.message;
         if (message === 'SCRIPT_ERROR') {
-          let err = SCRIPT_ERRORS[(asset.env.context: string)];
+          let err = SCRIPT_ERRORS[asset.env.context as string];
           message = err?.message || SCRIPT_ERRORS.browser.message;
         }
 
@@ -501,7 +498,7 @@ export default (new Transformer({
             });
           }
 
-          let err = SCRIPT_ERRORS[(asset.env.context: string)];
+          let err = SCRIPT_ERRORS[asset.env.context as string];
           if (err) {
             if (!res.hints) {
               res.hints = [err.hint];
@@ -899,7 +896,7 @@ export default (new Transformer({
 
     return [asset];
   },
-}): Transformer);
+}) as Transformer;
 
 // On linux with older versions of glibc (e.g. CentOS 7), we encounter a segmentation fault
 // when worker threads exit due to thread local variables used by SWC. A workaround is to

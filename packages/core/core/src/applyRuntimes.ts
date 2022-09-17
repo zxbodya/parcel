@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {ContentKey} from '@parcel/graph';
 import type {Dependency, NamedBundle as INamedBundle} from '@parcel/types';
 import type {SharedReference} from '@parcel/workers';
@@ -32,12 +30,12 @@ import createAssetGraphRequest from './requests/AssetGraphRequest';
 import {createDevDependency, runDevDepRequest} from './requests/DevDepRequest';
 import {toProjectPath, fromProjectPathRelative} from './projectPath';
 
-type RuntimeConnection = {|
-  bundle: InternalBundle,
-  assetGroup: AssetGroup,
-  dependency: ?Dependency,
-  isEntry: ?boolean,
-|};
+type RuntimeConnection = {
+  bundle: InternalBundle;
+  assetGroup: AssetGroup;
+  dependency: Dependency | undefined | null;
+  isEntry: boolean | undefined | null;
+};
 
 export default async function applyRuntimes({
   bundleGraph,
@@ -49,17 +47,17 @@ export default async function applyRuntimes({
   previousDevDeps,
   devDepRequests,
   configs,
-}: {|
-  bundleGraph: InternalBundleGraph,
-  config: ParcelConfig,
-  options: ParcelOptions,
-  optionsRef: SharedReference,
-  pluginOptions: PluginOptions,
-  api: RunAPI,
-  previousDevDeps: Map<string, string>,
-  devDepRequests: Map<string, DevDepRequest>,
-  configs: Map<string, Config>,
-|}): Promise<Map<string, Asset>> {
+}: {
+  bundleGraph: InternalBundleGraph;
+  config: ParcelConfig;
+  options: ParcelOptions;
+  optionsRef: SharedReference;
+  pluginOptions: PluginOptions;
+  api: RunAPI;
+  previousDevDeps: Map<string, string>;
+  devDepRequests: Map<string, DevDepRequest>;
+  configs: Map<string, Config>;
+}): Promise<Map<string, Asset>> {
   let runtimes = await config.getRuntimes();
   let connections: Array<RuntimeConnection> = [];
 

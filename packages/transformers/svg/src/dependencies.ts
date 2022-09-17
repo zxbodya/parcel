@@ -1,5 +1,3 @@
-// @flow
-
 import type {AST, MutableAsset} from '@parcel/types';
 import PostHTML from 'posthtml';
 
@@ -58,7 +56,9 @@ const FUNC_IRI_ATTRS = new Set([
 const FUNC_IRI_RE =
   /^url\((?:((['"])(.*?)\2(\s+.*)?)|((?:\\[\s'"]|[^\s'"])+))\)$/;
 const ESCAPE_RE = /\\(.|\n|\r|\u2028|\u2029)/;
-export function parseFuncIRI(value: string): ?[string, string] {
+export function parseFuncIRI(
+  value: string,
+): [string, string] | undefined | null {
   let m = value.match(FUNC_IRI_RE);
   if (m) {
     let url = (m[3] || m[5]).replace(ESCAPE_RE, '$1');

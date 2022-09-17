@@ -1,4 +1,3 @@
-// @flow
 import path from 'path';
 import chalk from 'chalk';
 import stringWidth from 'string-width';

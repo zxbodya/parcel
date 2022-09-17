@@ -1,4 +1,3 @@
-// @flow
 import type {
   BundleGroup as IBundleGroup,
   Target as ITarget,
@@ -10,11 +9,11 @@ import Target from './Target';
 
 const internalBundleGroupToBundleGroup: WeakMap<
   InternalBundleGroup,
-  BundleGroup,
+  BundleGroup
 > = new WeakMap();
 const _bundleGroupToInternalBundleGroup: WeakMap<
   IBundleGroup,
-  InternalBundleGroup,
+  InternalBundleGroup
 > = new WeakMap();
 export function bundleGroupToInternalBundleGroup(
   target: IBundleGroup,
@@ -23,13 +22,10 @@ export function bundleGroupToInternalBundleGroup(
 }
 
 export default class BundleGroup implements IBundleGroup {
-  #bundleGroup :InternalBundleGroup ;
-  #options :ParcelOptions ;
+  #bundleGroup: InternalBundleGroup;
+  #options: ParcelOptions;
 
-  constructor(
-    bundleGroup: InternalBundleGroup,
-    options: ParcelOptions,
-  ): BundleGroup {
+  constructor(bundleGroup: InternalBundleGroup, options: ParcelOptions) {
     let existing = internalBundleGroupToBundleGroup.get(bundleGroup);
     if (existing != null) {
       return existing;

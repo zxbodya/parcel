@@ -1,4 +1,3 @@
-// @flow
 import {Resolver} from '@parcel/plugin';
 import {
   isGlob,
@@ -33,7 +32,7 @@ function errorToThrowableDiagnostic(error, dependency): ThrowableDiagnostic {
   });
 }
 
-export default (new Resolver({
+export default new Resolver({
   async resolve({dependency, options, specifier, pipeline, logger}) {
     if (!isGlob(specifier)) {
       return;
@@ -189,7 +188,7 @@ export default (new Resolver({
       priority: 'sync',
     };
   },
-}): Resolver);
+}) as Resolver;
 
 function set(obj, path, value) {
   for (let i = 0; i < path.length - 1; i++) {

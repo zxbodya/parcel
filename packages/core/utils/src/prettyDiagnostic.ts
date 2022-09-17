@@ -1,4 +1,3 @@
-// @flow strict-local
 import type {Diagnostic} from '@parcel/diagnostic';
 import type {PluginOptions} from '@parcel/types';
 
@@ -10,21 +9,21 @@ import nullthrows from 'nullthrows';
 // $FlowFixMe
 import terminalLink from 'terminal-link';
 
-export type FormattedCodeFrame = {|
-  location: string,
-  code: string,
-|};
+export type FormattedCodeFrame = {
+  location: string;
+  code: string;
+};
 
-export type AnsiDiagnosticResult = {|
-  message: string,
-  stack: string,
+export type AnsiDiagnosticResult = {
+  message: string;
+  stack: string;
   /** A formatted string containing all code frames, including their file locations. */
-  codeframe: string,
+  codeframe: string;
   /** A list of code frames with highlighted code and file locations separately. */
-  frames: Array<FormattedCodeFrame>,
-  hints: Array<string>,
-  documentation: string,
-|};
+  frames: Array<FormattedCodeFrame>;
+  hints: Array<string>;
+  documentation: string;
+};
 
 export default async function prettyDiagnostic(
   diagnostic: Diagnostic,

@@ -1,5 +1,3 @@
-// @flow
-
 import {Transformer} from '@parcel/plugin';
 import {createDependencyLocation, isGlob, glob, globSync} from '@parcel/utils';
 import path from 'path';
@@ -13,7 +11,7 @@ import Evaluator from 'stylus/lib/visitor/evaluator';
 
 const URL_RE = /^(?:url\s*\(\s*)?['"]?(?:[#/]|(?:https?:)?\/\/)/i;
 
-export default (new Transformer({
+export default new Transformer({
   async loadConfig({config}) {
     let configFile = await config.getConfig(
       ['.stylusrc', '.stylusrc.js', '.stylusrc.cjs'],
@@ -79,7 +77,7 @@ export default (new Transformer({
     asset.meta.hasDependencies = false;
     return [asset];
   },
-}): Transformer);
+}) as Transformer;
 
 function attemptResolve(importedPath, filepath, asset, resolve, deps) {
   if (deps.has(importedPath)) {

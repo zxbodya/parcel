@@ -1,5 +1,3 @@
-// @flow
-
 /* eslint-disable no-console */
 
 import assert from 'assert';
@@ -27,7 +25,7 @@ describe('json reporter', () => {
         return JSON.parse(call.lastArg);
       });
       for (let [iStr, parsed] of Object.entries(parsedCalls)) {
-        parsed = (parsed: any);
+        parsed = parsed as any;
         invariant(typeof iStr === 'string');
         let i = parseInt(iStr, 10);
 

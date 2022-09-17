@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import assert from 'assert';
 import {Asset, MutableAsset} from '../src/public/Asset';
 import UncommittedAsset from '../src/UncommittedAsset';

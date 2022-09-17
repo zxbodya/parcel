@@ -1,4 +1,3 @@
-// @flow
 import type {TSModuleGraph} from './TSModuleGraph';
 
 import nullthrows from 'nullthrows';
@@ -13,8 +12,8 @@ export function collect(
 ): any {
   // When module definitions are nested inside each other (e.g with module augmentation),
   // we want to keep track of the hierarchy so we can associated nodes with the right module.
-  const moduleStack: Array<?TSModule> = [];
-  let _currentModule: ?TSModule;
+  const moduleStack: Array<TSModule | undefined | null> = [];
+  let _currentModule: TSModule | undefined | null;
   let visit = (node: any): any => {
     if (ts.isBundle(node)) {
       return ts.updateBundle(node, ts.visitNodes(node.sourceFiles, visit));

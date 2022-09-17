@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {
   Asset,
   Bundle as LegacyBundle,
@@ -29,18 +27,18 @@ import {
 import nullthrows from 'nullthrows';
 import {encodeJSONKeyComponent} from '@parcel/diagnostic';
 
-type BundlerConfig = {|
-  http?: number,
-  minBundles?: number,
-  minBundleSize?: number,
-  maxParallelRequests?: number,
-|};
+type BundlerConfig = {
+  http?: number;
+  minBundles?: number;
+  minBundleSize?: number;
+  maxParallelRequests?: number;
+};
 
-type ResolvedBundlerConfig = {|
-  minBundles: number,
-  minBundleSize: number,
-  maxParallelRequests: number,
-|};
+type ResolvedBundlerConfig = {
+  minBundles: number;
+  minBundleSize: number;
+  maxParallelRequests: number;
+};
 
 // Default options by http version.
 const HTTP_OPTIONS = {
@@ -60,19 +58,20 @@ type AssetId = string;
 
 /* BundleRoot - An asset that is the main entry of a Bundle. */
 type BundleRoot = Asset;
-export type Bundle = {|
-  uniqueKey: ?string,
-  assets: Set<Asset>,
-  internalizedAssetIds: Array<AssetId>,
-  bundleBehavior?: ?BundleBehavior,
-  needsStableName: boolean,
-  mainEntryAsset: ?Asset,
-  size: number,
-  sourceBundles: Set<NodeId>,
-  target: Target,
-  env: Environment,
-  type: string,
-|};
+
+export type Bundle = {
+  uniqueKey: string | undefined | null;
+  assets: Set<Asset>;
+  internalizedAssetIds: Array<AssetId>;
+  bundleBehavior?: BundleBehavior | null;
+  needsStableName: boolean;
+  mainEntryAsset: Asset | undefined | null;
+  size: number;
+  sourceBundles: Set<NodeId>;
+  target: Target;
+  env: Environment;
+  type: string;
+};
 
 const dependencyPriorityEdges = {
   sync: 1,
@@ -81,25 +80,26 @@ const dependencyPriorityEdges = {
 };
 
 type DependencyBundleGraph = ContentGraph<
-  | {|
-      value: Bundle,
-      type: 'bundle',
-    |}
-  | {|
-      value: Dependency,
-      type: 'dependency',
-    |},
-  number,
+  | {
+      value: Bundle;
+      type: 'bundle';
+    }
+  | {
+      value: Dependency;
+      type: 'dependency';
+    },
+  number
 >;
+
 // IdealGraph is the structure we will pass to decorate,
 // which mutates the assetGraph into the bundleGraph we would
 // expect from default bundler
-type IdealGraph = {|
-  dependencyBundleGraph: DependencyBundleGraph,
-  bundleGraph: Graph<Bundle | 'root'>,
-  bundleGroupBundleIds: Set<NodeId>,
-  assetReference: DefaultMap<Asset, Array<[Dependency, Bundle]>>,
-|};
+type IdealGraph = {
+  dependencyBundleGraph: DependencyBundleGraph;
+  bundleGraph: Graph<Bundle | 'root'>;
+  bundleGroupBundleIds: Set<NodeId>;
+  assetReference: DefaultMap<Asset, Array<[Dependency, Bundle]>>;
+};
 
 /**
  *
@@ -116,7 +116,7 @@ type IdealGraph = {|
  *  will have two or more distDirs, or output folders.) Then calls create IdealGraph and Decorate per target.
  *
  */
-export default (new Bundler({
+export default new Bundler({
   loadConfig({config, options}) {
     return loadBundlerConfig(config, options);
   },
@@ -133,7 +133,7 @@ export default (new Bundler({
     }
   },
   optimize() {},
-}): Bundler);
+}) as Bundler;
 
 function decorateLegacyGraph(
   idealGraph: IdealGraph,
@@ -313,7 +313,7 @@ function createIdealGraph(
   let dependencyBundleGraph: DependencyBundleGraph = new ContentGraph();
   let assetReference: DefaultMap<
     Asset,
-    Array<[Dependency, Bundle]>,
+    Array<[Dependency, Bundle]>
   > = new DefaultMap(() => []);
 
   // A Graph of Bundles and a root node (dummy string), which models only Bundles, and connections to their
@@ -328,7 +328,7 @@ function createIdealGraph(
   // ContentGraph that models bundleRoots, with parallel & async deps only to inform reachability
   let bundleRootGraph: ContentGraph<
     BundleRoot | 'root',
-    $Values<typeof bundleRootEdgeTypes>,
+    typeof bundleRootEdgeTypes[keyof typeof bundleRootEdgeTypes]
   > = new ContentGraph();
 
   let bundleGroupBundleIds: Set<NodeId> = new Set();
@@ -1212,15 +1212,15 @@ const CONFIG_SCHEMA: SchemaEntity = {
   additionalProperties: false,
 };
 
-function createBundle(opts: {|
-  uniqueKey?: string,
-  target: Target,
-  asset?: Asset,
-  env?: Environment,
-  type?: string,
-  needsStableName?: boolean,
-  bundleBehavior?: ?BundleBehavior,
-|}): Bundle {
+function createBundle(opts: {
+  uniqueKey?: string;
+  target: Target;
+  asset?: Asset;
+  env?: Environment;
+  type?: string;
+  needsStableName?: boolean;
+  bundleBehavior?: BundleBehavior | null;
+}): Bundle {
   if (opts.asset == null) {
     return {
       uniqueKey: opts.uniqueKey,

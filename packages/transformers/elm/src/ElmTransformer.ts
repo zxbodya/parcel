@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import {Transformer} from '@parcel/plugin';
 import spawn from 'cross-spawn';
 import path from 'path';
@@ -20,7 +18,7 @@ try {
   isWorker = false;
 }
 
-export default (new Transformer({
+export default new Transformer({
   loadConfig({config}) {
     return load({config});
   },
@@ -86,7 +84,7 @@ export default (new Transformer({
     asset.setCode(code);
     return [asset];
   },
-}): Transformer);
+}) as Transformer;
 
 // gather extra modules that should be added to the compilation process
 function resolveExtraSources({asset, logger}) {

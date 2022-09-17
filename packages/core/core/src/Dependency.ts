@@ -1,4 +1,3 @@
-// @flow
 import type {
   FilePath,
   Meta,
@@ -15,29 +14,34 @@ import {SpecifierType, Priority, BundleBehavior} from './types';
 import {toInternalSourceLocation} from './utils';
 import {toProjectPath} from './projectPath';
 
-type DependencyOpts = {|
-  id?: string,
-  sourcePath?: FilePath,
-  sourceAssetId?: string,
-  specifier: DependencySpecifier,
-  specifierType: $Keys<typeof SpecifierType>,
-  priority?: $Keys<typeof Priority>,
-  needsStableName?: boolean,
-  bundleBehavior?: ?IBundleBehavior,
-  isEntry?: boolean,
-  isOptional?: boolean,
-  loc?: SourceLocation,
-  env: Environment,
-  meta?: Meta,
-  resolveFrom?: FilePath,
-  range?: SemverRange,
-  target?: Target,
+type DependencyOpts = {
+  id?: string;
+  sourcePath?: FilePath;
+  sourceAssetId?: string;
+  specifier: DependencySpecifier;
+  specifierType: keyof typeof SpecifierType;
+  priority?: keyof typeof Priority;
+  needsStableName?: boolean;
+  bundleBehavior?: IBundleBehavior | null;
+  isEntry?: boolean;
+  isOptional?: boolean;
+  loc?: SourceLocation;
+  env: Environment;
+  meta?: Meta;
+  resolveFrom?: FilePath;
+  range?: SemverRange;
+  target?: Target;
   symbols?: Map<
     Symbol,
-    {|local: Symbol, loc: ?SourceLocation, isWeak: boolean, meta?: ?Meta|},
-  >,
-  pipeline?: ?string,
-|};
+    {
+      local: Symbol;
+      loc: SourceLocation | undefined | null;
+      isWeak: boolean;
+      meta?: Meta | null;
+    }
+  >;
+  pipeline?: string | null;
+};
 
 export function createDependency(
   projectRoot: FilePath,

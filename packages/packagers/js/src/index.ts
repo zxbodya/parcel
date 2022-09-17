@@ -1,4 +1,3 @@
-// @flow strict-local
 import type {Async} from '@parcel/types';
 import type SourceMap from '@parcel/source-map';
 import {Packager} from '@parcel/plugin';
@@ -9,7 +8,7 @@ import nullthrows from 'nullthrows';
 import {DevPackager} from './DevPackager';
 import {ScopeHoistingPackager} from './ScopeHoistingPackager';
 
-export default (new Packager({
+export default new Packager({
   async loadConfig({config, options}) {
     // Generate a name for the global parcelRequire function that is unique to this project.
     // This allows multiple parcel builds to coexist on the same page.
@@ -88,11 +87,13 @@ export default (new Packager({
       map,
     });
   },
-}): Packager);
+}) as Packager;
 
 async function getSourceMapSuffix(
-  getSourceMapReference: (?SourceMap) => Async<?string>,
-  map: ?SourceMap,
+  getSourceMapReference: (
+    a?: SourceMap | null,
+  ) => Async<string | undefined | null>,
+  map?: SourceMap | null,
 ): Promise<string> {
   let sourcemapReference = await getSourceMapReference(map);
   if (sourcemapReference != null) {

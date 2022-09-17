@@ -1,5 +1,3 @@
-// @flow
-
 import type {
   PackageJSON,
   FileCreateInvalidation,
@@ -20,18 +18,18 @@ for (let builtin of Module.builtinModules) {
   builtins[builtin] = true;
 }
 
-export type ModuleInfo = {|
-  moduleName: string,
-  subPath: ?string,
-  moduleDir: FilePath,
-  filePath: FilePath,
-  code?: string,
-|};
+export type ModuleInfo = {
+  moduleName: string;
+  subPath: string | undefined | null;
+  moduleDir: FilePath;
+  filePath: FilePath;
+  code?: string;
+};
 
-export type ResolverContext = {|
-  invalidateOnFileCreate: Array<FileCreateInvalidation>,
-  invalidateOnFileChange: Set<FilePath>,
-|};
+export type ResolverContext = {
+  invalidateOnFileCreate: Array<FileCreateInvalidation>;
+  invalidateOnFileChange: Set<FilePath>;
+};
 
 const NODE_MODULES = `${path.sep}node_modules${path.sep}`;
 
@@ -110,7 +108,7 @@ export class NodeResolverBase<T> {
     id: DependencySpecifier,
     sourceFile: FilePath,
     ctx: ResolverContext,
-  ): ?ResolveResult | ?ModuleInfo {
+  ): ResolveResult | undefined | null | ModuleInfo | undefined | null {
     if (this.isBuiltin(id)) {
       return {
         resolved: id,
@@ -162,7 +160,7 @@ export class NodeResolverBase<T> {
     return null;
   }
 
-  getNodeModulesPackagePath(sourceFile: FilePath): ?FilePath {
+  getNodeModulesPackagePath(sourceFile: FilePath): FilePath | undefined | null {
     // If the file is in node_modules, we can find the package.json in the root of the package
     // by slicing from the start of the string until 1-2 path segments after node_modules.
     let index = sourceFile.lastIndexOf(NODE_MODULES);

@@ -1,4 +1,3 @@
-// @flow strict-local
 import type {PostHTMLNode} from 'posthtml';
 
 import htmlnano from 'htmlnano';
@@ -7,7 +6,7 @@ import posthtml from 'posthtml';
 import path from 'path';
 import {SVG_ATTRS, SVG_TAG_NAMES} from './svgMappings';
 
-export default (new Optimizer({
+export default new Optimizer({
   async loadConfig({config, options}) {
     let userConfig = await config.getConfigFrom(
       path.join(options.projectRoot, 'index.html'),
@@ -108,7 +107,7 @@ export default (new Optimizer({
       ).html,
     };
   },
-}): Optimizer);
+}) as Optimizer;
 
 // HTML tags and attributes are case insensitive. The HTML transformer normalizes them so it can
 // more easily process any case. But SVGO requires case sensitive tags and attributes to work correctly.

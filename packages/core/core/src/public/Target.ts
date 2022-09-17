@@ -1,4 +1,3 @@
-// @flow
 import type {
   FilePath,
   Target as ITarget,
@@ -21,10 +20,10 @@ export function targetToInternalTarget(target: ITarget): TargetValue {
 }
 
 export default class Target implements ITarget {
-  #target :TargetValue ;
-  #options :ParcelOptions ;
+  #target: TargetValue;
+  #options: ParcelOptions;
 
-  constructor(target: TargetValue, options: ParcelOptions): Target {
+  constructor(target: TargetValue, options: ParcelOptions) {
     let existing = internalTargetToTarget.get(target);
     if (existing != null) {
       return existing;
@@ -37,7 +36,7 @@ export default class Target implements ITarget {
     return this;
   }
 
-  get distEntry(): ?FilePath {
+  get distEntry(): FilePath | undefined | null {
     return this.#target.distEntry;
   }
 
@@ -57,7 +56,7 @@ export default class Target implements ITarget {
     return this.#target.publicUrl;
   }
 
-  get loc(): ?SourceLocation {
+  get loc(): SourceLocation | undefined | null {
     return fromInternalSourceLocation(
       this.#options.projectRoot,
       this.#target.loc,

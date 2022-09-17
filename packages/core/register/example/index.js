@@ -1,6 +1,6 @@
 require('../');
 
-const count = require('./count.js');
+const count = require("./count");
 const number = require('./number.js');
 const something = require('something');
 

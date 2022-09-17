@@ -1,4 +1,3 @@
-// @flow strict-local
 import type {
   Async,
   FilePath,
@@ -38,29 +37,30 @@ import ParcelConfig from '../ParcelConfig';
 import {createBuildCache} from '../buildCache';
 import {toProjectPath} from '../projectPath';
 
-type ConfigMap<K, V> = {[K]: V, ...};
+type ConfigMap<K, V> = {
+  [k in K]: V;
+};
 
-export type ConfigAndCachePath = {|
-  config: ProcessedParcelConfig,
-  cachePath: string,
-|};
+export type ConfigAndCachePath = {
+  config: ProcessedParcelConfig;
+  cachePath: string;
+};
 
-type RunOpts = {|
-  input: null,
-  ...StaticRunOpts,
-|};
+type RunOpts = {
+  input: null;
+} & StaticRunOpts;
 
-export type ParcelConfigRequest = {|
-  id: string,
-  type: string,
-  input: null,
-  run: RunOpts => Async<ConfigAndCachePath>,
-|};
+export type ParcelConfigRequest = {
+  id: string;
+  type: string;
+  input: null;
+  run: (a: RunOpts) => Async<ConfigAndCachePath>;
+};
 
-type ParcelConfigChain = {|
-  config: ProcessedParcelConfig,
-  extendedFiles: Array<FilePath>,
-|};
+type ParcelConfigChain = {
+  config: ProcessedParcelConfig;
+  extendedFiles: Array<FilePath>;
+};
 
 const type = 'parcel_config_request';
 
@@ -73,10 +73,9 @@ export default function createParcelConfigRequest(): ParcelConfigRequest {
         config,
         extendedFiles,
         usedDefault,
-      }: {|
-        ...ParcelConfigChain,
-        usedDefault: boolean,
-      |} = await loadParcelConfig(
+      }: {
+        usedDefault: boolean;
+      } & ParcelConfigChain = await loadParcelConfig(
         optionsProxy(options, api.invalidateOnOptionChange),
       );
 
@@ -125,9 +124,11 @@ export function getCachedParcelConfig(
   return config;
 }
 
-export async function loadParcelConfig(
-  options: ParcelOptions,
-): Promise<{|...ParcelConfigChain, usedDefault: boolean|}> {
+export async function loadParcelConfig(options: ParcelOptions): Promise<
+  {
+    usedDefault: boolean;
+  } & ParcelConfigChain
+> {
   let parcelConfig = await resolveParcelConfig(options);
 
   if (!parcelConfig) {
@@ -137,9 +138,13 @@ export async function loadParcelConfig(
   return parcelConfig;
 }
 
-export async function resolveParcelConfig(
-  options: ParcelOptions,
-): Promise<?{|...ParcelConfigChain, usedDefault: boolean|}> {
+export async function resolveParcelConfig(options: ParcelOptions): Promise<
+  | ({
+      usedDefault: boolean;
+    } & ParcelConfigChain)
+  | undefined
+  | null
+> {
   let resolveFrom = getResolveFrom(options.inputFS, options.projectRoot);
   let configPath =
     options.config != null
@@ -246,7 +251,7 @@ export async function parseAndProcessConfig(
 
 function processPipeline(
   options: ParcelOptions,
-  pipeline: ?Array<PackageName>,
+  pipeline: Array<PackageName> | undefined | null,
   keyPath: string,
   filePath: FilePath,
 ) {
@@ -276,11 +281,11 @@ const RESERVED_PIPELINES = new Set([
 
 async function processMap(
   // $FlowFixMe
-  map: ?ConfigMap<any, any>,
+  map: ConfigMap<any, any> | undefined | null,
   keyPath: string,
   filePath: FilePath,
-  options: ParcelOptions,
   // $FlowFixMe
+  options: ParcelOptions,
 ): Promise<ConfigMap<any, any> | typeof undefined> {
   if (!map) return undefined;
 
@@ -636,8 +641,8 @@ function assertPurePipeline(
 }
 
 export function mergePipelines(
-  base: ?ExtendableParcelConfigPipeline,
-  ext: ?ExtendableParcelConfigPipeline,
+  base?: ExtendableParcelConfigPipeline | null,
+  ext?: ExtendableParcelConfigPipeline | null,
 ): ExtendableParcelConfigPipeline {
   if (ext == null) {
     return base ?? [];
@@ -662,9 +667,9 @@ export function mergePipelines(
   }
 }
 
-export function mergeMaps<K: string, V>(
-  base: ?ConfigMap<K, V>,
-  ext: ?ConfigMap<K, V>,
+export function mergeMaps<K extends string, V>(
+  base?: ConfigMap<K, V> | null,
+  ext?: ConfigMap<K, V> | null,
   merger?: (a: V, b: V) => V,
 ): ConfigMap<K, V> {
   if (!ext || Object.keys(ext).length === 0) {
@@ -679,7 +684,7 @@ export function mergeMaps<K: string, V>(
   // Add the extension options first so they have higher precedence in the output glob map
   for (let k in ext) {
     //$FlowFixMe Flow doesn't correctly infer the type. See https://github.com/facebook/flow/issues/1736.
-    let key: K = (k: any);
+    let key: K = k as any;
     res[key] =
       merger && base[key] != null ? merger(base[key], ext[key]) : ext[key];
   }
@@ -687,7 +692,7 @@ export function mergeMaps<K: string, V>(
   // Add base options that aren't defined in the extension
   for (let k in base) {
     // $FlowFixMe
-    let key: K = (k: any);
+    let key: K = k as any;
     if (res[key] == null) {
       res[key] = base[key];
     }

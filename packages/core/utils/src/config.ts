@@ -1,5 +1,3 @@
-// @flow
-
 import type {ConfigResult, File, FilePath} from '@parcel/types';
 import type {FileSystem} from '@parcel/fs';
 import ThrowableDiagnostic from '@parcel/diagnostic';
@@ -9,15 +7,15 @@ import json5 from 'json5';
 import {parse as toml} from '@iarna/toml';
 import LRU from 'lru-cache';
 
-export type ConfigOutput = {|
-  config: ConfigResult,
-  files: Array<File>,
-|};
+export type ConfigOutput = {
+  config: ConfigResult;
+  files: Array<File>;
+};
 
-export type ConfigOptions = {|
-  parse?: boolean,
-  parser?: string => any,
-|};
+export type ConfigOptions = {
+  parse?: boolean;
+  parser?: (a: string) => any;
+};
 
 const configCache = new LRU<FilePath, ConfigOutput>({max: 500});
 const resolveCache = new Map();
@@ -27,7 +25,7 @@ export function resolveConfig(
   filepath: FilePath,
   filenames: Array<FilePath>,
   projectRoot: FilePath,
-): Promise<?FilePath> {
+): Promise<FilePath | undefined | null> {
   // Cache the result of resolving config for this directory.
   // This is automatically invalidated at the end of the current build.
   let key = path.dirname(filepath) + filenames.join(',');
@@ -50,7 +48,7 @@ export function resolveConfigSync(
   filepath: FilePath,
   filenames: Array<FilePath>,
   projectRoot: FilePath,
-): ?FilePath {
+): FilePath | undefined | null {
   return fs.findAncestorFile(filenames, path.dirname(filepath), projectRoot);
 }
 
@@ -59,7 +57,7 @@ export async function loadConfig(
   filepath: FilePath,
   filenames: Array<FilePath>,
   projectRoot: FilePath,
-  opts: ?ConfigOptions,
+  opts?: ConfigOptions | null,
 ): Promise<ConfigOutput | null> {
   let parse = opts?.parse ?? true;
   let configFile = await resolveConfig(fs, filepath, filenames, projectRoot);

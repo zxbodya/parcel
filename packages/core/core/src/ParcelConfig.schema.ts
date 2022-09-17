@@ -1,4 +1,3 @@
-// @flow strict-local
 import type {PackageName} from '@parcel/types';
 import type {SchemaEntity} from '@parcel/utils';
 import assert from 'assert';
@@ -6,7 +5,7 @@ import assert from 'assert';
 // Reasoning behind this validation:
 // https://github.com/parcel-bundler/parcel/issues/3397#issuecomment-521353931
 export function validatePackageName(
-  pkg: ?PackageName,
+  pkg: PackageName | undefined | null,
   pluginType: string,
   key: string,
 ) {
@@ -113,20 +112,22 @@ export default {
     },
     bundler: {
       type: 'string',
-      __validate: (validatePluginName('bundler', 'bundler'): string => void),
+      __validate: validatePluginName('bundler', 'bundler') as (
+        a: string,
+      ) => void,
     },
-    resolvers: (pipelineSchema('resolver', 'resolvers'): SchemaEntity),
-    transformers: (mapPipelineSchema(
+    resolvers: pipelineSchema('resolver', 'resolvers') as SchemaEntity,
+    transformers: mapPipelineSchema(
       'transformer',
       'transformers',
-    ): SchemaEntity),
-    validators: (mapPipelineSchema('validator', 'validators'): SchemaEntity),
-    namers: (pipelineSchema('namer', 'namers'): SchemaEntity),
-    packagers: (mapStringSchema('packager', 'packagers'): SchemaEntity),
-    optimizers: (mapPipelineSchema('optimizer', 'optimizers'): SchemaEntity),
-    compressors: (mapPipelineSchema('compressor', 'compressors'): SchemaEntity),
-    reporters: (pipelineSchema('reporter', 'reporters'): SchemaEntity),
-    runtimes: (pipelineSchema('runtime', 'runtimes'): SchemaEntity),
+    ) as SchemaEntity,
+    validators: mapPipelineSchema('validator', 'validators') as SchemaEntity,
+    namers: pipelineSchema('namer', 'namers') as SchemaEntity,
+    packagers: mapStringSchema('packager', 'packagers') as SchemaEntity,
+    optimizers: mapPipelineSchema('optimizer', 'optimizers') as SchemaEntity,
+    compressors: mapPipelineSchema('compressor', 'compressors') as SchemaEntity,
+    reporters: pipelineSchema('reporter', 'reporters') as SchemaEntity,
+    runtimes: pipelineSchema('runtime', 'runtimes') as SchemaEntity,
     filePath: {
       type: 'string',
     },

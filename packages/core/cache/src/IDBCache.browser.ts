@@ -1,4 +1,3 @@
-// @flow strict-local
 import type {Cache} from './types';
 
 import {Readable} from 'stream';
@@ -30,7 +29,7 @@ export class IDBCache implements Cache {
     return Promise.resolve();
   }
 
-  serialize(): {||} {
+  serialize(): {} {
     return {
       /*::...null*/
     };
@@ -44,7 +43,7 @@ export class IDBCache implements Cache {
     return Promise.resolve(this.store.get(key) != null);
   }
 
-  async get<T>(key: string): Promise<?T> {
+  async get<T>(key: string): Promise<T | undefined | null> {
     let data = await (await this.store).get(STORE_NAME, key);
     if (data == null) {
       return null;
@@ -53,7 +52,7 @@ export class IDBCache implements Cache {
     return Promise.resolve(deserialize(data));
   }
 
-  async set(key: string, value: mixed): Promise<void> {
+  async set(key: string, value: unknown): Promise<void> {
     await (await this.store).put(STORE_NAME, serialize(value), key);
   }
 
@@ -97,7 +96,7 @@ export class IDBCache implements Cache {
     await (await this.store).put(STORE_NAME, data, key);
   }
 
-  async getBuffer(key: string): Promise<?Buffer> {
+  async getBuffer(key: string): Promise<Buffer | undefined | null> {
     let data = await (await this.store).get(STORE_NAME, key);
     if (data == null) {
       return null;

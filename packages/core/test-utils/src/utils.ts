@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {
   Asset,
   BuildEvent,
@@ -34,7 +32,7 @@ import {makeDeferredWithPromise, normalizeSeparators} from '@parcel/utils';
 import _chalk from 'chalk';
 import resolve from 'resolve';
 
-export const workerFarm = (createWorkerFarm(): WorkerFarm);
+export const workerFarm = createWorkerFarm() as WorkerFarm;
 export const inputFS: NodeFS = new NodeFS();
 export let outputFS: MemoryFS = new MemoryFS(workerFarm);
 export let overlayFS: OverlayFS = new OverlayFS(outputFS, inputFS);
@@ -67,11 +65,14 @@ console.warn = (...args) => {
   // eslint-disable-next-line no-console
   console.error(warning(...args));
 };
+
 /* eslint-enable no-console */
 
-type ExternalModules = {|
-  [name: string]: (vm$Context) => {[string]: mixed},
-|};
+type ExternalModules = {
+  [name: string]: (a: vm$Context) => {
+    [x: string]: unknown;
+  };
+};
 
 export function sleep(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -106,7 +107,7 @@ If you don't know how, check here: https://bit.ly/2UmWsbD
 
 export function getParcelOptions(
   entries: FilePath | Array<FilePath>,
-  opts?: $Shape<InitialParcelOptions>,
+  opts?: Partial<InitialParcelOptions>,
 ): InitialParcelOptions {
   return mergeParcelOptions(
     {
@@ -137,7 +138,7 @@ export function getParcelOptions(
 
 export function bundler(
   entries: FilePath | Array<FilePath>,
-  opts?: $Shape<InitialParcelOptions>,
+  opts?: Partial<InitialParcelOptions>,
 ): Parcel {
   return new Parcel(getParcelOptions(entries, opts));
 }
@@ -145,7 +146,7 @@ export function bundler(
 export function findAsset(
   bundleGraph: BundleGraph<PackagedBundle>,
   assetFileName: string,
-): ?Asset {
+): Asset | undefined | null {
   return bundleGraph.traverseBundles((bundle, context, actions) => {
     let asset = bundle.traverseAssets((asset, context, actions) => {
       if (path.basename(asset.filePath) === assetFileName) {
@@ -260,8 +261,12 @@ export async function getNextBuildSuccess(
 }
 
 export function shallowEqual(
-  a: $Shape<{|+[string]: mixed|}>,
-  b: $Shape<{|+[string]: mixed|}>,
+  a: Partial<{
+    readonly [x: string]: unknown;
+  }>,
+  b: Partial<{
+    readonly [x: string]: unknown;
+  }>,
 ): boolean {
   if (Object.keys(a).length !== Object.keys(b).length) {
     return false;
@@ -276,16 +281,19 @@ export function shallowEqual(
   return true;
 }
 
-type RunOpts = {require?: boolean, strict?: boolean, ...};
+type RunOpts = {
+  require?: boolean;
+  strict?: boolean;
+};
 
 export async function runBundles(
   bundleGraph: BundleGraph<PackagedBundle>,
   parent: PackagedBundle,
   bundles: Array<[string, PackagedBundle]>,
-  globals: mixed,
+  globals: unknown,
   opts: RunOpts = {},
   externalModules?: ExternalModules,
-): Promise<mixed> {
+): Promise<unknown> {
   let entryAsset = nullthrows(
     bundles
       .map(([, b]) => b.getMainEntry() || b.getEntryAssets()[0])
@@ -420,10 +428,10 @@ export async function runBundles(
 export async function runBundle(
   bundleGraph: BundleGraph<PackagedBundle>,
   bundle: PackagedBundle,
-  globals: mixed,
+  globals: unknown,
   opts: RunOpts = {},
   externalModules?: ExternalModules,
-): Promise<mixed> {
+): Promise<unknown> {
   if (bundle.type === 'html') {
     let code = await overlayFS.readFile(nullthrows(bundle.filePath), 'utf8');
     let ast = postHtmlParse(code, {
@@ -475,10 +483,10 @@ export async function runBundle(
 
 export function run(
   bundleGraph: BundleGraph<PackagedBundle>,
-  globals: mixed,
+  globals: unknown,
   opts: RunOpts = {},
-  externalModules?: ExternalModules,
   // $FlowFixMe[unclear-type]
+  externalModules?: ExternalModules,
 ): Promise<any> {
   let bundle = nullthrows(
     bundleGraph.getBundles().find(b => b.type === 'js' || b.type === 'html'),
@@ -488,11 +496,11 @@ export function run(
 
 export function assertBundles(
   bundleGraph: BundleGraph<PackagedBundle>,
-  expectedBundles: Array<{|
-    name?: string | RegExp,
-    type?: string,
-    assets: Array<string>,
-  |}>,
+  expectedBundles: Array<{
+    name?: string | RegExp;
+    type?: string;
+    assets: Array<string>;
+  }>,
 ) {
   let actualBundles = [];
   const byAlphabet = (a, b) => (a.toLowerCase() < b.toLowerCase() ? -1 : 1);
@@ -595,11 +603,11 @@ export function normaliseNewlines(text: string): string {
 
 function prepareBrowserContext(
   bundle: PackagedBundle,
-  globals: mixed,
-): {|
-  ctx: vm$Context,
-  promises: Array<Promise<mixed>>,
-|} {
+  globals: unknown,
+): {
+  ctx: vm$Context;
+  promises: Array<Promise<unknown>>;
+} {
   // for testing dynamic imports
   const fakeElement = {
     remove() {},
@@ -791,11 +799,11 @@ function createWorkerClass(filePath: FilePath) {
 
 function prepareWorkerContext(
   filePath: FilePath,
-  globals: mixed,
-): {|
-  ctx: vm$Context,
-  promises: Array<Promise<mixed>>,
-|} {
+  globals: unknown,
+): {
+  ctx: vm$Context;
+  promises: Array<Promise<unknown>>;
+} {
   let promises = [];
 
   var exports = {};
@@ -967,7 +975,11 @@ export async function runESM(
   fs: FileSystem,
   externalModules: ExternalModules = {},
   requireExtensions: boolean = false,
-): Promise<Array<{|[string]: mixed|}>> {
+): Promise<
+  Array<{
+    [x: string]: unknown;
+  }>
+> {
   let id = instanceId++;
   let cache = new Map();
   function load(specifier, referrer, code = null) {
@@ -1073,10 +1085,10 @@ export async function runESM(
 
 export async function assertESMExports(
   b: BundleGraph<PackagedBundle>,
-  expected: mixed,
+  expected: unknown,
   externalModules?: ExternalModules,
   // $FlowFixMe[unclear-type]
-  evaluate: ?({|[string]: any|}) => mixed,
+  evaluate?: ((a: {[x: string]: any}) => unknown) | null,
 ) {
   let parcelResult = await run(b, undefined, undefined, externalModules);
 

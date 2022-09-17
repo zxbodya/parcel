@@ -1,4 +1,3 @@
-// @flow
 import {validateConfig} from './validateConfig';
 import {Transformer} from '@parcel/plugin';
 import nullthrows from 'nullthrows';
@@ -20,7 +19,7 @@ const FORMATS = new Map([
 
 let isSharpLoadedOnMainThread = false;
 
-export default (new Transformer({
+export default new Transformer({
   async loadConfig({config}) {
     let configFile: any = await config.getConfig(
       ['sharp.config.json'], // '.sharprc', '.sharprc.json'
@@ -117,4 +116,4 @@ export default (new Transformer({
 
     return [asset];
   },
-}): Transformer);
+}) as Transformer;

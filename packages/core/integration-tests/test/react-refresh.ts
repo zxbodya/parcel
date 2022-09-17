@@ -1,4 +1,3 @@
-// @flow strict-local
 import assert from 'assert';
 import invariant from 'assert';
 import path from 'path';

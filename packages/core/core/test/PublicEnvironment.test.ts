@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import assert from 'assert';
 import {createEnvironment} from '../src/Environment';
 import PublicEnvironment from '../src/public/Environment';

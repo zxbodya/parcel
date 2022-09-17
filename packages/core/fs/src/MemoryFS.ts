@@ -1,5 +1,3 @@
-// @flow
-
 import type {FileSystem, FileOptions, ReaddirOptions, Encoding} from './types';
 import type {FilePath} from '@parcel/types';
 import type {
@@ -22,23 +20,23 @@ const instances: Map<number, MemoryFS> = new Map();
 let id = 0;
 
 type HandleFunction = (...args: Array<any>) => any;
+
 type SerializedMemoryFS = {
-  id: number,
-  handle: any,
-  dirs: Map<FilePath, Directory>,
-  files: Map<FilePath, File>,
-  symlinks: Map<FilePath, FilePath>,
-  ...
+  id: number;
+  handle: any;
+  dirs: Map<FilePath, Directory>;
+  files: Map<FilePath, File>;
+  symlinks: Map<FilePath, FilePath>;
 };
 
-type WorkerEvent = {|
-  type: 'writeFile' | 'unlink' | 'mkdir' | 'symlink',
-  path: FilePath,
-  entry?: Entry,
-  target?: FilePath,
-|};
+type WorkerEvent = {
+  type: 'writeFile' | 'unlink' | 'mkdir' | 'symlink';
+  path: FilePath;
+  entry?: Entry;
+  target?: FilePath;
+};
 
-type ResolveFunction = () => mixed;
+type ResolveFunction = () => unknown;
 
 export class MemoryFS implements FileSystem {
   dirs: Map<FilePath, Directory>;
@@ -98,7 +96,7 @@ export class MemoryFS implements FileSystem {
   serialize(): SerializedMemoryFS {
     if (!this.handle) {
       this.handle = this.farm.createReverseHandle(
-        (fn: string, args: Array<mixed>) => {
+        (fn: string, args: Array<unknown>) => {
           // $FlowFixMe
           return this[fn](...args);
         },
@@ -158,7 +156,7 @@ export class MemoryFS implements FileSystem {
   async writeFile(
     filePath: FilePath,
     contents: Buffer | string,
-    options?: ?FileOptions,
+    options?: FileOptions | null,
   ) {
     filePath = this._normalizePath(filePath);
     if (this.dirs.has(filePath)) {
@@ -483,7 +481,10 @@ export class MemoryFS implements FileSystem {
     return new ReadStream(this, filePath);
   }
 
-  createWriteStream(filePath: FilePath, options: ?FileOptions): WriteStream {
+  createWriteStream(
+    filePath: FilePath,
+    options?: FileOptions | null,
+  ): WriteStream {
     return new WriteStream(this, filePath, options);
   }
 
@@ -567,7 +568,7 @@ export class MemoryFS implements FileSystem {
 
   watch(
     dir: FilePath,
-    fn: (err: ?Error, events: Array<Event>) => mixed,
+    fn: (err: Error | undefined | null, events: Array<Event>) => unknown,
     opts: WatcherOptions,
   ): Promise<AsyncSubscription> {
     dir = this._normalizePath(dir);
@@ -620,25 +621,28 @@ export class MemoryFS implements FileSystem {
     fileNames: Array<string>,
     fromDir: FilePath,
     root: FilePath,
-  ): ?FilePath {
+  ): FilePath | undefined | null {
     return findAncestorFile(this, fileNames, fromDir, root);
   }
 
-  findNodeModule(moduleName: string, fromDir: FilePath): ?FilePath {
+  findNodeModule(
+    moduleName: string,
+    fromDir: FilePath,
+  ): FilePath | undefined | null {
     return findNodeModule(this, moduleName, fromDir);
   }
 
-  findFirstFile(filePaths: Array<FilePath>): ?FilePath {
+  findFirstFile(filePaths: Array<FilePath>): FilePath | undefined | null {
     return findFirstFile(this, filePaths);
   }
 }
 
 class Watcher {
-  fn: (err: ?Error, events: Array<Event>) => mixed;
+  fn: (err: Error | undefined | null, events: Array<Event>) => unknown;
   options: WatcherOptions;
 
   constructor(
-    fn: (err: ?Error, events: Array<Event>) => mixed,
+    fn: (err: Error | undefined | null, events: Array<Event>) => unknown,
     options: WatcherOptions,
   ) {
     this.fn = fn;
@@ -706,10 +710,14 @@ class ReadStream extends Readable {
 class WriteStream extends Writable {
   fs: FileSystem;
   filePath: FilePath;
-  options: ?FileOptions;
+  options: FileOptions | undefined | null;
   buffer: Buffer;
 
-  constructor(fs: FileSystem, filePath: FilePath, options: ?FileOptions) {
+  constructor(
+    fs: FileSystem,
+    filePath: FilePath,
+    options?: FileOptions | null,
+  ) {
     super({emitClose: true, autoDestroy: true});
     this.fs = fs;
     this.filePath = filePath;
@@ -842,7 +850,12 @@ class Dirent {
   name: string;
   #mode: number;
 
-  constructor(name: string, entry: interface {mode: number}) {
+  constructor(
+    name: string,
+    entry: {
+      mode: number;
+    },
+  ) {
     this.name = name;
     this.#mode = entry.mode;
   }
@@ -969,7 +982,7 @@ class WorkerFS extends MemoryFS {
   writeFile(
     filePath: FilePath,
     contents: Buffer | string,
-    options: ?FileOptions,
+    options?: FileOptions | null,
   ): Promise<void> {
     super.writeFile(filePath, contents, options);
     let buffer = makeShared(contents);

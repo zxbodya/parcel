@@ -1,5 +1,3 @@
-// @flow strict-local
-
 export type {NodeId, ContentKey, Edge} from './types';
 export type {GraphOpts} from './Graph';
 export type {ContentGraphOpts, SerializedContentGraph} from './ContentGraph';

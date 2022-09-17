@@ -1,4 +1,3 @@
-// @flow
 import type {BundleGraph, FilePath, PackagedBundle} from '@parcel/types';
 import type {FileSystem} from '@parcel/fs';
 

@@ -1,4 +1,3 @@
-// @flow
 import type {
   Dependency as IDependency,
   Environment as IEnvironment,
@@ -30,7 +29,7 @@ const internalDependencyToDependency: WeakMap<InternalDependency, Dependency> =
   new WeakMap();
 const _dependencyToInternalDependency: WeakMap<
   IDependency,
-  InternalDependency,
+  InternalDependency
 > = new WeakMap();
 export function dependencyToInternalDependency(
   dependency: IDependency,
@@ -39,10 +38,10 @@ export function dependencyToInternalDependency(
 }
 
 export default class Dependency implements IDependency {
-  #dep :InternalDependency ;
-  #options :ParcelOptions ;
+  #dep: InternalDependency;
+  #options: ParcelOptions;
 
-  constructor(dep: InternalDependency, options: ParcelOptions): Dependency {
+  constructor(dep: InternalDependency, options: ParcelOptions) {
     let existing = internalDependencyToDependency.get(dep);
     if (existing != null) {
       return existing;
@@ -80,7 +79,7 @@ export default class Dependency implements IDependency {
     return this.#dep.needsStableName;
   }
 
-  get bundleBehavior(): ?BundleBehavior {
+  get bundleBehavior(): BundleBehavior | undefined | null {
     let bundleBehavior = this.#dep.bundleBehavior;
     return bundleBehavior == null ? null : BundleBehaviorNames[bundleBehavior];
   }
@@ -93,7 +92,7 @@ export default class Dependency implements IDependency {
     return this.#dep.isOptional;
   }
 
-  get loc(): ?SourceLocation {
+  get loc(): SourceLocation | undefined | null {
     return fromInternalSourceLocation(this.#options.projectRoot, this.#dep.loc);
   }
 
@@ -109,37 +108,37 @@ export default class Dependency implements IDependency {
     return new MutableDependencySymbols(this.#options, this.#dep);
   }
 
-  get target(): ?Target {
+  get target(): Target | undefined | null {
     let target = this.#dep.target;
     return target ? new Target(target, this.#options) : null;
   }
 
-  get sourceAssetId(): ?string {
+  get sourceAssetId(): string | undefined | null {
     // TODO: does this need to be public?
     return this.#dep.sourceAssetId;
   }
 
-  get sourcePath(): ?FilePath {
+  get sourcePath(): FilePath | undefined | null {
     // TODO: does this need to be public?
     return fromProjectPath(this.#options.projectRoot, this.#dep.sourcePath);
   }
 
-  get sourceAssetType(): ?string {
+  get sourceAssetType(): string | undefined | null {
     return this.#dep.sourceAssetType;
   }
 
-  get resolveFrom(): ?string {
+  get resolveFrom(): string | undefined | null {
     return fromProjectPath(
       this.#options.projectRoot,
       this.#dep.resolveFrom ?? this.#dep.sourcePath,
     );
   }
 
-  get range(): ?string {
+  get range(): string | undefined | null {
     return this.#dep.range;
   }
 
-  get pipeline(): ?string {
+  get pipeline(): string | undefined | null {
     return this.#dep.pipeline;
   }
 }

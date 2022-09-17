@@ -1,4 +1,3 @@
-// @flow strict-local
 import path from 'path';
 
 import {normalizeSeparators} from './path';
@@ -6,7 +5,9 @@ import {normalizeSeparators} from './path';
 /**
  * Returns the package name and the optional subpath
  */
-export default function getModuleParts(_name: string): [string, ?string] {
+export default function getModuleParts(
+  _name: string,
+): [string, string | undefined | null] {
   let name = path.normalize(_name);
   let splitOn = name.indexOf(path.sep);
   if (name.charAt(0) === '@') {

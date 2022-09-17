@@ -1,5 +1,3 @@
-// @flow
-
 import type {Stats} from 'fs';
 import type {FileSystem, ReaddirOptions} from './types';
 import type {FilePath} from '@parcel/types';
@@ -61,7 +59,11 @@ export class OverlayFS implements FileSystem {
     return new OverlayFS(opts.writable, opts.readable);
   }
 
-  serialize(): {|$$raw: boolean, readable: FileSystem, writable: FileSystem|} {
+  serialize(): {
+    $$raw: boolean;
+    readable: FileSystem;
+    writable: FileSystem;
+  } {
     return {
       $$raw: false,
       writable: this.writable,
@@ -69,7 +71,7 @@ export class OverlayFS implements FileSystem {
     };
   }
 
-  readFile: (...args: Array<any>) => Promise<Buffer & string & $Shape<Stats>> =
+  readFile: (...args: Array<any>) => Promise<Buffer & string & Partial<Stats>> =
     read('readFile');
   writeFile: (...args: Array<any>) => any = write('writeFile');
   async copyFile(source: FilePath, destination: FilePath) {
@@ -85,7 +87,7 @@ export class OverlayFS implements FileSystem {
       );
     }
   }
-  stat: (...args: Array<any>) => Promise<Buffer & string & $Shape<Stats>> =
+  stat: (...args: Array<any>) => Promise<Buffer & string & Partial<Stats>> =
     read('stat');
   unlink: (...args: Array<any>) => any = write('unlink');
   mkdirp: (...args: Array<any>) => any = write('mkdirp');
@@ -151,7 +153,7 @@ export class OverlayFS implements FileSystem {
 
   async watch(
     dir: FilePath,
-    fn: (err: ?Error, events: Array<Event>) => mixed,
+    fn: (err: Error | undefined | null, events: Array<Event>) => unknown,
     opts: WatcherOptions,
   ): Promise<AsyncSubscription> {
     let writableSubscription = await this.writable.watch(dir, fn, opts);
@@ -194,15 +196,18 @@ export class OverlayFS implements FileSystem {
     fileNames: Array<string>,
     fromDir: FilePath,
     root: FilePath,
-  ): ?FilePath {
+  ): FilePath | undefined | null {
     return findAncestorFile(this, fileNames, fromDir, root);
   }
 
-  findNodeModule(moduleName: string, fromDir: FilePath): ?FilePath {
+  findNodeModule(
+    moduleName: string,
+    fromDir: FilePath,
+  ): FilePath | undefined | null {
     return findNodeModule(this, moduleName, fromDir);
   }
 
-  findFirstFile(filePaths: Array<FilePath>): ?FilePath {
+  findFirstFile(filePaths: Array<FilePath>): FilePath | undefined | null {
     return findFirstFile(this, filePaths);
   }
 }

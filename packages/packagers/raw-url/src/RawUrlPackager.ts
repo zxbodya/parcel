@@ -1,10 +1,8 @@
-// @flow strict-local
-
 import assert from 'assert';
 import {Packager} from '@parcel/plugin';
 import {replaceURLReferences} from '@parcel/utils';
 
-export default (new Packager({
+export default new Packager({
   async package({bundle, bundleGraph}) {
     let assets = [];
     bundle.traverseAssets(asset => {
@@ -21,4 +19,4 @@ export default (new Packager({
     });
     return {contents};
   },
-}): Packager);
+}) as Packager;

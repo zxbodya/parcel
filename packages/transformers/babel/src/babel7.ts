@@ -1,7 +1,5 @@
-// @flow
-
 import type {MutableAsset, AST, PluginOptions} from '@parcel/types';
-import typeof * as BabelCore from '@babel/core';
+type BabelCore = typeof import('@babel/core');
 
 import invariant from 'assert';
 import {relativeUrl} from '@parcel/utils';
@@ -9,19 +7,19 @@ import {remapAstLocations} from './remapAstLocations';
 
 import packageJson from '../package.json';
 
-const transformerVersion: mixed = packageJson.version;
+const transformerVersion: unknown = packageJson.version;
 invariant(typeof transformerVersion === 'string');
 
-type Babel7TransformOptions = {|
-  asset: MutableAsset,
-  options: PluginOptions,
-  babelOptions: any,
-  additionalPlugins?: Array<any>,
-|};
+type Babel7TransformOptions = {
+  asset: MutableAsset;
+  options: PluginOptions;
+  babelOptions: any;
+  additionalPlugins?: Array<any>;
+};
 
 export default async function babel7(
   opts: Babel7TransformOptions,
-): Promise<?AST> {
+): Promise<AST | undefined | null> {
   let {asset, options, babelOptions, additionalPlugins = []} = opts;
   const babelCore: BabelCore = await options.packageManager.require(
     '@babel/core',

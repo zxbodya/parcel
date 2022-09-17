@@ -1,4 +1,3 @@
-// @flow
 import chalk from 'chalk';
 
 // double char markdown matchers

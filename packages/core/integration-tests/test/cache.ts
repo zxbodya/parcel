@@ -1,4 +1,3 @@
-// @flow
 import type {InitialParcelOptions, BuildSuccessEvent} from '@parcel/types';
 import assert from 'assert';
 import invariant from 'assert';
@@ -51,15 +50,19 @@ function runBundle(entries = 'src/index.js', opts) {
   return bundler(getEntries(entries), getOptions(opts)).run();
 }
 
-type UpdateFn = BuildSuccessEvent =>
-  | ?InitialParcelOptions
-  | Promise<?InitialParcelOptions>;
-type TestConfig = {|
-  ...InitialParcelOptions,
-  entries?: Array<string>,
-  setup?: () => void | Promise<void>,
-  update: UpdateFn,
-|};
+type UpdateFn = (
+  a: BuildSuccessEvent,
+) =>
+  | InitialParcelOptions
+  | undefined
+  | null
+  | Promise<InitialParcelOptions | undefined | null>;
+
+type TestConfig = {
+  entries?: Array<string>;
+  setup?: () => void | Promise<void>;
+  update: UpdateFn;
+} & InitialParcelOptions;
 
 async function testCache(update: UpdateFn | TestConfig, integration) {
   await overlayFS.rimraf(path.join(__dirname, '/input'));
@@ -69,7 +72,7 @@ async function testCache(update: UpdateFn | TestConfig, integration) {
   );
 
   let entries;
-  let options: ?InitialParcelOptions;
+  let options: InitialParcelOptions | undefined | null;
   if (typeof update === 'object') {
     let setup;
     ({entries, setup, update, ...options} = update);

@@ -1,13 +1,15 @@
-// @flow
-
 import type {FilePath, PluginOptions} from '@parcel/types';
 import type {PackageManager} from '@parcel/package-manager';
 
 export default async function loadExternalPlugins(
-  plugins: Array<string> | {|+[pluginName: string]: mixed|},
+  plugins:
+    | Array<string>
+    | {
+        readonly [pluginName: string]: unknown;
+      },
   relative: FilePath,
   options: PluginOptions,
-): Promise<Array<mixed>> {
+): Promise<Array<unknown>> {
   if (Array.isArray(plugins)) {
     return Promise.all(
       plugins
@@ -44,10 +46,10 @@ export default async function loadExternalPlugins(
 async function loadPlugin(
   pluginArg: string | Function,
   relative: FilePath,
-  options: mixed = {},
+  options: unknown = {},
   packageManager: PackageManager,
   shouldAutoInstall: boolean,
-): mixed {
+): unknown {
   if (typeof pluginArg !== 'string') {
     return pluginArg;
   }

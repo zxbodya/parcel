@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {AbortSignal} from 'abortcontroller-polyfill/dist/cjs-ponyfill';
 import type {Async, EnvMap} from '@parcel/types';
 import type {EventType, Options as WatcherOptions} from '@parcel/watcher';
@@ -60,70 +58,92 @@ export const requestGraphEdgeTypes = {
   dirname: 7,
 };
 
-export type RequestGraphEdgeType = $Values<typeof requestGraphEdgeTypes>;
+export type RequestGraphEdgeType =
+  typeof requestGraphEdgeTypes[keyof typeof requestGraphEdgeTypes];
 
-type RequestGraphOpts = {|
-  ...ContentGraphOpts<RequestGraphNode, RequestGraphEdgeType>,
-  invalidNodeIds: Set<NodeId>,
-  incompleteNodeIds: Set<NodeId>,
-  globNodeIds: Set<NodeId>,
-  envNodeIds: Set<NodeId>,
-  optionNodeIds: Set<NodeId>,
-  unpredicatableNodeIds: Set<NodeId>,
-  invalidateOnBuildNodeIds: Set<NodeId>,
-|};
+type RequestGraphOpts = {
+  invalidNodeIds: Set<NodeId>;
+  incompleteNodeIds: Set<NodeId>;
+  globNodeIds: Set<NodeId>;
+  envNodeIds: Set<NodeId>;
+  optionNodeIds: Set<NodeId>;
+  unpredicatableNodeIds: Set<NodeId>;
+  invalidateOnBuildNodeIds: Set<NodeId>;
+} & ContentGraphOpts<RequestGraphNode, RequestGraphEdgeType>;
 
-type SerializedRequestGraph = {|
-  ...SerializedContentGraph<RequestGraphNode, RequestGraphEdgeType>,
-  invalidNodeIds: Set<NodeId>,
-  incompleteNodeIds: Set<NodeId>,
-  globNodeIds: Set<NodeId>,
-  envNodeIds: Set<NodeId>,
-  optionNodeIds: Set<NodeId>,
-  unpredicatableNodeIds: Set<NodeId>,
-  invalidateOnBuildNodeIds: Set<NodeId>,
-|};
+type SerializedRequestGraph = {
+  invalidNodeIds: Set<NodeId>;
+  incompleteNodeIds: Set<NodeId>;
+  globNodeIds: Set<NodeId>;
+  envNodeIds: Set<NodeId>;
+  optionNodeIds: Set<NodeId>;
+  unpredicatableNodeIds: Set<NodeId>;
+  invalidateOnBuildNodeIds: Set<NodeId>;
+} & SerializedContentGraph<RequestGraphNode, RequestGraphEdgeType>;
 
-type FileNode = {|id: ContentKey, +type: 'file', value: InternalFile|};
-type GlobNode = {|id: ContentKey, +type: 'glob', value: InternalGlob|};
-type FileNameNode = {|
-  id: ContentKey,
-  +type: 'file_name',
-  value: string,
-|};
-type EnvNode = {|
-  id: ContentKey,
-  +type: 'env',
-  value: {|key: string, value: string | void|},
-|};
+type FileNode = {
+  id: ContentKey;
+  readonly type: 'file';
+  value: InternalFile;
+};
 
-type OptionNode = {|
-  id: ContentKey,
-  +type: 'option',
-  value: {|key: string, hash: string|},
-|};
+type GlobNode = {
+  id: ContentKey;
+  readonly type: 'glob';
+  value: InternalGlob;
+};
 
-type Request<TInput, TResult> = {|
-  id: string,
-  +type: string,
-  input: TInput,
-  run: ({|input: TInput, ...StaticRunOpts|}) => Async<TResult>,
-|};
+type FileNameNode = {
+  id: ContentKey;
+  readonly type: 'file_name';
+  value: string;
+};
 
-type StoredRequest = {|
-  id: string,
-  +type: string,
-  result?: mixed,
-  resultCacheKey?: ?string,
-|};
+type EnvNode = {
+  id: ContentKey;
+  readonly type: 'env';
+  value: {
+    key: string;
+    value: string | void;
+  };
+};
+
+type OptionNode = {
+  id: ContentKey;
+  readonly type: 'option';
+  value: {
+    key: string;
+    hash: string;
+  };
+};
+
+type Request<TInput, TResult> = {
+  id: string;
+  readonly type: string;
+  input: TInput;
+  run: (
+    a: {
+      input: TInput;
+    } & StaticRunOpts,
+  ) => Async<TResult>;
+};
+
+type StoredRequest = {
+  id: string;
+  readonly type: string;
+  result?: unknown;
+  resultCacheKey?: string | null;
+};
 
 type InvalidateReason = number;
-type RequestNode = {|
-  id: ContentKey,
-  +type: 'request',
-  value: StoredRequest,
-  invalidateReason: InvalidateReason,
-|};
+
+type RequestNode = {
+  id: ContentKey;
+  readonly type: 'request';
+  value: StoredRequest;
+  invalidateReason: InvalidateReason;
+};
+
 type RequestGraphNode =
   | RequestNode
   | FileNode
@@ -132,36 +152,36 @@ type RequestGraphNode =
   | EnvNode
   | OptionNode;
 
-export type RunAPI = {|
-  invalidateOnFileCreate: InternalFileCreateInvalidation => void,
-  invalidateOnFileDelete: ProjectPath => void,
-  invalidateOnFileUpdate: ProjectPath => void,
-  invalidateOnStartup: () => void,
-  invalidateOnBuild: () => void,
-  invalidateOnEnvChange: string => void,
-  invalidateOnOptionChange: string => void,
-  getInvalidations(): Array<RequestInvalidation>,
-  storeResult: (result: mixed, cacheKey?: string) => void,
-  getRequestResult<T>(contentKey: ContentKey): Async<?T>,
-  getPreviousResult<T>(ifMatch?: string): Async<?T>,
-  getSubRequests(): Array<StoredRequest>,
-  canSkipSubrequest(ContentKey): boolean,
+export type RunAPI = {
+  invalidateOnFileCreate: (a: InternalFileCreateInvalidation) => void;
+  invalidateOnFileDelete: (a: ProjectPath) => void;
+  invalidateOnFileUpdate: (a: ProjectPath) => void;
+  invalidateOnStartup: () => void;
+  invalidateOnBuild: () => void;
+  invalidateOnEnvChange: (a: string) => void;
+  invalidateOnOptionChange: (a: string) => void;
+  getInvalidations(): Array<RequestInvalidation>;
+  storeResult: (result: unknown, cacheKey?: string) => void;
+  getRequestResult<T>(contentKey: ContentKey): Async<T | undefined | null>;
+  getPreviousResult<T>(ifMatch?: string): Async<T | undefined | null>;
+  getSubRequests(): Array<StoredRequest>;
+  canSkipSubrequest(a: ContentKey): boolean;
   runRequest: <TInput, TResult>(
     subRequest: Request<TInput, TResult>,
     opts?: RunRequestOpts,
-  ) => Async<TResult>,
-|};
+  ) => Async<TResult>;
+};
 
-type RunRequestOpts = {|
-  force: boolean,
-|};
+type RunRequestOpts = {
+  force: boolean;
+};
 
-export type StaticRunOpts = {|
-  farm: WorkerFarm,
-  options: ParcelOptions,
-  api: RunAPI,
-  invalidateReason: InvalidateReason,
-|};
+export type StaticRunOpts = {
+  farm: WorkerFarm;
+  options: ParcelOptions;
+  api: RunAPI;
+  invalidateReason: InvalidateReason;
+};
 
 const nodeFromFilePath = (filePath: ProjectPath): RequestGraphNode => ({
   id: fromProjectPathRelative(filePath),
@@ -191,15 +211,17 @@ const nodeFromRequest = (request: StoredRequest): RequestGraphNode => ({
 const nodeFromEnv = (env: string, value: string | void): RequestGraphNode => ({
   id: 'env:' + env,
   type: 'env',
+
   value: {
     key: env,
     value,
   },
 });
 
-const nodeFromOption = (option: string, value: mixed): RequestGraphNode => ({
+const nodeFromOption = (option: string, value: unknown): RequestGraphNode => ({
   id: 'option:' + option,
   type: 'option',
+
   value: {
     key: option,
     hash: hashFromOption(value),
@@ -208,7 +230,7 @@ const nodeFromOption = (option: string, value: mixed): RequestGraphNode => ({
 
 export class RequestGraph extends ContentGraph<
   RequestGraphNode,
-  RequestGraphEdgeType,
+  RequestGraphEdgeType
 > {
   invalidNodeIds: Set<NodeId> = new Set();
   incompleteNodeIds: Set<NodeId> = new Set();
@@ -550,7 +572,7 @@ export class RequestGraph extends ContentGraph<
   invalidateOnOptionChange(
     requestNodeId: NodeId,
     option: string,
-    value: mixed,
+    value: unknown,
   ) {
     let optionNode = nodeFromOption(option, value);
     let optionNodeId = this.addNode(optionNode);
@@ -693,7 +715,10 @@ export class RequestGraph extends ContentGraph<
   }
 
   respondToFSEvents(
-    events: Array<{|path: ProjectPath, type: EventType|}>,
+    events: Array<{
+      path: ProjectPath;
+      type: EventType;
+    }>,
   ): boolean {
     let didInvalidate = false;
     for (let {path: _filePath, type} of events) {
@@ -800,17 +825,17 @@ export default class RequestTracker {
   graph: RequestGraph;
   farm: WorkerFarm;
   options: ParcelOptions;
-  signal: ?AbortSignal;
+  signal: AbortSignal | undefined | null;
 
   constructor({
     graph,
     farm,
     options,
-  }: {|
-    graph?: RequestGraph,
-    farm: WorkerFarm,
-    options: ParcelOptions,
-  |}) {
+  }: {
+    graph?: RequestGraph;
+    farm: WorkerFarm;
+    options: ParcelOptions;
+  }) {
     this.graph = graph || new RequestGraph();
     this.farm = farm;
     this.options = options;
@@ -821,10 +846,10 @@ export default class RequestTracker {
     this.signal = signal;
   }
 
-  startRequest(request: StoredRequest): {|
-    requestNodeId: NodeId,
-    deferred: Deferred<boolean>,
-  |} {
+  startRequest(request: StoredRequest): {
+    requestNodeId: NodeId;
+    deferred: Deferred<boolean>;
+  } {
     let didPreviouslyExist = this.graph.hasContentKey(request.id);
     let requestNodeId;
     if (didPreviouslyExist) {
@@ -846,7 +871,7 @@ export default class RequestTracker {
   }
 
   // If a cache key is provided, the result will be removed from the node and stored in a separate cache entry
-  storeResult(nodeId: NodeId, result: mixed, cacheKey: ?string) {
+  storeResult(nodeId: NodeId, result: unknown, cacheKey?: string | null) {
     let node = this.graph.getNode(nodeId);
     if (node && node.type === 'request') {
       node.value.result = result;
@@ -865,7 +890,7 @@ export default class RequestTracker {
   async getRequestResult<T>(
     contentKey: ContentKey,
     ifMatch?: string,
-  ): Async<?T> {
+  ): Async<T | undefined | null> {
     let node = nullthrows(this.graph.getNodeByContentKey(contentKey));
     invariant(node.type === 'request');
 
@@ -875,7 +900,7 @@ export default class RequestTracker {
 
     if (node.value.result != undefined) {
       // $FlowFixMe
-      let result: T = (node.value.result: any);
+      let result: T = node.value.result as any;
       return result;
     } else if (node.value.resultCacheKey != null && ifMatch == null) {
       let key = node.value.resultCacheKey;
@@ -909,7 +934,10 @@ export default class RequestTracker {
   }
 
   respondToFSEvents(
-    events: Array<{|path: ProjectPath, type: EventType|}>,
+    events: Array<{
+      path: ProjectPath;
+      type: EventType;
+    }>,
   ): boolean {
     return this.graph.respondToFSEvents(events);
   }
@@ -937,7 +965,7 @@ export default class RequestTracker {
 
   async runRequest<TInput, TResult>(
     request: Request<TInput, TResult>,
-    opts?: ?RunRequestOpts,
+    opts?: RunRequestOpts | null,
   ): Async<TResult> {
     let requestId = this.graph.hasContentKey(request.id)
       ? this.graph.getNodeIdByContentKey(request.id)
@@ -1004,7 +1032,10 @@ export default class RequestTracker {
   createAPI(
     requestId: NodeId,
     previousInvalidations: Array<RequestInvalidation>,
-  ): {|api: RunAPI, subRequestContentKeys: Set<ContentKey>|} {
+  ): {
+    api: RunAPI;
+    subRequestContentKeys: Set<ContentKey>;
+  } {
     let subRequestContentKeys = new Set<ContentKey>();
     let api: RunAPI = {
       invalidateOnFileCreate: input =>
@@ -1028,11 +1059,12 @@ export default class RequestTracker {
         this.storeResult(requestId, result, cacheKey);
       },
       getSubRequests: () => this.graph.getSubRequests(requestId),
-      getPreviousResult: <T>(ifMatch?: string): Async<?T> => {
+      getPreviousResult: <T>(ifMatch?: string): Async<T | undefined | null> => {
         let contentKey = nullthrows(this.graph.getNode(requestId)?.id);
         return this.getRequestResult<T>(contentKey, ifMatch);
       },
-      getRequestResult: <T>(id): Async<?T> => this.getRequestResult<T>(id),
+      getRequestResult: <T>(id): Async<T | undefined | null> =>
+        this.getRequestResult<T>(id),
       canSkipSubrequest: contentKey => {
         if (
           this.graph.hasContentKey(contentKey) &&
@@ -1103,10 +1135,10 @@ export default class RequestTracker {
   static async init({
     farm,
     options,
-  }: {|
-    farm: WorkerFarm,
-    options: ParcelOptions,
-  |}): Async<RequestTracker> {
+  }: {
+    farm: WorkerFarm;
+    options: ParcelOptions;
+  }): Async<RequestTracker> {
     let graph = await loadRequestGraph(options);
     return new RequestTracker({farm, options, graph});
   }

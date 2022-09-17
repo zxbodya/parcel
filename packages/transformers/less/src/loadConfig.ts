@@ -1,17 +1,12 @@
-// @flow
 import type {Config} from '@parcel/types';
 import path from 'path';
 
-type ConfigResult = {|
-  isStatic: boolean,
-  config: any,
-|};
+type ConfigResult = {
+  isStatic: boolean;
+  config: any;
+};
 
-export async function load({
-  config,
-}: {|
-  config: Config,
-|}): Promise<ConfigResult> {
+export async function load({config}: {config: Config}): Promise<ConfigResult> {
   let configFile = await config.getConfig(
     ['.lessrc', '.lessrc.js', '.lessrc.cjs'],
     {

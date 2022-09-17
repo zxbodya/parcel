@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {PackageInstaller, InstallerOptions} from './types';
 
 import commandExists from 'command-exists';
@@ -18,50 +16,63 @@ const PNPM_CMD = 'pnpm';
 
 type LogLevel = 'error' | 'warn' | 'info' | 'debug';
 
-type ErrorLog = {|
-  err: {|
-    message: string,
-    code: string,
-    stack: string,
-  |},
-|};
+type ErrorLog = {
+  err: {
+    message: string;
+    code: string;
+    stack: string;
+  };
+};
 
 type PNPMLog =
-  | {|
-      +name: 'pnpm:progress',
-      packageId: string,
-      status: 'fetched' | 'found_in_store' | 'resolved',
-    |}
-  | {|
-      +name: 'pnpm:root',
-      added?: {|
-        id?: string,
-        name: string,
-        realName: string,
-        version?: string,
-        dependencyType?: 'prod' | 'dev' | 'optional',
-        latest?: string,
-        linkedFrom?: string,
-      |},
-      removed?: {|
-        name: string,
-        version?: string,
-        dependencyType?: 'prod' | 'dev' | 'optional',
-      |},
-    |}
-  | {|+name: 'pnpm:importing', from: string, method: string, to: string|}
-  | {|+name: 'pnpm:link', target: string, link: string|}
-  | {|+name: 'pnpm:stats', prefix: string, removed?: number, added?: number|};
+  | {
+      readonly name: 'pnpm:progress';
+      packageId: string;
+      status: 'fetched' | 'found_in_store' | 'resolved';
+    }
+  | {
+      readonly name: 'pnpm:root';
+      added?: {
+        id?: string;
+        name: string;
+        realName: string;
+        version?: string;
+        dependencyType?: 'prod' | 'dev' | 'optional';
+        latest?: string;
+        linkedFrom?: string;
+      };
+      removed?: {
+        name: string;
+        version?: string;
+        dependencyType?: 'prod' | 'dev' | 'optional';
+      };
+    }
+  | {
+      readonly name: 'pnpm:importing';
+      from: string;
+      method: string;
+      to: string;
+    }
+  | {
+      readonly name: 'pnpm:link';
+      target: string;
+      link: string;
+    }
+  | {
+      readonly name: 'pnpm:stats';
+      prefix: string;
+      removed?: number;
+      added?: number;
+    };
 
-type PNPMResults = {|
-  level: LogLevel,
-  prefix?: string,
-  message?: string,
-  ...ErrorLog,
-  ...PNPMLog,
-|};
+type PNPMResults = {
+  level: LogLevel;
+  prefix?: string;
+  message?: string;
+} & ErrorLog &
+  PNPMLog;
 
-let hasPnpm: ?boolean;
+let hasPnpm: boolean | undefined | null;
 export class Pnpm implements PackageInstaller {
   static async exists(): Promise<boolean> {
     if (hasPnpm != null) {

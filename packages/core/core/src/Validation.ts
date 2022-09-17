@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {WorkerApi} from '@parcel/workers';
 import type {AssetGroup, ParcelOptions, ReportFn} from './types';
 import type {Validator, ValidateResult} from '@parcel/types';
@@ -17,29 +15,33 @@ import PluginOptions from './public/PluginOptions';
 import summarizeRequest from './summarizeRequest';
 import {fromProjectPath, fromProjectPathRelative} from './projectPath';
 
-export type ValidationOpts = {|
-  config: ParcelConfig,
+export type ValidationOpts = {
+  config: ParcelConfig;
   /**
    * If true, this Validation instance will run all validators that implement the single-threaded "validateAll" method.
    * If falsy, it will run validators that implement the one-asset-at-a-time "validate" method.
    */
-  dedicatedThread?: boolean,
-  options: ParcelOptions,
-  requests: AssetGroup[],
-  report: ReportFn,
-  workerApi?: WorkerApi,
-|};
+  dedicatedThread?: boolean;
+  options: ParcelOptions;
+  requests: AssetGroup[];
+  report: ReportFn;
+  workerApi?: WorkerApi;
+};
 
 export default class Validation {
-  allAssets: {[validatorName: string]: UncommittedAsset[], ...} = {};
-  allValidators: {[validatorName: string]: Validator, ...} = {};
+  allAssets: {
+    [validatorName: string]: UncommittedAsset[];
+  } = {};
+  allValidators: {
+    [validatorName: string]: Validator;
+  } = {};
   dedicatedThread: boolean;
-  impactfulOptions: $Shape<ParcelOptions>;
+  impactfulOptions: Partial<ParcelOptions>;
   options: ParcelOptions;
   parcelConfig: ParcelConfig;
   report: ReportFn;
   requests: AssetGroup[];
-  workerApi: ?WorkerApi;
+  workerApi: WorkerApi | undefined | null;
 
   constructor({
     config,
@@ -66,7 +68,7 @@ export default class Validation {
         if (assets) {
           let plugin = this.allValidators[validatorName];
           let validatorLogger = new PluginLogger({origin: validatorName});
-          let validatorResults: Array<?ValidateResult> = [];
+          let validatorResults: Array<ValidateResult | undefined | null> = [];
           try {
             // If the plugin supports the single-threading validateAll method, pass all assets to it.
             if (plugin.validateAll && this.dedicatedThread) {
@@ -158,7 +160,7 @@ export default class Validation {
     );
   }
 
-  handleResults(validatorResults: Array<?ValidateResult>) {
+  handleResults(validatorResults: Array<ValidateResult | undefined | null>) {
     let warnings: Array<Diagnostic> = [];
     let errors: Array<Diagnostic> = [];
     validatorResults.forEach(result => {

@@ -1,4 +1,3 @@
-// @flow
 import {Transformer} from '@parcel/plugin';
 import path from 'path';
 import {EOL} from 'os';
@@ -9,7 +8,7 @@ import {promisify} from 'util';
 // E.g: ~library/file.sass
 const NODE_MODULE_ALIAS_RE = /^~[^/\\]/;
 
-export default (new Transformer({
+export default new Transformer({
   async loadConfig({config, options}) {
     let configFile = await config.getConfig(
       ['.sassrc', '.sassrc.json', '.sassrc.js', '.sassrc.cjs'],
@@ -99,7 +98,7 @@ export default (new Transformer({
     asset.setCode(css);
     return [asset];
   },
-}): Transformer);
+}) as Transformer;
 
 function resolvePathImporter({asset, resolve, includePaths, options}) {
   // This is a reimplementation of the Sass resolution algorithm that uses Parcel's
@@ -107,7 +106,10 @@ function resolvePathImporter({asset, resolve, includePaths, options}) {
   async function resolvePath(
     url,
     prev,
-  ): Promise<{filePath: string, contents: string, ...} | void> {
+  ): Promise<{
+    filePath: string;
+    contents: string;
+  } | void> {
     /*
       Imports are resolved by trying, in order:
         * Loading a file relative to the file in which the `@import` appeared.

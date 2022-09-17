@@ -1,7 +1,5 @@
-// @flow
-
 import type {Config, PluginOptions, PluginLogger} from '@parcel/types';
-import typeof * as BabelCore from '@babel/core';
+type BabelCore = typeof import('@babel/core');
 import type {Diagnostic} from '@parcel/diagnostic';
 import type {BabelConfig} from './types';
 
@@ -30,18 +28,18 @@ const BABEL_CONFIG_FILENAMES = [
   'babel.config.cjs',
 ];
 
-type BabelConfigResult = {|
-  internal: boolean,
-  config: BabelConfig,
-  targets?: mixed,
-  syntaxPlugins?: mixed,
-|};
+type BabelConfigResult = {
+  internal: boolean;
+  config: BabelConfig;
+  targets?: unknown;
+  syntaxPlugins?: unknown;
+};
 
 export async function load(
   config: Config,
   options: PluginOptions,
   logger: PluginLogger,
-): Promise<?BabelConfigResult> {
+): Promise<BabelConfigResult | undefined | null> {
   // Don't transpile inside node_modules
   if (!config.isSource) {
     return;
@@ -98,9 +96,12 @@ export async function load(
     showIgnoredFiles: true,
   };
 
-  let partialConfig: ?{|
-    [string]: any,
-  |} = await babelCore.loadPartialConfigAsync(babelOptions);
+  let partialConfig:
+    | {
+        [x: string]: any;
+      }
+    | undefined
+    | null = await babelCore.loadPartialConfigAsync(babelOptions);
 
   let addIncludedFile = file => {
     if (JS_EXTNAME_RE.test(path.extname(file))) {
@@ -213,7 +214,7 @@ export async function load(
 async function buildDefaultBabelConfig(
   options: PluginOptions,
   config: Config,
-): Promise<?BabelConfigResult> {
+): Promise<BabelConfigResult | undefined | null> {
   // If this is a .ts or .tsx file, we don't need to enable flow.
   if (TYPESCRIPT_EXTNAME_RE.test(config.searchPath)) {
     return;
@@ -244,7 +245,11 @@ function hasRequire(options) {
   return configItems.some(item => !item.file);
 }
 
-function definePluginDependencies(config, babelConfig: ?BabelConfig, options) {
+function definePluginDependencies(
+  config,
+  babelConfig?: BabelConfig | null,
+  options,
+) {
   if (babelConfig == null) {
     return;
   }

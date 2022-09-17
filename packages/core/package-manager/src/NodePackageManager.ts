@@ -1,4 +1,3 @@
-// @flow
 import type {FilePath, DependencySpecifier, SemverRange} from '@parcel/types';
 import type {FileSystem} from '@parcel/fs';
 import type {
@@ -42,7 +41,7 @@ const children = new Map<FilePath, Set<DependencySpecifier>>();
 export class NodePackageManager implements PackageManager {
   fs: FileSystem;
   projectRoot: FilePath;
-  installer: ?PackageInstaller;
+  installer: PackageInstaller | undefined | null;
   resolver: NodeResolver;
   syncResolver: NodeResolverSync;
   invalidationsCache: Map<string, Invalidations> = new Map();
@@ -50,7 +49,7 @@ export class NodePackageManager implements PackageManager {
   constructor(
     fs: FileSystem,
     projectRoot: FilePath,
-    installer?: ?PackageInstaller,
+    installer?: PackageInstaller | null,
   ) {
     this.fs = fs;
     this.projectRoot = projectRoot;
@@ -63,12 +62,12 @@ export class NodePackageManager implements PackageManager {
     return new NodePackageManager(opts.fs, opts.projectRoot, opts.installer);
   }
 
-  serialize(): {|
-    $$raw: boolean,
-    fs: FileSystem,
-    projectRoot: FilePath,
-    installer: ?PackageInstaller,
-  |} {
+  serialize(): {
+    $$raw: boolean;
+    fs: FileSystem;
+    projectRoot: FilePath;
+    installer: PackageInstaller | undefined | null;
+  } {
     return {
       $$raw: false,
       fs: this.fs,
@@ -80,11 +79,11 @@ export class NodePackageManager implements PackageManager {
   async require(
     name: DependencySpecifier,
     from: FilePath,
-    opts: ?{|
-      range?: ?SemverRange,
-      shouldAutoInstall?: boolean,
-      saveDev?: boolean,
-    |},
+    opts?: {
+      range?: SemverRange | null;
+      shouldAutoInstall?: boolean;
+      saveDev?: boolean;
+    } | null,
   ): Promise<any> {
     let {resolved} = await this.resolve(name, from, opts);
     return this.load(resolved, from);
@@ -141,11 +140,11 @@ export class NodePackageManager implements PackageManager {
   async resolve(
     id: DependencySpecifier,
     from: FilePath,
-    options?: ?{|
-      range?: ?SemverRange,
-      shouldAutoInstall?: boolean,
-      saveDev?: boolean,
-    |},
+    options?: {
+      range?: SemverRange | null;
+      shouldAutoInstall?: boolean;
+      saveDev?: boolean;
+    } | null,
   ): Promise<ResolveResult> {
     let basedir = path.dirname(from);
     let key = basedir + ':' + id;

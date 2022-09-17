@@ -1,7 +1,6 @@
-// @flow
 import type {FileSystem} from '@parcel/fs';
 import type {FilePath} from '@parcel/types';
-import typeof TypeScriptModule from 'typescript'; // eslint-disable-line import/no-extraneous-dependencies
+type TypeScriptModule = typeof import('typescript').default;
 import path from 'path';
 
 export class FSHost {
@@ -53,10 +52,10 @@ export class FSHost {
     }
   }
 
-  getAccessibleFileSystemEntries(dirPath: FilePath): {|
-    directories: Array<FilePath>,
-    files: Array<FilePath>,
-  |} {
+  getAccessibleFileSystemEntries(dirPath: FilePath): {
+    directories: Array<FilePath>;
+    files: Array<FilePath>;
+  } {
     try {
       let entries = this.fs.readdirSync(dirPath || '.').sort();
       let files = [];
@@ -86,9 +85,9 @@ export class FSHost {
 
   readDirectory(
     root: FilePath,
-    extensions?: $ReadOnlyArray<string>,
-    excludes?: $ReadOnlyArray<string>,
-    includes?: $ReadOnlyArray<string>,
+    extensions?: ReadonlyArray<string>,
+    excludes?: ReadonlyArray<string>,
+    includes?: ReadonlyArray<string>,
     depth?: number,
   ): any {
     // $FlowFixMe[prop-missing]

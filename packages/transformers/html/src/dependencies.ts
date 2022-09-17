@@ -1,5 +1,3 @@
-// @flow
-
 import type {AST, MutableAsset} from '@parcel/types';
 import type {PostHTMLNode} from 'posthtml';
 import PostHTML from 'posthtml';
@@ -199,7 +197,7 @@ export default function collectDependencies(
 
       // If this is a <script type="module">, and not all of the browser targets support ESM natively,
       // add a copy of the script tag with a nomodule attribute.
-      let copy: ?PostHTMLNode;
+      let copy: PostHTMLNode | undefined | null;
       if (
         outputFormat === 'esmodule' &&
         !asset.env.supports('esmodules', true)

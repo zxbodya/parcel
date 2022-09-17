@@ -1,4 +1,3 @@
-// @flow
 import type {LogEvent} from '@parcel/types';
 import invariant from 'assert';
 import WorkerFarm from './WorkerFarm';

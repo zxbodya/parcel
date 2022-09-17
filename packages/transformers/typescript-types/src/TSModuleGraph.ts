@@ -1,4 +1,3 @@
-// @flow
 import type {TSModule, Export} from './TSModule';
 
 import nullthrows from 'nullthrows';
@@ -8,7 +7,7 @@ import ts from 'typescript';
 export class TSModuleGraph {
   modules: Map<string, TSModule>;
   mainModuleName: string;
-  mainModule: ?TSModule;
+  mainModule: TSModule | undefined | null;
 
   constructor(mainModuleName: string) {
     this.modules = new Map();
@@ -23,7 +22,7 @@ export class TSModuleGraph {
     }
   }
 
-  getModule(name: string): ?TSModule {
+  getModule(name: string): TSModule | undefined | null {
     return this.modules.get(name);
   }
 
@@ -75,7 +74,14 @@ export class TSModuleGraph {
   getExport(
     m: TSModule,
     e: Export,
-  ): ?{|imported: string, module: TSModule, name: string|} {
+  ):
+    | {
+        imported: string;
+        module: TSModule;
+        name: string;
+      }
+    | undefined
+    | null {
     invariant(e.name != null);
     let exportName = e.name;
 
@@ -120,7 +126,14 @@ export class TSModuleGraph {
     module: TSModule,
     local: string,
     imported?: string,
-  ): ?{|imported: string, module: TSModule, name: string|} {
+  ):
+    | {
+        imported: string;
+        module: TSModule;
+        name: string;
+      }
+    | undefined
+    | null {
     let i = module.imports.get(local);
     if (!i) {
       return null;
@@ -138,7 +151,14 @@ export class TSModuleGraph {
   resolveExport(
     module: TSModule,
     name: string,
-  ): ?{|imported: string, module: TSModule, name: string|} {
+  ):
+    | {
+        imported: string;
+        module: TSModule;
+        name: string;
+      }
+    | undefined
+    | null {
     for (let e of module.exports) {
       if (e.name === name) {
         return this.getExport(module, e);
@@ -157,7 +177,11 @@ export class TSModuleGraph {
   getAllExports(
     module: TSModule = nullthrows(this.mainModule),
     excludeDefault: boolean = false,
-  ): Array<{|imported: string, module: TSModule, name: string|}> {
+  ): Array<{
+    imported: string;
+    module: TSModule;
+    name: string;
+  }> {
     let res = [];
     for (let e of module.exports) {
       if (e.name && (!excludeDefault || e.name !== 'default')) {

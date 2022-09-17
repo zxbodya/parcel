@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import assert from 'assert';
 import path from 'path';
 import {bundle} from '@parcel/test-utils';

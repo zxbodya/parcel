@@ -1,17 +1,15 @@
-// @flow strict-local
-
 import invariant from 'assert';
 
-export type Deferred<T> = {|
-  resolve(T): void,
-  reject(mixed): void,
-|};
+export type Deferred<T> = {
+  resolve(a: T): void;
+  reject(a: unknown): void;
+};
 
-export function makeDeferredWithPromise<T>(): {|
-  deferred: Deferred<T>,
-  promise: Promise<T>,
-|} {
-  let deferred: ?Deferred<T>;
+export function makeDeferredWithPromise<T>(): {
+  deferred: Deferred<T>;
+  promise: Promise<T>;
+} {
+  let deferred: Deferred<T> | undefined | null;
   let promise = new Promise<T>((resolve, reject) => {
     deferred = {resolve, reject};
   });

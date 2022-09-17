@@ -1,12 +1,10 @@
-// @flow
-
 import {Reporter} from '@parcel/plugin';
 import HMRServer from './HMRServer';
 import Server from './Server';
 
 let servers: Map<number, Server> = new Map();
 let hmrServers: Map<number, HMRServer> = new Map();
-export default (new Reporter({
+export default new Reporter({
   async report({event, options, logger}) {
     let {serveOptions, hmrOptions} = options;
     let server = serveOptions ? servers.get(serveOptions.port) : undefined;
@@ -116,4 +114,4 @@ export default (new Reporter({
         break;
     }
   },
-}): Reporter);
+}) as Reporter;

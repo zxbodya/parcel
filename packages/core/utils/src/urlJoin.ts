@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import URL from 'url';
 import path from 'path';
 

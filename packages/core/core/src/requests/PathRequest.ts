@@ -1,4 +1,3 @@
-// @flow strict-local
 import type {Diagnostic} from '@parcel/diagnostic';
 import type {Async, FileCreateInvalidation, FilePath} from '@parcel/types';
 import type {StaticRunOpts} from '../RequestTracker';
@@ -25,22 +24,21 @@ import {
 } from '../projectPath';
 import {Priority} from '../types';
 
-export type PathRequest = {|
-  id: string,
-  +type: 'path_request',
-  run: RunOpts => Async<?AssetGroup>,
-  input: PathRequestInput,
-|};
+export type PathRequest = {
+  id: string;
+  readonly type: 'path_request';
+  run: (a: RunOpts) => Async<AssetGroup | undefined | null>;
+  input: PathRequestInput;
+};
 
-export type PathRequestInput = {|
-  dependency: Dependency,
-  name: string,
-|};
+export type PathRequestInput = {
+  dependency: Dependency;
+  name: string;
+};
 
-type RunOpts = {|
-  input: PathRequestInput,
-  ...StaticRunOpts,
-|};
+type RunOpts = {
+  input: PathRequestInput;
+} & StaticRunOpts;
 
 const type = 'path_request';
 const PIPELINE_REGEX = /^([a-z0-9-]+?):(.*)$/i;
@@ -102,18 +100,18 @@ async function run({input, api, options}: RunOpts) {
   }
 }
 
-type ResolverRunnerOpts = {|
-  config: ParcelConfig,
-  options: ParcelOptions,
-|};
+type ResolverRunnerOpts = {
+  config: ParcelConfig;
+  options: ParcelOptions;
+};
 
-type ResolverResult = {|
-  assetGroup: ?AssetGroup,
-  invalidateOnFileCreate?: Array<FileCreateInvalidation>,
-  invalidateOnFileChange?: Array<FilePath>,
-  invalidateOnEnvChange?: Array<string>,
-  diagnostics?: Array<Diagnostic>,
-|};
+type ResolverResult = {
+  assetGroup: AssetGroup | undefined | null;
+  invalidateOnFileCreate?: Array<FileCreateInvalidation>;
+  invalidateOnFileChange?: Array<FilePath>;
+  invalidateOnEnvChange?: Array<string>;
+  diagnostics?: Array<Diagnostic>;
+};
 
 export class ResolverRunner {
   config: ParcelConfig;

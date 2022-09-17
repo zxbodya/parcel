@@ -1,4 +1,3 @@
-// @flow strict-local
 const invariant = require('assert');
 const nullthrows = require('nullthrows');
 const t = require('@babel/types');
@@ -15,61 +14,102 @@ import type {
   Statement,
 } from '@babel/types';
 
-type Templates = {|
+type Templates = {
   IMPORT_NAMED: Template<
-    {|local: Identifier, name: Identifier, source: StringLiteral|},
-    Statement,
-  >,
+    {
+      local: Identifier;
+      name: Identifier;
+      source: StringLiteral;
+    },
+    Statement
+  >;
   IMPORT_NAMESPACE: Template<
-    {|local: Identifier, source: StringLiteral|},
-    Statement,
-  >,
-  EXPORT_CONST: Template<{|name: Identifier, value: Expression|}, Statement>,
-  EXPORT_NAMED: Template<{|local: Identifier, name: Identifier|}, Statement>,
-  CONST: Template<{|name: Identifier, value: Expression|}, Statement>,
+    {
+      local: Identifier;
+      source: StringLiteral;
+    },
+    Statement
+  >;
+  EXPORT_CONST: Template<
+    {
+      name: Identifier;
+      value: Expression;
+    },
+    Statement
+  >;
+  EXPORT_NAMED: Template<
+    {
+      local: Identifier;
+      name: Identifier;
+    },
+    Statement
+  >;
+  CONST: Template<
+    {
+      name: Identifier;
+      value: Expression;
+    },
+    Statement
+  >;
   REEXPORT_NAMED: Template<
-    {|local: Identifier, name: Identifier, source: StringLiteral|},
-    Statement,
-  >,
-  REEXPORT_NAMESPACE: Template<{|source: StringLiteral|}, Statement>,
+    {
+      local: Identifier;
+      name: Identifier;
+      source: StringLiteral;
+    },
+    Statement
+  >;
+  REEXPORT_NAMESPACE: Template<
+    {
+      source: StringLiteral;
+    },
+    Statement
+  >;
   REEXPORT_NAMESPACE_AS: Template<
-    {|name: Identifier, source: StringLiteral|},
-    Statement,
-  >,
-|};
+    {
+      name: Identifier;
+      source: StringLiteral;
+    },
+    Statement
+  >;
+};
 
-type ModuleImportSymbol = {|
-  from: number,
-  symbol: string,
-  as: string,
-|};
-type ModuleExportSymbol = {|
-  from?: ?number,
-  symbol: string,
-  as: string,
-|};
+type ModuleImportSymbol = {
+  from: number;
+  symbol: string;
+  as: string;
+};
 
-type Module = {|
-  type: 'mjs', // | 'cjs',
-  imported: Array<ModuleImportSymbol>,
-  exported: Array<ModuleExportSymbol>,
-|};
+type ModuleExportSymbol = {
+  from?: number | null;
+  symbol: string;
+  as: string;
+};
 
-type State = {|
-  modules: {|
-    [number]: Module,
-  |},
-  entries: Array<number>,
-  noSideEffects: Array<number>
-|};
+type Module = {
+  type: 'mjs'; // | 'cjs',
+  imported: Array<ModuleImportSymbol>;
+  exported: Array<ModuleExportSymbol>;
+};
 
-type Fixture = {|
-  files: {|[string]: string|},
-  entries: Array<string>,
-|};
+type State = {
+  modules: {
+    [x: number]: Module;
+  };
+  entries: Array<number>;
+  noSideEffects: Array<number>;
+};
 
+type Fixture = {
+  files: {
+    [x: string]: string;
+  };
+  entries: Array<string>;
+};
 
-const TEMPLATES :{|mjs: Templates|} = {
+const TEMPLATES: {
+  mjs: Templates;
+} = {
   mjs: {
     IMPORT_NAMED: template.statement(`
   import { %%name%% as %%local%% } from %%source%%;
@@ -120,11 +160,7 @@ function getRandomModuleIndex(state) {
   return getRandom(Object.keys(state.modules).length);
 }
 
-function appendToModule(
-  state :State,
-  n :number,
-  data :$Shape<Module> ,
-) {
+function appendToModule(state: State, n: number, data: Partial<Module>) {
   let {imported = [], exported = []} = data;
 
   let mod = state.modules[n];
@@ -142,7 +178,7 @@ function appendToModule(
 }
 
 let getNewExportNameNext = 'a';
-function getNewExportName() :string {
+function getNewExportName(): string {
   for (let i = getNewExportNameNext.length - 1; i >= 0; i--) {
     if (getNewExportNameNext[i] !== 'z') {
       getNewExportNameNext =
@@ -164,11 +200,11 @@ function getNewExportName() :string {
   return getNewExportNameNext;
 }
 
-function getNewModuleIndex(state :State) :number {
+function getNewModuleIndex(state: State): number {
   return Object.keys(state.modules).length;
 }
 
-const ACTIONS :Array<[number, (State) => State]>  = [
+const ACTIONS: Array<[number, (a: State) => State]> = [
   [
     0.2,
     function addUnusedNamedExport(oldState) {
@@ -306,7 +342,7 @@ invariant.deepEqual(
   'invalid weights for actions',
 );
 
-function mutate(state :State ) :State {
+function mutate(state: State): State {
   let action;
 
   if (process.env.ACTION != null) {
@@ -327,13 +363,13 @@ function mutate(state :State ) :State {
   return action(state);
 }
 
-function numberToFilename(n :number , type :string) {
+function numberToFilename(n: number, type: string) {
   return `${n}.${type}`;
 }
 
-function linearizeState(state :State ) :Fixture  {
+function linearizeState(state: State): Fixture {
   // $FlowFixMe
-  let modules :Array<[string, Module]>  = Object.entries(state.modules);
+  let modules: Array<[string, Module]> = Object.entries(state.modules);
   return {
     files: Object.fromEntries(
       modules
@@ -455,10 +491,10 @@ function linearizeState(state :State ) :Fixture  {
   };
 }
 
-function* generateExamples() :Iterable<Fixture>  {
+function* generateExamples(): Iterable<Fixture> {
   getNewExportNameNext = 'a';
 
-  let state :State  = {
+  let state: State = {
     modules: {
       [0]: {
         type: 'mjs',

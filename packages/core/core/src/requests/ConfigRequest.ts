@@ -1,4 +1,3 @@
-// @flow
 import type {
   Async,
   Config as IConfig,
@@ -16,7 +15,7 @@ import type {LoadedPlugin} from '../ParcelConfig';
 import type {RunAPI} from '../RequestTracker';
 import type {ProjectPath} from '../projectPath';
 
-import {serializeRaw} from '../serializer.js';
+import {serializeRaw} from '../serializer';
 import {PluginLogger} from '@parcel/logger';
 import PluginOptions from '../public/PluginOptions';
 import ThrowableDiagnostic, {errorToDiagnostic} from '@parcel/diagnostic';
@@ -26,42 +25,39 @@ import {getInvalidationHash} from '../assetUtils';
 import {Hash} from '@parcel/hash';
 
 export type PluginWithLoadConfig = {
-  loadConfig?: ({|
-    config: IConfig,
-    options: IPluginOptions,
-    logger: IPluginLogger,
-  |}) => Async<mixed>,
-  ...
+  loadConfig?: (a: {
+    config: IConfig;
+    options: IPluginOptions;
+    logger: IPluginLogger;
+  }) => Async<unknown>;
 };
 
 export type PluginWithBundleConfig = {
-  loadConfig?: ({|
-    config: IConfig,
-    options: IPluginOptions,
-    logger: IPluginLogger,
-  |}) => Async<mixed>,
-  loadBundleConfig?: ({|
-    bundle: INamedBundle,
-    bundleGraph: IBundleGraph<INamedBundle>,
-    config: IConfig,
-    options: IPluginOptions,
-    logger: IPluginLogger,
-  |}) => Async<mixed>,
-  ...
+  loadConfig?: (a: {
+    config: IConfig;
+    options: IPluginOptions;
+    logger: IPluginLogger;
+  }) => Async<unknown>;
+  loadBundleConfig?: (a: {
+    bundle: INamedBundle;
+    bundleGraph: IBundleGraph<INamedBundle>;
+    config: IConfig;
+    options: IPluginOptions;
+    logger: IPluginLogger;
+  }) => Async<unknown>;
 };
 
 export type ConfigRequest = {
-  id: string,
-  invalidateOnFileChange: Set<ProjectPath>,
-  invalidateOnFileCreate: Array<InternalFileCreateInvalidation>,
-  invalidateOnEnvChange: Set<string>,
-  invalidateOnOptionChange: Set<string>,
-  invalidateOnStartup: boolean,
-  invalidateOnBuild: boolean,
-  ...
+  id: string;
+  invalidateOnFileChange: Set<ProjectPath>;
+  invalidateOnFileCreate: Array<InternalFileCreateInvalidation>;
+  invalidateOnEnvChange: Set<string>;
+  invalidateOnOptionChange: Set<string>;
+  invalidateOnStartup: boolean;
+  invalidateOnBuild: boolean;
 };
 
-export async function loadPluginConfig<T: PluginWithLoadConfig>(
+export async function loadPluginConfig<T extends PluginWithLoadConfig>(
   loadedPlugin: LoadedPlugin<T>,
   config: Config,
   options: ParcelOptions,

@@ -1,8 +1,7 @@
-// @flow
 import {Runtime} from '@parcel/plugin';
 import {urlJoin} from '@parcel/utils';
 
-export default (new Runtime({
+export default new Runtime({
   apply({bundle, bundleGraph}) {
     if (bundle.env.context !== 'service-worker') {
       return [];
@@ -47,4 +46,4 @@ _register(manifest, version);
       },
     ];
   },
-}): Runtime);
+}) as Runtime;

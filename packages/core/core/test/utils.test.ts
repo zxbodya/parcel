@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import assert from 'assert';
 import {getPublicId} from '../src/utils';
 

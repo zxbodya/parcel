@@ -1,4 +1,3 @@
-// @flow strict-local
 import assert from 'assert';
 import path from 'path';
 import {
@@ -51,13 +50,18 @@ describe('hmr', function () {
 
   async function testHMRClient(
     name: string,
-    updates:
-      | ((
+    updates: // $FlowFixMe[unclear-type]
+    | ((
           // $FlowFixMe[unclear-type]
-          Array<any>,
-        ) => {[string]: string})
-      // $FlowFixMe[unclear-type]
-      | Array<(Array<any>) => {[string]: string}>,
+          a: Array<any>,
+        ) => {
+          [x: string]: string;
+        })
+      | Array<
+          (a: Array<any>) => {
+            [x: string]: string;
+          }
+        >,
   ) {
     await ncp(
       path.join(__dirname, '/integration/', name),

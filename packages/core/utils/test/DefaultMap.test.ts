@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import assert from 'assert';
 import {DefaultMap} from '../src/DefaultMap';
 

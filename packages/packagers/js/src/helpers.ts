@@ -1,4 +1,3 @@
-// @flow strict-local
 export const prelude = (
   parcelRequireName: string,
 ): string => `var $parcel$modules = {};

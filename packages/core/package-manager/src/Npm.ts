@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {PackageInstaller, InstallerOptions} from './types';
 
 import path from 'path';
@@ -87,8 +85,10 @@ export class Npm implements PackageInstaller {
   }
 }
 
-type NPMResults = {|
-  added: Array<{name: string, ...}>,
-|};
+type NPMResults = {
+  added: Array<{
+    name: string;
+  }>;
+};
 
 registerSerializableClass(`${pkg.version}:Npm`, Npm);

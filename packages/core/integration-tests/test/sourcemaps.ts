@@ -1,4 +1,3 @@
-// @flow
 import assert from 'assert';
 import invariant from 'assert';
 import path from 'path';
@@ -46,15 +45,15 @@ function checkSourceMapping({
   generatedStr = str,
   sourcePath,
   msg = '',
-}: {|
-  map: SourceMap,
-  source: string,
-  generated: string,
-  str: string,
-  generatedStr?: string,
-  sourcePath: string,
-  msg?: string,
-|}) {
+}: {
+  map: SourceMap;
+  source: string;
+  generated: string;
+  str: string;
+  generatedStr?: string;
+  sourcePath: string;
+  msg?: string;
+}) {
   assert(
     generated.indexOf(generatedStr) !== -1,
     "'" + generatedStr + "' not found in generated code",

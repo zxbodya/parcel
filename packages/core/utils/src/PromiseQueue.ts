@@ -1,16 +1,16 @@
-// @flow strict-local
-
 import {makeDeferredWithPromise, type Deferred} from './Deferred';
 
-type PromiseQueueOpts = {|maxConcurrent: number|};
+type PromiseQueueOpts = {
+  maxConcurrent: number;
+};
 
 export default class PromiseQueue<T> {
-  _deferred: ?Deferred<Array<T>>;
+  _deferred: Deferred<Array<T>> | undefined | null;
   _maxConcurrent: number;
   _numRunning: number = 0;
   _queue: Array<() => Promise<void>> = [];
-  _runPromise: ?Promise<Array<T>> = null;
-  _error: mixed;
+  _runPromise: Promise<Array<T>> | undefined | null = null;
+  _error: unknown;
   _count: number = 0;
   _results: Array<T> = [];
 
@@ -79,7 +79,7 @@ export default class PromiseQueue<T> {
     }
   }
 
-  async _runFn(fn: () => mixed): Promise<void> {
+  async _runFn(fn: () => unknown): Promise<void> {
     this._numRunning++;
     try {
       await fn();

@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {PackageName, ConfigResult} from '@parcel/types';
 import type {
   Config,
@@ -13,20 +11,20 @@ import {fromProjectPathRelative} from './projectPath';
 import {createEnvironment} from './Environment';
 import {hashString} from '@parcel/hash';
 
-type ConfigOpts = {|
-  plugin: PackageName,
-  searchPath: ProjectPath,
-  isSource?: boolean,
-  env?: Environment,
-  result?: ConfigResult,
-  invalidateOnFileChange?: Set<ProjectPath>,
-  invalidateOnFileCreate?: Array<InternalFileCreateInvalidation>,
-  invalidateOnEnvChange?: Set<string>,
-  invalidateOnOptionChange?: Set<string>,
-  devDeps?: Array<InternalDevDepOptions>,
-  invalidateOnStartup?: boolean,
-  invalidateOnBuild?: boolean,
-|};
+type ConfigOpts = {
+  plugin: PackageName;
+  searchPath: ProjectPath;
+  isSource?: boolean;
+  env?: Environment;
+  result?: ConfigResult;
+  invalidateOnFileChange?: Set<ProjectPath>;
+  invalidateOnFileCreate?: Array<InternalFileCreateInvalidation>;
+  invalidateOnEnvChange?: Set<string>;
+  invalidateOnOptionChange?: Set<string>;
+  devDeps?: Array<InternalDevDepOptions>;
+  invalidateOnStartup?: boolean;
+  invalidateOnBuild?: boolean;
+};
 
 export function createConfig({
   plugin,

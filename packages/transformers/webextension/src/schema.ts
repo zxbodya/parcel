@@ -1,7 +1,6 @@
-// @flow strict-local
 import type {SchemaEntity} from '@parcel/utils';
 
-const validateVersion = (ver: string): ?string => {
+const validateVersion = (ver: string): string | undefined | null => {
   const parts = ver.split('.', 5);
   if (parts.length == 5) return 'Extension versions to have at most three dots';
   if (
@@ -133,7 +132,7 @@ const commonProps = {
     },
     additionalProperties: false,
   },
-  commands: ({
+  commands: {
     type: 'object',
     properties: {},
     additionalProperties: {
@@ -156,7 +155,7 @@ const commonProps = {
       },
       additionalProperties: false,
     },
-  }: SchemaEntity),
+  } as SchemaEntity,
   content_scripts: {
     type: 'array',
     items: {
@@ -179,7 +178,7 @@ const commonProps = {
       required: ['matches'],
     },
   },
-  declarative_net_request: ({
+  declarative_net_request: {
     type: 'object',
     properties: {
       rule_resources: {
@@ -198,14 +197,14 @@ const commonProps = {
     },
     additionalProperties: false,
     required: ['rule_resources'],
-  }: SchemaEntity),
+  } as SchemaEntity,
   devtools_page: string,
   // looks to be FF only
-  dictionaries: ({
+  dictionaries: {
     type: 'object',
     properties: {},
     additionalProperties: string,
-  }: SchemaEntity),
+  } as SchemaEntity,
   externally_connectable: {
     type: 'object',
     properties: {
@@ -264,11 +263,11 @@ const commonProps = {
     additionalProperties: false,
   },
   offline_enabled: boolean,
-  omnibox: ({
+  omnibox: {
     type: 'object',
     properties: {},
     additionalProperties: string,
-  }: SchemaEntity),
+  } as SchemaEntity,
   optional_host_permissions: arrStr,
   optional_permissions: arrStr,
   // options_page is deprecated
@@ -438,7 +437,7 @@ const commonProps = {
   version_name: string,
 };
 
-export const MV3Schema = ({
+export const MV3Schema = {
   type: 'object',
   properties: {
     ...commonProps,
@@ -492,9 +491,9 @@ export const MV3Schema = ({
     },
   },
   required: ['manifest_version', 'name', 'version'],
-}: SchemaEntity);
+} as SchemaEntity;
 
-export const MV2Schema = ({
+export const MV2Schema = {
   type: 'object',
   properties: {
     ...commonProps,
@@ -535,9 +534,9 @@ export const MV2Schema = ({
     web_accessible_resources: arrStr,
   },
   required: ['manifest_version', 'name', 'version'],
-}: SchemaEntity);
+} as SchemaEntity;
 
-export const VersionSchema = ({
+export const VersionSchema = {
   type: 'object',
   properties: {
     $schema: string,
@@ -547,4 +546,4 @@ export const VersionSchema = ({
     },
   },
   required: ['manifest_version'],
-}: SchemaEntity);
+} as SchemaEntity;

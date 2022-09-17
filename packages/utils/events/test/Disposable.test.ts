@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import assert from 'assert';
 import Disposable from '../src/Disposable';
 import {AlreadyDisposedError} from '../src/errors';

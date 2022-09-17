@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {AST, Blob} from '@parcel/types';
 import type {Asset, Dependency, ParcelOptions} from './types';
 
@@ -12,12 +10,12 @@ import {deserializeRaw} from './serializer';
 export default class CommittedAsset {
   value: Asset;
   options: ParcelOptions;
-  content: ?Promise<Buffer | string>;
-  mapBuffer: ?Promise<?Buffer>;
-  map: ?Promise<?SourceMap>;
-  ast: ?Promise<AST>;
-  idBase: ?string;
-  generatingPromise: ?Promise<void>;
+  content: Promise<Buffer | string> | undefined | null;
+  mapBuffer: Promise<Buffer | undefined | null> | undefined | null;
+  map: Promise<SourceMap | undefined | null> | undefined | null;
+  ast: Promise<AST> | undefined | null;
+  idBase: string | undefined | null;
+  generatingPromise: Promise<void> | undefined | null;
 
   constructor(value: Asset, options: ParcelOptions) {
     this.value = value;
@@ -88,7 +86,7 @@ export default class CommittedAsset {
       : blobToStream(content);
   }
 
-  getMapBuffer(): Promise<?Buffer> {
+  getMapBuffer(): Promise<Buffer | undefined | null> {
     let mapKey = this.value.mapKey;
     if (mapKey != null && this.mapBuffer == null) {
       this.mapBuffer = (async () => {
@@ -107,7 +105,7 @@ export default class CommittedAsset {
     return this.mapBuffer ?? Promise.resolve();
   }
 
-  getMap(): Promise<?SourceMap> {
+  getMap(): Promise<SourceMap | undefined | null> {
     if (this.map == null) {
       this.map = (async () => {
         let mapBuffer = await this.getMapBuffer();
@@ -121,7 +119,7 @@ export default class CommittedAsset {
     return this.map;
   }
 
-  getAST(): Promise<?AST> {
+  getAST(): Promise<AST | undefined | null> {
     if (this.value.astKey == null) {
       return Promise.resolve(null);
     }

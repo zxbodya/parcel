@@ -1,4 +1,3 @@
-// @flow
 import type {PackageManager} from '@parcel/package-manager';
 import type {FilePath} from '@parcel/types';
 

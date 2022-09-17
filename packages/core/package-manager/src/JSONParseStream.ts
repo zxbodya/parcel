@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {JSONObject} from '@parcel/types';
 
 import logger from '@parcel/logger';
@@ -8,7 +6,7 @@ import {Transform} from 'stream';
 // Transforms chunks of json strings to parsed objects.
 // Pair with split2 to parse stream of newline-delimited text.
 export default class JSONParseStream extends Transform {
-  constructor(options: mixed) {
+  constructor(options: unknown) {
     super({...options, objectMode: true});
   }
 
@@ -16,7 +14,7 @@ export default class JSONParseStream extends Transform {
   _transform(
     chunk: Buffer | string,
     encoding: string,
-    callback: (err: ?Error, parsed: ?JSONObject) => mixed,
+    callback: (err?: Error | null, parsed?: JSONObject | null) => unknown,
   ) {
     try {
       let parsed;

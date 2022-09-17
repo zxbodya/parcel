@@ -1,4 +1,3 @@
-// @flow strict-local
 // $FlowFixMe this is untyped
 import {builtinModules} from 'module';
 import nullthrows from 'nullthrows';
@@ -7,7 +6,12 @@ import packageJson from '../package.json';
 
 export const empty: string = require.resolve('./_empty.js');
 
-let builtins: {[string]: {|name: string, range: ?string|}, ...} =
+let builtins: {
+  [x: string]: {
+    name: string;
+    range: string | undefined | null;
+  };
+} =
   // $FlowFixMe
   Object.create(null);
 

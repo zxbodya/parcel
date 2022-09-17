@@ -1,4 +1,3 @@
-// @flow strict-local
 /* eslint-disable no-console */
 
 import type {Diagnostic as ParcelDiagnostic} from '@parcel/diagnostic';
@@ -17,7 +16,7 @@ import * as ps from 'ps-node';
 import {promisify} from 'util';
 import ipc from 'node-ipc';
 
-const lookupPid: Query => Program[] = promisify(ps.lookup);
+const lookupPid: (a: Query) => Program[] = promisify(ps.lookup);
 
 // flowlint-next-line unclear-type:off
 type LspDiagnostic = any;
@@ -30,7 +29,7 @@ let fileDiagnostics: DefaultMap<string, Array<LspDiagnostic>> = new DefaultMap(
 );
 let pipeFilename;
 
-export default (new Reporter({
+export default new Reporter({
   async report({event, logger, options}) {
     switch (event.type) {
       case 'watchStart': {
@@ -158,7 +157,7 @@ export default (new Reporter({
         break;
     }
   },
-}): Reporter);
+}) as Reporter;
 
 function updateDiagnostics(
   fileDiagnostics: DefaultMap<string, Array<LspDiagnostic>>,
@@ -239,7 +238,7 @@ function updateDiagnostics(
   }
 }
 
-function parcelSeverityToLspSeverity(parcelSeverity: ParcelSeverity): mixed {
+function parcelSeverityToLspSeverity(parcelSeverity: ParcelSeverity): unknown {
   switch (parcelSeverity) {
     case 'error':
       return DiagnosticSeverity.Error;

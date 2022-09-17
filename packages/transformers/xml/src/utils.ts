@@ -1,4 +1,3 @@
-// @flow
 import type {MutableAsset} from '@parcel/types';
 
 export function urlHandler(element: Element, asset: MutableAsset) {

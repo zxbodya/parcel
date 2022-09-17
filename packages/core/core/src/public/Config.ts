@@ -1,4 +1,3 @@
-// @flow strict-local
 import type {
   Config as IConfig,
   ConfigResult,
@@ -17,16 +16,16 @@ import {fromProjectPath, toProjectPath} from '../projectPath';
 
 const internalConfigToConfig: DefaultWeakMap<
   ParcelOptions,
-  WeakMap<Config, PublicConfig>,
+  WeakMap<Config, PublicConfig>
 > = new DefaultWeakMap(() => new WeakMap());
 
 export default class PublicConfig implements IConfig {
-  #config :Config ;
-  #pkg :?PackageJSON ;
-  #pkgFilePath :?FilePath ;
-  #options :ParcelOptions ;
+  #config: Config;
+  #pkg: PackageJSON | undefined | null;
+  #pkgFilePath: FilePath | undefined | null;
+  #options: ParcelOptions;
 
-  constructor(config: Config, options: ParcelOptions): PublicConfig {
+  constructor(config: Config, options: ParcelOptions) {
     let existing = internalConfigToConfig.get(options).get(config);
     if (existing != null) {
       return existing;
@@ -119,12 +118,12 @@ export default class PublicConfig implements IConfig {
   async getConfigFrom<T>(
     searchPath: FilePath,
     fileNames: Array<string>,
-    options: ?{|
-      packageKey?: string,
-      parse?: boolean,
-      exclude?: boolean,
-    |},
-  ): Promise<?ConfigResultWithFilePath<T>> {
+    options?: {
+      packageKey?: string;
+      parse?: boolean;
+      exclude?: boolean;
+    } | null,
+  ): Promise<ConfigResultWithFilePath<T> | undefined | null> {
     let packageKey = options?.packageKey;
     if (packageKey != null) {
       let pkg = await this.getConfigFrom(searchPath, ['package.json']);
@@ -173,16 +172,16 @@ export default class PublicConfig implements IConfig {
 
   getConfig<T>(
     filePaths: Array<FilePath>,
-    options: ?{|
-      packageKey?: string,
-      parse?: boolean,
-      exclude?: boolean,
-    |},
-  ): Promise<?ConfigResultWithFilePath<T>> {
+    options?: {
+      packageKey?: string;
+      parse?: boolean;
+      exclude?: boolean;
+    } | null,
+  ): Promise<ConfigResultWithFilePath<T> | undefined | null> {
     return this.getConfigFrom(this.searchPath, filePaths, options);
   }
 
-  async getPackage(): Promise<?PackageJSON> {
+  async getPackage(): Promise<PackageJSON | undefined | null> {
     if (this.#pkg) {
       return this.#pkg;
     }

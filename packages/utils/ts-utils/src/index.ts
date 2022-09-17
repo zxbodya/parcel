@@ -1,4 +1,3 @@
-// @flow
 export {FSHost} from './FSHost';
 export {CompilerHost} from './CompilerHost';
 export {ParseConfigHost} from './ParseConfigHost';

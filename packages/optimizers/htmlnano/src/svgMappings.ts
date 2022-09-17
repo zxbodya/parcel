@@ -1,7 +1,8 @@
-// @flow
 // Based on parse5: https://github.com/inikulin/parse5/blob/252819607421a5741cf745bb60c404f023531b0d/packages/parse5/lib/common/foreign-content.js#L54
 
-export const SVG_TAG_NAMES: {|[string]: string|} = {
+export const SVG_TAG_NAMES: {
+  [x: string]: string;
+} = {
   altglyph: 'altGlyph',
   altglyphdef: 'altGlyphDef',
   altglyphitem: 'altGlyphItem',
@@ -40,7 +41,9 @@ export const SVG_TAG_NAMES: {|[string]: string|} = {
   textpath: 'textPath',
 };
 
-export const SVG_ATTRS: {|[string]: string|} = {
+export const SVG_ATTRS: {
+  [x: string]: string;
+} = {
   attributename: 'attributeName',
   attributetype: 'attributeType',
   basefrequency: 'baseFrequency',

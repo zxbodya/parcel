@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {Readable, Writable} from 'stream';
 import type {FilePath} from '@parcel/types';
 import type {FileSystem} from '@parcel/fs';
@@ -13,7 +11,7 @@ import {serialize, deserialize, registerSerializableClass} from '@parcel/core';
 // flowlint-next-line untyped-import:off
 import packageJson from '../package.json';
 
-const pipeline: (Readable, Writable) => Promise<void> = promisify(
+const pipeline: (b: Readable, a: Writable) => Promise<void> = promisify(
   stream.pipeline,
 );
 
@@ -69,7 +67,7 @@ export class FSCache implements Cache {
     await this.fs.writeFile(this._getCachePath(key), contents);
   }
 
-  async getBuffer(key: string): Promise<?Buffer> {
+  async getBuffer(key: string): Promise<Buffer | undefined | null> {
     try {
       return await this.fs.readFile(this._getCachePath(key));
     } catch (err) {
@@ -93,7 +91,7 @@ export class FSCache implements Cache {
     await this.fs.writeFile(this._getCachePath(`${key}-large`), contents);
   }
 
-  async get<T>(key: string): Promise<?T> {
+  async get<T>(key: string): Promise<T | undefined | null> {
     try {
       let data = await this.fs.readFile(this._getCachePath(key));
       return deserialize(data);
@@ -106,7 +104,7 @@ export class FSCache implements Cache {
     }
   }
 
-  async set(key: string, value: mixed): Promise<void> {
+  async set(key: string, value: unknown): Promise<void> {
     try {
       let blobPath = this._getCachePath(key);
       let data = serialize(value);

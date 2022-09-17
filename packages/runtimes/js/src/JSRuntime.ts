@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {
   BundleGraph,
   BundleGroup,
@@ -46,9 +44,13 @@ const LOADERS = {
   },
 };
 
-function getLoaders(
-  ctx: Environment,
-): ?{[string]: string, IMPORT_POLYFILL: null | false | string, ...} {
+function getLoaders(ctx: Environment):
+  | {
+      IMPORT_POLYFILL: null | false | string;
+      [x: string]: string;
+    }
+  | undefined
+  | null {
   if (ctx.isWorker()) return LOADERS.worker;
   if (ctx.isBrowser()) return LOADERS.browser;
   if (ctx.isNode()) return LOADERS.node;
@@ -59,13 +61,13 @@ function getLoaders(
 // This can happen when we reuse the BundleGraph between subsequent builds
 let bundleDependencies = new WeakMap<
   NamedBundle,
-  {|
-    asyncDependencies: Array<Dependency>,
-    otherDependencies: Array<Dependency>,
-  |},
+  {
+    asyncDependencies: Array<Dependency>;
+    otherDependencies: Array<Dependency>;
+  }
 >();
 
-export default (new Runtime({
+export default new Runtime({
   apply({bundle, bundleGraph, options}) {
     // Dependency ids in code replaced with referenced bundle names
     // Loader runtime added for bundle groups that don't have a native loader (e.g. HTML/CSS/Worker - isURL?),
@@ -241,12 +243,12 @@ export default (new Runtime({
 
     return assets;
   },
-}): Runtime);
+}) as Runtime;
 
-function getDependencies(bundle: NamedBundle): {|
-  asyncDependencies: Array<Dependency>,
-  otherDependencies: Array<Dependency>,
-|} {
+function getDependencies(bundle: NamedBundle): {
+  asyncDependencies: Array<Dependency>;
+  otherDependencies: Array<Dependency>;
+} {
   let cachedDependencies = bundleDependencies.get(bundle);
 
   if (cachedDependencies) {
@@ -280,13 +282,13 @@ function getLoaderRuntime({
   bundleGroup,
   bundleGraph,
   options,
-}: {|
-  bundle: NamedBundle,
-  dependency: Dependency,
-  bundleGroup: BundleGroup,
-  bundleGraph: BundleGraph<NamedBundle>,
-  options: PluginOptions,
-|}): ?RuntimeAsset {
+}: {
+  bundle: NamedBundle;
+  dependency: Dependency;
+  bundleGroup: BundleGroup;
+  bundleGraph: BundleGraph<NamedBundle>;
+  options: PluginOptions;
+}): RuntimeAsset | undefined | null {
   let loaders = getLoaders(bundle.env);
   if (loaders == null) {
     return;
@@ -422,7 +424,10 @@ function getLoaderRuntime({
 function getHintedBundleGroups(
   bundleGraph: BundleGraph<NamedBundle>,
   bundle: NamedBundle,
-): {|preload: Array<BundleGroup>, prefetch: Array<BundleGroup>|} {
+): {
+  preload: Array<BundleGroup>;
+  prefetch: Array<BundleGroup>;
+} {
   let preload = [];
   let prefetch = [];
   let {asyncDependencies} = getDependencies(bundle);

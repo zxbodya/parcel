@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {GraphVisitor} from '@parcel/types';
 import type {
   ContentGraphOpts,
@@ -30,23 +28,21 @@ import {ContentGraph} from '@parcel/graph';
 import {createDependency} from './Dependency';
 import {type ProjectPath, fromProjectPathRelative} from './projectPath';
 
-type InitOpts = {|
-  entries?: Array<ProjectPath>,
-  targets?: Array<Target>,
-  assetGroups?: Array<AssetGroup>,
-|};
+type InitOpts = {
+  entries?: Array<ProjectPath>;
+  targets?: Array<Target>;
+  assetGroups?: Array<AssetGroup>;
+};
 
-type AssetGraphOpts = {|
-  ...ContentGraphOpts<AssetGraphNode>,
-  symbolPropagationRan: boolean,
-  hash?: ?string,
-|};
+type AssetGraphOpts = {
+  symbolPropagationRan: boolean;
+  hash?: string | null;
+} & ContentGraphOpts<AssetGraphNode>;
 
-type SerializedAssetGraph = {|
-  ...SerializedContentGraph<AssetGraphNode>,
-  hash?: ?string,
-  symbolPropagationRan: boolean,
-|};
+type SerializedAssetGraph = {
+  hash?: string | null;
+  symbolPropagationRan: boolean;
+} & SerializedContentGraph<AssetGraphNode>;
 
 export function nodeFromDep(dep: Dependency): DependencyNode {
   return {
@@ -110,12 +106,12 @@ export function nodeFromEntryFile(entry: Entry): EntryFileNode {
 }
 
 export default class AssetGraph extends ContentGraph<AssetGraphNode> {
-  onNodeRemoved: ?(nodeId: NodeId) => mixed;
-  hash: ?string;
+  onNodeRemoved: ((nodeId: NodeId) => unknown) | undefined | null;
+  hash: string | undefined | null;
   envCache: Map<string, Environment>;
   symbolPropagationRan: boolean;
 
-  constructor(opts: ?AssetGraphOpts) {
+  constructor(opts?: AssetGraphOpts | null) {
     if (opts) {
       let {hash, symbolPropagationRan, ...rest} = opts;
       super(rest);
@@ -274,7 +270,7 @@ export default class AssetGraph extends ContentGraph<AssetGraphNode> {
 
   resolveDependency(
     dependency: Dependency,
-    assetGroup: ?AssetGroup,
+    assetGroup: AssetGroup | undefined | null,
     correspondingRequest: string,
   ) {
     let depNodeId = this.getNodeIdByContentKey(dependency.id);
@@ -388,7 +384,7 @@ export default class AssetGraph extends ContentGraph<AssetGraphNode> {
   // a huge number of functions since we can avoid even transforming the files that aren't used.
   shouldDeferDependency(
     dependency: Dependency,
-    sideEffects: ?boolean,
+    sideEffects: boolean | undefined | null,
     canDefer: boolean,
   ): boolean {
     let defer = false;
@@ -458,10 +454,10 @@ export default class AssetGraph extends ContentGraph<AssetGraphNode> {
       }
     }
 
-    let assetObjects: Array<{|
-      assetNodeId: NodeId,
-      dependentAssets: Array<Asset>,
-    |}> = [];
+    let assetObjects: Array<{
+      assetNodeId: NodeId;
+      dependentAssets: Array<Asset>;
+    }> = [];
     let assetNodeIds = [];
     for (let asset of assets) {
       this.normalizeEnvironment(asset);
@@ -572,8 +568,8 @@ export default class AssetGraph extends ContentGraph<AssetGraphNode> {
 
   traverseAssets<TContext>(
     visit: GraphVisitor<Asset, TContext>,
-    startNodeId: ?NodeId,
-  ): ?TContext {
+    startNodeId?: NodeId | null,
+  ): TContext | undefined | null {
     return this.filteredTraverse(
       nodeId => {
         let node = nullthrows(this.getNode(nodeId));

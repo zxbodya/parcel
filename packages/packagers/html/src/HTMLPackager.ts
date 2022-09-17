@@ -1,4 +1,3 @@
-// @flow strict-local
 import type {Bundle, BundleGraph, NamedBundle} from '@parcel/types';
 
 import assert from 'assert';
@@ -26,7 +25,7 @@ const metadataContent = new Set([
   'title',
 ]);
 
-export default (new Packager({
+export default new Packager({
   async loadConfig({config}) {
     let posthtmlConfig = await config.getConfig(
       [
@@ -95,14 +94,14 @@ export default (new Packager({
       map,
     });
   },
-}): Packager);
+}) as Packager;
 
 async function getAssetContent(
   bundleGraph: BundleGraph<NamedBundle>,
   getInlineBundleContents,
   assetId,
 ) {
-  let inlineBundle: ?Bundle;
+  let inlineBundle: Bundle | undefined | null;
   bundleGraph.traverseBundles((bundle, context, {stop}) => {
     let entryAssets = bundle.getEntryAssets();
     if (entryAssets.some(a => a.uniqueKey === assetId)) {

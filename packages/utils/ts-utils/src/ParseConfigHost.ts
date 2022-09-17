@@ -1,7 +1,6 @@
-// @flow
 import type {FileSystem} from '@parcel/fs';
 import type {FilePath} from '@parcel/types';
-import typeof TypeScriptModule from 'typescript'; // eslint-disable-line import/no-extraneous-dependencies
+type TypeScriptModule = typeof import('typescript').default;
 import type {ParseConfigHost as IParseConfigHost} from 'typescript'; // eslint-disable-line import/no-extraneous-dependencies
 import {FSHost} from './FSHost';
 

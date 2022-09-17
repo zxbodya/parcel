@@ -1,9 +1,7 @@
-// @flow
-
 import {Transformer} from '@parcel/plugin';
 import json5 from 'json5';
 
-export default (new Transformer({
+export default new Transformer({
   async transform({asset}) {
     asset.type = 'js';
     // Use JSON.parse("...") for faster script parsing, see
@@ -16,4 +14,4 @@ export default (new Transformer({
     );
     return [asset];
   },
-}): Transformer);
+}) as Transformer;

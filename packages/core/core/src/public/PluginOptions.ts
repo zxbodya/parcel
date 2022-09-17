@@ -1,4 +1,3 @@
-// @flow
 import type {
   BuildMode,
   EnvMap,
@@ -17,9 +16,9 @@ let parcelOptionsToPluginOptions: WeakMap<ParcelOptions, PluginOptions> =
   new WeakMap();
 
 export default class PluginOptions implements IPluginOptions {
-  #options :ParcelOptions ;
+  #options: ParcelOptions;
 
-  constructor(options: ParcelOptions): PluginOptions {
+  constructor(options: ParcelOptions) {
     let existing = parcelOptionsToPluginOptions.get(options);
     if (existing != null) {
       return existing;
@@ -42,7 +41,7 @@ export default class PluginOptions implements IPluginOptions {
     return this.#options.env;
   }
 
-  get hmrOptions(): ?HMROptions {
+  get hmrOptions(): HMROptions | undefined | null {
     return this.#options.hmrOptions;
   }
 
@@ -84,7 +83,7 @@ export default class PluginOptions implements IPluginOptions {
     return this.#options.packageManager;
   }
 
-  get detailedReport(): ?DetailedReportOptions {
+  get detailedReport(): DetailedReportOptions | undefined | null {
     return this.#options.detailedReport;
   }
 }

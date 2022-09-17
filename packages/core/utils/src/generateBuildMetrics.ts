@@ -1,5 +1,3 @@
-// @flow
-
 import type {FilePath, PackagedBundle} from '@parcel/types';
 import type {FileSystem} from '@parcel/fs';
 import SourceMap from '@parcel/source-map';
@@ -7,29 +5,29 @@ import nullthrows from 'nullthrows';
 import path from 'path';
 import {loadSourceMapUrl} from './';
 
-export type AssetStats = {|
-  filePath: string,
-  size: number,
-  originalSize: number,
-  time: number,
-|};
+export type AssetStats = {
+  filePath: string;
+  size: number;
+  originalSize: number;
+  time: number;
+};
 
-export type BundleStats = {|
-  filePath: string,
-  size: number,
-  time: number,
-  assets: Array<AssetStats>,
-|};
+export type BundleStats = {
+  filePath: string;
+  size: number;
+  time: number;
+  assets: Array<AssetStats>;
+};
 
-export type BuildMetrics = {|
-  bundles: Array<BundleStats>,
-|};
+export type BuildMetrics = {
+  bundles: Array<BundleStats>;
+};
 
 async function getSourcemapSizes(
   filePath: FilePath,
   fs: FileSystem,
   projectRoot: FilePath,
-): Promise<?Map<string, number>> {
+): Promise<Map<string, number> | undefined | null> {
   let bundleContents = await fs.readFile(filePath, 'utf-8');
   let mapUrlData = await loadSourceMapUrl(fs, filePath, bundleContents);
   if (!mapUrlData) {

@@ -1,8 +1,6 @@
-// @flow
-
 import type {Config, PluginOptions, PackageJSON} from '@parcel/types';
 import type {BabelConfig} from './types';
-import typeof * as BabelCore from '@babel/core';
+type BabelCore = typeof import('@babel/core');
 
 import {BABEL_CORE_RANGE} from './constants';
 import path from 'path';
@@ -13,7 +11,7 @@ import path from 'path';
 export default async function getFlowOptions(
   config: Config,
   options: PluginOptions,
-): Promise<?BabelConfig> {
+): Promise<BabelConfig | undefined | null> {
   if (!config.isSource) {
     return null;
   }

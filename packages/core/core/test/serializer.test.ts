@@ -1,4 +1,3 @@
-// @flow
 import {
   serialize,
   deserialize,
@@ -149,8 +148,8 @@ describe('serializer', () => {
 
   it('should serialize a cyclic class', () => {
     class Foo {
-      x: ?Foo;
-      constructor(x: ?Foo) {
+      x: Foo | undefined | null;
+      constructor(x?: Foo | null) {
         this.x = x;
       }
     }
@@ -191,8 +190,8 @@ describe('serializer', () => {
 
   it('should serialize a cyclic class and copy on write', () => {
     class Foo {
-      x: ?Foo;
-      constructor(x: ?Foo) {
+      x: Foo | undefined | null;
+      constructor(x?: Foo | null) {
         this.x = x;
       }
     }

@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {Diagnostic} from '@parcel/diagnostic';
 import type {ContentKey, NodeId} from '@parcel/graph';
 import type {Async, Symbol, Meta} from '@parcel/types';
@@ -40,36 +38,35 @@ import {
 } from '../projectPath';
 import dumpGraphToGraphViz from '../dumpGraphToGraphViz';
 
-type AssetGraphRequestInput = {|
-  entries?: Array<ProjectPath>,
-  assetGroups?: Array<AssetGroup>,
-  optionsRef: SharedReference,
-  name: string,
-  shouldBuildLazily?: boolean,
-  requestedAssetIds?: Set<string>,
-|};
+type AssetGraphRequestInput = {
+  entries?: Array<ProjectPath>;
+  assetGroups?: Array<AssetGroup>;
+  optionsRef: SharedReference;
+  name: string;
+  shouldBuildLazily?: boolean;
+  requestedAssetIds?: Set<string>;
+};
 
-type AssetGraphRequestResult = {|
-  assetGraph: AssetGraph,
-  changedAssets: Map<string, Asset>,
-  assetRequests: Array<AssetGroup>,
-|};
+type AssetGraphRequestResult = {
+  assetGraph: AssetGraph;
+  changedAssets: Map<string, Asset>;
+  assetRequests: Array<AssetGroup>;
+};
 
-type RunInput = {|
-  input: AssetGraphRequestInput,
-  ...StaticRunOpts,
-|};
+type RunInput = {
+  input: AssetGraphRequestInput;
+} & StaticRunOpts;
 
-type AssetGraphRequest = {|
-  id: string,
-  +type: 'asset_graph_request',
-  run: RunInput => Async<{|
-    assetGraph: AssetGraph,
-    changedAssets: Map<string, Asset>,
-    assetRequests: Array<AssetGroup>,
-  |}>,
-  input: AssetGraphRequestInput,
-|};
+type AssetGraphRequest = {
+  id: string;
+  readonly type: 'asset_graph_request';
+  run: (a: RunInput) => Async<{
+    assetGraph: AssetGraph;
+    changedAssets: Map<string, Asset>;
+    assetRequests: Array<AssetGroup>;
+  }>;
+  input: AssetGraphRequestInput;
+};
 
 export default function createAssetGraphRequest(
   input: AssetGraphRequestInput,
@@ -97,7 +94,7 @@ const typesWithRequests = new Set([
 export class AssetGraphBuilder {
   assetGraph: AssetGraph;
   assetRequests: Array<AssetGroup> = [];
-  queue: PromiseQueue<mixed>;
+  queue: PromiseQueue<unknown>;
   changedAssets: Map<string, Asset> = new Map();
   optionsRef: SharedReference;
   options: ParcelOptions;
@@ -109,7 +106,7 @@ export class AssetGraphBuilder {
 
   constructor(
     {input, api, options}: RunInput,
-    prevResult: ?AssetGraphRequestResult,
+    prevResult?: AssetGraphRequestResult | null,
   ) {
     let {
       entries,
@@ -275,9 +272,13 @@ export class AssetGraphBuilder {
       if (!assetNode.value.symbols) return;
 
       // exportSymbol -> identifier
-      let assetSymbols: $ReadOnlyMap<
+      let assetSymbols: ReadonlyMap<
         Symbol,
-        {|local: Symbol, loc: ?InternalSourceLocation, meta?: ?Meta|},
+        {
+          local: Symbol;
+          loc: InternalSourceLocation | undefined | null;
+          meta?: Meta | null;
+        }
       > = assetNode.value.symbols;
       // identifier -> exportSymbol
       let assetSymbolsInverse;
@@ -437,10 +438,17 @@ export class AssetGraphBuilder {
     this.propagateSymbolsUp((assetNode, incomingDeps, outgoingDeps) => {
       invariant(assetNode.type === 'asset');
 
-      let assetSymbols: ?$ReadOnlyMap<
-        Symbol,
-        {|local: Symbol, loc: ?InternalSourceLocation, meta?: ?Meta|},
-      > = assetNode.value.symbols;
+      let assetSymbols:
+        | ReadonlyMap<
+            Symbol,
+            {
+              local: Symbol;
+              loc: InternalSourceLocation | undefined | null;
+              meta?: Meta | null;
+            }
+          >
+        | undefined
+        | null = assetNode.value.symbols;
 
       let assetSymbolsInverse = null;
       if (assetSymbols) {
@@ -458,7 +466,12 @@ export class AssetGraphBuilder {
       // the symbols that are reexported (not used in `asset`) -> asset they resolved to
       let reexportedSymbols = new Map<
         Symbol,
-        ?{|asset: ContentKey, symbol: ?Symbol|},
+        | {
+            asset: ContentKey;
+            symbol: Symbol | undefined | null;
+          }
+        | undefined
+        | null
       >();
       // the symbols that are reexported (not used in `asset`) -> the corresponding outgoingDep(s)
       // To generate the diagnostic when there are multiple dependencies with non-statically
@@ -680,8 +693,8 @@ export class AssetGraphBuilder {
   propagateSymbolsDown(
     visit: (
       assetNode: AssetNode,
-      incoming: $ReadOnlyArray<DependencyNode>,
-      outgoing: $ReadOnlyArray<DependencyNode>,
+      incoming: ReadonlyArray<DependencyNode>,
+      outgoing: ReadonlyArray<DependencyNode>,
     ) => void,
   ) {
     let rootNodeId = nullthrows(
@@ -742,8 +755,8 @@ export class AssetGraphBuilder {
   propagateSymbolsUp(
     visit: (
       assetNode: AssetNode,
-      incoming: $ReadOnlyArray<DependencyNode>,
-      outgoing: $ReadOnlyArray<DependencyNode>,
+      incoming: ReadonlyArray<DependencyNode>,
+      outgoing: ReadonlyArray<DependencyNode>,
     ) => Array<Diagnostic>,
   ): void {
     let rootNodeId = nullthrows(
@@ -890,7 +903,7 @@ export class AssetGraphBuilder {
   queueCorrespondingRequest(
     nodeId: NodeId,
     errors: Array<Error>,
-  ): Promise<mixed> {
+  ): Promise<unknown> {
     let promise;
     let node = nullthrows(this.assetGraph.getNode(nodeId));
     switch (node.type) {
@@ -934,10 +947,10 @@ export class AssetGraphBuilder {
 
   async runPathRequest(input: Dependency) {
     let request = createPathRequest({dependency: input, name: this.name});
-    let result = await this.api.runRequest<PathRequestInput, ?AssetGroup>(
-      request,
-      {force: true},
-    );
+    let result = await this.api.runRequest<
+      PathRequestInput,
+      AssetGroup | undefined | null
+    >(request, {force: true});
     this.assetGraph.resolveDependency(input, result, request.id);
   }
 
@@ -963,8 +976,24 @@ export class AssetGraphBuilder {
 }
 
 function equalMap<K>(
-  a: $ReadOnlyMap<K, ?{|asset: ContentKey, symbol: ?Symbol|}>,
-  b: $ReadOnlyMap<K, ?{|asset: ContentKey, symbol: ?Symbol|}>,
+  a: ReadonlyMap<
+    K,
+    | {
+        asset: ContentKey;
+        symbol: Symbol | undefined | null;
+      }
+    | undefined
+    | null
+  >,
+  b: ReadonlyMap<
+    K,
+    | {
+        asset: ContentKey;
+        symbol: Symbol | undefined | null;
+      }
+    | undefined
+    | null
+  >,
 ) {
   if (a.size !== b.size) return false;
   for (let [k, v] of a) {
@@ -975,6 +1004,6 @@ function equalMap<K>(
   return true;
 }
 
-function equalSet<T>(a: $ReadOnlySet<T>, b: $ReadOnlySet<T>) {
+function equalSet<T>(a: ReadonlySet<T>, b: ReadonlySet<T>) {
   return a.size === b.size && [...a].every(i => b.has(i));
 }

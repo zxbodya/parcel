@@ -1,5 +1,3 @@
-// @flow
-
 import type {
   BuildSuccessEvent,
   Dependency,
@@ -10,12 +8,7 @@ import type {
 } from '@parcel/types';
 import type {Diagnostic} from '@parcel/diagnostic';
 import type {AnsiDiagnosticResult} from '@parcel/utils';
-import type {
-  ServerError,
-  HMRServerOptions,
-  Request,
-  Response,
-} from './types.js.flow';
+import type {ServerError, HMRServerOptions, Request, Response} from './types';
 import {setHeaders, SOURCES_ENDPOINT} from './Server';
 
 import nullthrows from 'nullthrows';
@@ -30,28 +23,32 @@ import {
   PromiseQueue,
 } from '@parcel/utils';
 
-export type HMRAsset = {|
-  id: string,
-  url: string,
-  type: string,
-  output: string,
-  envHash: string,
-  outputFormat: string,
-  depsByBundle: {[string]: {[string]: string, ...}, ...},
-|};
+export type HMRAsset = {
+  id: string;
+  url: string;
+  type: string;
+  output: string;
+  envHash: string;
+  outputFormat: string;
+  depsByBundle: {
+    [x: string]: {
+      [x: string]: string;
+    };
+  };
+};
 
 export type HMRMessage =
-  | {|
-      type: 'update',
-      assets: Array<HMRAsset>,
-    |}
-  | {|
-      type: 'error',
-      diagnostics: {|
-        ansi: Array<AnsiDiagnosticResult>,
-        html: Array<$Rest<AnsiDiagnosticResult, {|codeframe: string|}>>,
-      |},
-    |};
+  | {
+      type: 'update';
+      assets: Array<HMRAsset>;
+    }
+  | {
+      type: 'error';
+      diagnostics: {
+        ansi: Array<AnsiDiagnosticResult>;
+        html: Array<Omit<AnsiDiagnosticResult, 'codeframe'>>;
+      };
+    };
 
 const FS_CONCURRENCY = 64;
 const HMR_ENDPOINT = '/__parcel_hmr';
@@ -61,7 +58,7 @@ export default class HMRServer {
   unresolvedError: HMRMessage | null = null;
   options: HMRServerOptions;
   bundleGraph: BundleGraph<PackagedBundle> | null = null;
-  stopServer: ?() => Promise<void>;
+  stopServer: (() => Promise<void>) | undefined | null;
 
   constructor(options: HMRServerOptions) {
     this.options = options;

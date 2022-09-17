@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import {Runtime} from '@parcel/plugin';
 import nullthrows from 'nullthrows';
 import fs from 'fs';
@@ -10,7 +8,7 @@ const AUTORELOAD_BG = fs.readFileSync(
   'utf8',
 );
 
-export default (new Runtime({
+export default new Runtime({
   apply({bundle, bundleGraph, options}) {
     if (!bundle.env.isBrowser() || bundle.env.isWorklet()) {
       return;
@@ -63,4 +61,4 @@ export default (new Runtime({
       }
     }
   },
-}): Runtime);
+}) as Runtime;

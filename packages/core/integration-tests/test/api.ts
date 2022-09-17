@@ -1,4 +1,3 @@
-// @flow strict-local
 import path from 'path';
 import assert from 'assert';
 import {distDir, bundle, assertBundles, outputFS} from '@parcel/test-utils';

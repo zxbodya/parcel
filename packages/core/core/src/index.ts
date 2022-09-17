@@ -1,5 +1,3 @@
-// @flow
-
 // Needs to be exported first because of circular imports
 export {
   registerSerializableClass,

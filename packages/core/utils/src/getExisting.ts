@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import fs from 'fs';
 
 /**
@@ -9,7 +7,10 @@ import fs from 'fs';
 export default function getExisting(
   minifiedPath: string,
   sourcePath: string,
-): {|minified: string, source: string|} {
+): {
+  minified: string;
+  source: string;
+} {
   let source = fs.readFileSync(sourcePath, 'utf8').trim();
   return {
     source,

@@ -1,12 +1,10 @@
-// @flow strict-local
-
 import type {Config} from '@parcel/types';
 import path from 'path';
 import ThrowableDiagnostic from '@parcel/diagnostic';
 import commandExists from 'command-exists';
 import nullthrows from 'nullthrows';
 
-async function load({config}: {|config: Config|}): Promise<null> {
+async function load({config}: {config: Config}): Promise<null> {
   const elmConfig = await config.getConfig(['elm.json']);
   if (!elmConfig) {
     elmBinaryPath(); // Check if elm is even installed
@@ -25,7 +23,7 @@ async function load({config}: {|config: Config|}): Promise<null> {
   return null;
 }
 
-function elmBinaryPath(): ?string {
+function elmBinaryPath(): string | undefined | null {
   let elmBinary = resolveLocalElmBinary();
 
   if (elmBinary == null && !commandExists.sync('elm')) {

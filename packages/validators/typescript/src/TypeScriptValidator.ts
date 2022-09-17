@@ -1,4 +1,3 @@
-// @flow
 import type {
   Asset,
   ConfigResult,
@@ -15,27 +14,26 @@ import {Validator} from '@parcel/plugin';
 import {LanguageServiceHost, ParseConfigHost} from '@parcel/ts-utils';
 
 let langServiceCache: {
-  [configHash: string]: {|
-    configHost: ParseConfigHost,
-    host: LanguageServiceHost,
-    service: LanguageService,
-  |},
-  ...
+  [configHash: string]: {
+    configHost: ParseConfigHost;
+    host: LanguageServiceHost;
+    service: LanguageService;
+  };
 } = {};
 
-type TSValidatorConfig = {|
-  filepath: ?string,
-  baseDir: string,
-  configHash: string,
-  tsconfig: ConfigResult | null,
-|};
+type TSValidatorConfig = {
+  filepath: string | undefined | null;
+  baseDir: string;
+  configHash: string;
+  tsconfig: ConfigResult | null;
+};
 
-export default (new Validator({
+export default new Validator({
   async validateAll({
     assets,
     options,
     resolveConfigWithPath,
-  }): Promise<Array<?ValidateResult>> {
+  }): Promise<Array<ValidateResult | undefined | null>> {
     // Build a collection that of all the LanguageServices related to files that just changed.
     let servicesToValidate: Set<string> = new Set();
     await Promise.all(
@@ -55,7 +53,7 @@ export default (new Validator({
     );
 
     // Ask typescript to analyze all changed programs and translate the results into ValidatorResult objects.
-    let validatorResults: Array<?ValidateResult> = [];
+    let validatorResults: Array<ValidateResult | undefined | null> = [];
     servicesToValidate.forEach(configHash => {
       // Make sure that the filesystem being used by the LanguageServiceHost and ParseConfigHost is up-to-date.
       // (This could change in the context of re-running tests, and probably also for other reasons).
@@ -76,7 +74,7 @@ export default (new Validator({
 
     return validatorResults;
   },
-}): Validator);
+}) as Validator;
 
 async function getConfig(
   asset,
@@ -90,7 +88,7 @@ async function getConfig(
     configNames,
     options.projectRoot,
   );
-  let configPath: ?string = await resolveConfigWithPath(
+  let configPath: string | undefined | null = await resolveConfigWithPath(
     configNames,
     asset.filePath,
   );
@@ -141,7 +139,7 @@ function tryCreateLanguageService(
 /** Translates semantic diagnostics (from TypeScript) into a ValidateResult that Parcel understands. */
 function getValidateResultFromDiagnostics(
   filePath: string,
-  diagnostics: $ReadOnlyArray<Diagnostic>,
+  diagnostics: ReadonlyArray<Diagnostic>,
 ): ValidateResult {
   let validatorResult = {
     warnings: [],
@@ -159,7 +157,7 @@ function getValidateResultFromDiagnostics(
           : diagnostic.messageText.messageText,
       );
 
-      let codeframe: ?DiagnosticCodeFrame;
+      let codeframe: DiagnosticCodeFrame | undefined | null;
       if (file != null && diagnostic.start != null) {
         let source = file.text || diagnostic.source;
         if (file.fileName) {

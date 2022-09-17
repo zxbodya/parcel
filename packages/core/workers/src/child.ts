@@ -1,5 +1,3 @@
-// @flow
-
 import type {
   CallRequest,
   WorkerDataResponse,
@@ -24,26 +22,26 @@ import _Handle from './Handle';
 // The import of './Handle' should really be imported eagerly (with @babel/plugin-transform-modules-commonjs's lazy mode).
 const Handle = _Handle;
 
-type ChildCall = WorkerRequest & {|
-  resolve: (result: Promise<any> | any) => void,
-  reject: (error: any) => void,
-|};
+type ChildCall = WorkerRequest & {
+  resolve: (result: Promise<any> | any) => void;
+  reject: (error: any) => void;
+};
 
 export class Child {
   callQueue: Array<ChildCall> = [];
-  childId: ?number;
+  childId: number | undefined | null;
   maxConcurrentCalls: number = 10;
-  module: ?any;
+  module: any;
   responseId: number = 0;
   responseQueue: Map<number, ChildCall> = new Map();
   loggerDisposable: IDisposable;
   child: ChildImpl;
-  profiler: ?Profiler;
+  profiler: Profiler | undefined | null;
   handles: Map<number, Handle> = new Map();
-  sharedReferences: Map<SharedReference, mixed> = new Map();
-  sharedReferencesByValue: Map<mixed, SharedReference> = new Map();
+  sharedReferences: Map<SharedReference, unknown> = new Map();
+  sharedReferencesByValue: Map<unknown, SharedReference> = new Map();
 
-  constructor(ChildBackend: Class<ChildImpl>) {
+  constructor(ChildBackend: {new (...args: any): ChildImpl}) {
     this.child = new ChildBackend(
       m => {
         this.messageListener(m);
@@ -58,27 +56,27 @@ export class Child {
     });
   }
 
-  workerApi: {|
+  workerApi: {
     callMaster: (
       request: CallRequest,
-      awaitResponse?: ?boolean,
-    ) => Promise<mixed>,
-    createReverseHandle: (fn: (...args: Array<any>) => mixed) => Handle,
-    getSharedReference: (ref: SharedReference) => mixed,
-    resolveSharedReference: (value: mixed) => void | SharedReference,
-    runHandle: (handle: Handle, args: Array<any>) => Promise<mixed>,
-  |} = {
+      awaitResponse?: boolean | null,
+    ) => Promise<unknown>;
+    createReverseHandle: (fn: (...args: Array<any>) => unknown) => Handle;
+    getSharedReference: (ref: SharedReference) => unknown;
+    resolveSharedReference: (value: unknown) => void | SharedReference;
+    runHandle: (handle: Handle, args: Array<any>) => Promise<unknown>;
+  } = {
     callMaster: (
       request: CallRequest,
-      awaitResponse: ?boolean = true,
-    ): Promise<mixed> => this.addCall(request, awaitResponse),
-    createReverseHandle: (fn: (...args: Array<any>) => mixed): Handle =>
+      awaitResponse: boolean | undefined | null = true,
+    ): Promise<unknown> => this.addCall(request, awaitResponse),
+    createReverseHandle: (fn: (...args: Array<any>) => unknown): Handle =>
       this.createReverseHandle(fn),
-    runHandle: (handle: Handle, args: Array<any>): Promise<mixed> =>
+    runHandle: (handle: Handle, args: Array<any>): Promise<unknown> =>
       this.workerApi.callMaster({handle: handle.id, args}, true),
     getSharedReference: (ref: SharedReference) =>
       this.sharedReferences.get(ref),
-    resolveSharedReference: (value: mixed) =>
+    resolveSharedReference: (value: unknown) =>
       this.sharedReferencesByValue.get(value),
   };
 
@@ -231,8 +229,8 @@ export class Child {
   // Keep in mind to make sure responses to these calls are JSON.Stringify safe
   addCall(
     request: CallRequest,
-    awaitResponse: ?boolean = true,
-  ): Promise<mixed> {
+    awaitResponse: boolean | undefined | null = true,
+  ): Promise<unknown> {
     // $FlowFixMe
     let call: ChildCall = {
       ...request,
@@ -291,7 +289,7 @@ export class Child {
     this.loggerDisposable.dispose();
   }
 
-  createReverseHandle(fn: (...args: Array<any>) => mixed): Handle {
+  createReverseHandle(fn: (...args: Array<any>) => unknown): Handle {
     let handle = new Handle({
       fn,
       childId: this.childId,

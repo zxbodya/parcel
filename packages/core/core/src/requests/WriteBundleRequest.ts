@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import type {FileSystem, FileOptions} from '@parcel/fs';
 import type {ContentKey} from '@parcel/graph';
 import type {Async, FilePath, Compressor} from '@parcel/types';
@@ -41,24 +39,23 @@ import ThrowableDiagnostic, {errorToDiagnostic} from '@parcel/diagnostic';
 
 const BOUNDARY_LENGTH = HASH_REF_PREFIX.length + 32 - 1;
 
-type WriteBundleRequestInput = {|
-  bundleGraph: BundleGraph,
-  bundle: Bundle,
-  info: BundleInfo,
-  hashRefToNameHash: Map<string, string>,
-|};
+type WriteBundleRequestInput = {
+  bundleGraph: BundleGraph;
+  bundle: Bundle;
+  info: BundleInfo;
+  hashRefToNameHash: Map<string, string>;
+};
 
-type RunInput = {|
-  input: WriteBundleRequestInput,
-  ...StaticRunOpts,
-|};
+type RunInput = {
+  input: WriteBundleRequestInput;
+} & StaticRunOpts;
 
-export type WriteBundleRequest = {|
-  id: ContentKey,
-  +type: 'write_bundle_request',
-  run: RunInput => Async<PackagedBundleInfo>,
-  input: WriteBundleRequestInput,
-|};
+export type WriteBundleRequest = {
+  id: ContentKey;
+  readonly type: 'write_bundle_request';
+  run: (a: RunInput) => Async<PackagedBundleInfo>;
+  input: WriteBundleRequestInput;
+};
 
 /**
  * Writes a bundle to the dist directory, replacing hash references with the final content hashes.
@@ -194,14 +191,14 @@ async function run({input, options, api}: RunInput) {
 }
 
 async function writeFiles(
-  inputStream: stream$Readable,
+  inputStream: Readable,
   info: BundleInfo,
   hashRefToNameHash: Map<string, string>,
   options: ParcelOptions,
   config: ParcelConfig,
   outputFS: FileSystem,
   filePath: ProjectPath,
-  writeOptions: ?FileOptions,
+  writeOptions: FileOptions | undefined | null,
   devDeps: Map<string, string>,
   api: RunAPI,
 ) {
@@ -235,11 +232,11 @@ async function writeFiles(
 
 async function runCompressor(
   compressor: LoadedPlugin<Compressor>,
-  stream: stream$Readable,
+  stream: Readable,
   options: ParcelOptions,
   outputFS: FileSystem,
   filePath: FilePath,
-  writeOptions: ?FileOptions,
+  writeOptions: FileOptions | undefined | null,
   devDeps: Map<string, string>,
   api: RunAPI,
 ) {

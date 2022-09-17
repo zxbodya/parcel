@@ -1,5 +1,3 @@
-// @flow strict-local
-
 import {Transform} from 'stream';
 
 /*
@@ -7,8 +5,8 @@ import {Transform} from 'stream';
  * callback. Continues to pass data chunks down the stream.
  */
 export default class TapStream extends Transform {
-  _tap: Buffer => mixed;
-  constructor(tap: Buffer => mixed, options: mixed) {
+  _tap: (a: Buffer) => unknown;
+  constructor(tap: (a: Buffer) => unknown, options: unknown) {
     super({...options});
     this._tap = tap;
   }
@@ -16,7 +14,10 @@ export default class TapStream extends Transform {
   _transform(
     chunk: Buffer | string,
     encoding: string,
-    callback: (err: ?Error, chunk?: Buffer | string) => mixed,
+    callback: (
+      err: Error | undefined | null,
+      chunk?: Buffer | string,
+    ) => unknown,
   ) {
     try {
       this._tap(Buffer.from(chunk));

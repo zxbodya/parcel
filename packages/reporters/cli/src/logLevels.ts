@@ -1,5 +1,3 @@
-// @flow strict-local
-
 const logLevels = {
   none: 0,
   error: 1,

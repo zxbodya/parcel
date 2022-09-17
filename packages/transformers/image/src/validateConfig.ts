@@ -1,4 +1,3 @@
-// @flow
 import type {SchemaEntity} from '@parcel/utils';
 import {validateSchema} from '@parcel/utils';
 
